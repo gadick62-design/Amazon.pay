@@ -17,7 +17,6 @@
     --amz-orange-subtle: #FFF4E5;
     --amz-text: #0F1111;
     --amz-muted: #565959;
-    --amz-muted-soft: #8A8F98;
     --amz-border: #E7E9EC;
     --amz-border-soft: #F0F1F3;
     --amz-success: #067D62;
@@ -33,25 +32,26 @@
     min-height: 100dvh;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 
   .phone {
     width: 100%;
-    max-width: 430px;
+    max-width: 400px;
     background: #FFFFFF;
-    min-height: 100dvh;
+    height: 100dvh;
     position: relative;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 60px rgba(19,25,33,0.10);
     overflow: hidden;
   }
   @media (min-width: 520px) {
-    body { padding: 20px 0; align-items: flex-start; }
+    body { padding: 20px 0; }
     .phone {
-      min-height: calc(100dvh - 40px);
-      max-height: calc(100dvh - 40px);
+      height: calc(100dvh - 40px);
+      max-height: 760px;
       border-radius: 22px;
+      box-shadow: 0 24px 70px rgba(19,25,33,0.18), 0 4px 14px rgba(19,25,33,0.08);
     }
   }
 
@@ -59,8 +59,8 @@
   .app-header {
     background: var(--amz-ink);
     color: #fff;
-    height: 82px;
-    padding: 0 16px;
+    height: 68px;
+    padding: 0 14px;
     padding-top: env(safe-area-inset-top, 0);
     display: flex;
     align-items: center;
@@ -70,155 +70,155 @@
     z-index: 5;
   }
   .app-header .back {
-    width: 40px; height: 40px;
+    width: 34px; height: 34px;
     border-radius: 50%;
     border: none;
     background: transparent;
     color: #fff;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    margin-left: -8px;
+    margin-left: -4px;
     transition: background .15s;
   }
   .app-header .back:hover { background: rgba(255,255,255,0.08); }
-  .app-header .back svg { width: 22px; height: 22px; }
+  .app-header .back svg { width: 19px; height: 19px; }
   .app-header .title {
     position: absolute;
     left: 50%; top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 26px;
+    font-size: 21px;
     font-weight: 600;
-    letter-spacing: -0.4px;
+    letter-spacing: -0.3px;
     white-space: nowrap;
   }
-  .app-header .spacer-right { width: 40px; height: 40px; }
+  .app-header .spacer-right { width: 34px; height: 34px; }
 
-  /* ── Scroll body (fits without scroll on normal phones) ── */
+  /* ── Scroll body ─────────────────────────────── */
   .body-scroll {
     flex: 1 1 auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 118px;
+    padding-bottom: 96px;
     display: flex;
     flex-direction: column;
   }
 
   /* ── Amount ─────────────────────────────────── */
   .amount-section {
-    padding: 22px 20px 20px;
+    padding: 14px 18px 12px;
     text-align: center;
     border-bottom: 1px solid var(--amz-border-soft);
   }
   .amount-label {
-    font-size: 13px;
+    font-size: 11.5px;
     font-weight: 500;
     color: var(--amz-muted);
-    letter-spacing: 0.1px;
+    letter-spacing: 0.2px;
   }
   .amount-value {
-    margin-top: 6px;
-    font-size: 58px;
+    margin-top: 3px;
+    font-size: 46px;
     font-weight: 800;
-    letter-spacing: -2px;
+    letter-spacing: -1.6px;
     line-height: 1.05;
     color: var(--amz-ink);
     word-break: break-word;
   }
   .amount-value .cur {
-    font-size: 26px;
+    font-size: 21px;
     font-weight: 700;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.4px;
     margin-right: 3px;
   }
   .amount-value .dec {
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 700;
-    letter-spacing: -1px;
+    letter-spacing: -0.8px;
   }
-  @media (max-width: 380px) {
-    .amount-value { font-size: 48px; letter-spacing: -1.5px; }
-    .amount-value .cur { font-size: 22px; }
-    .amount-value .dec { font-size: 32px; }
+  @media (max-width: 360px) {
+    .amount-value { font-size: 40px; letter-spacing: -1.2px; }
+    .amount-value .cur { font-size: 18px; }
+    .amount-value .dec { font-size: 26px; }
   }
 
   /* ── Payment method row ─────────────────────── */
   .row-block {
-    padding: 15px 20px;
+    padding: 11px 18px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 11px;
     border-bottom: 1px solid var(--amz-border-soft);
   }
   .row-block .icon {
-    flex: 0 0 30px; height: 30px;
+    flex: 0 0 24px; height: 24px;
     display: flex; align-items: center; justify-content: center;
     color: var(--amz-ink);
   }
   .row-block .icon svg { width: 100%; height: 100%; }
   .row-block .row-text {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--amz-ink);
-    letter-spacing: -0.2px;
+    letter-spacing: -0.15px;
   }
   .row-block .row-text .masked { font-weight: 700; }
 
   /* ── Transfer speed ─────────────────────────── */
   .speed-block {
-    padding: 14px 20px 13px;
+    padding: 10px 18px 9px;
     border-bottom: 1px solid var(--amz-border-soft);
   }
   .speed-line {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 16px;
+    gap: 9px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--amz-ink);
-    letter-spacing: -0.2px;
+    letter-spacing: -0.15px;
   }
   .speed-line .bolt {
-    flex: 0 0 22px; height: 22px;
+    flex: 0 0 18px; height: 18px;
     display: flex; align-items: center; justify-content: center;
     color: var(--amz-ink);
   }
   .speed-line .bolt svg { width: 100%; height: 100%; }
   .speed-sub {
-    margin-top: 5px;
-    font-size: 13px;
+    margin-top: 3px;
+    font-size: 12px;
     color: var(--amz-muted);
     line-height: 1.45;
-    padding-left: 32px;
+    padding-left: 27px;
   }
 
   /* ── Info paragraph ────────────────────────── */
   .info-block {
-    padding: 16px 20px 6px;
-    font-size: 13px;
+    padding: 12px 18px 4px;
+    font-size: 12px;
     color: var(--amz-muted);
     line-height: 1.5;
   }
 
-  .spacer { flex: 1 1 auto; min-height: 12px; }
+  .spacer { flex: 1 1 auto; min-height: 6px; }
 
   /* ── Summary ────────────────────────────────── */
   .summary {
-    padding: 0 20px 16px;
-    margin-top: 8px;
+    padding: 0 18px 12px;
+    margin-top: 2px;
   }
   .summary-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    font-size: 15px;
+    padding: 8px 0;
+    font-size: 13.5px;
     color: var(--amz-ink);
   }
   .summary-row .k { font-weight: 500; color: var(--amz-muted); }
   .summary-row .v { font-weight: 600; color: var(--amz-ink); }
   .summary-row.final { border-top: 1px solid var(--amz-border-soft); }
   .summary-row.final .k { color: var(--amz-ink); font-weight: 600; }
-  .summary-row.final .v { font-weight: 800; font-size: 17px; }
+  .summary-row.final .v { font-weight: 800; font-size: 15.5px; }
   .divider { height: 1px; background: var(--amz-border-soft); }
 
   /* ── Fixed swipe area ───────────────────────── */
@@ -227,33 +227,59 @@
     left: 0; right: 0; bottom: 0;
     background: #fff;
     border-top: 1px solid var(--amz-border);
-    padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0));
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0));
     z-index: 10;
   }
+
+  /* ── Swipe button ───────────────────────────── */
   .swipe {
     position: relative;
     width: 100%;
-    height: 68px;
-    border-radius: 34px;
-    background: linear-gradient(180deg, #FF9430 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
+    height: 60px;
+    border-radius: 30px;
+    background: linear-gradient(180deg, #FF9C3D 0%, var(--amz-orange) 50%, var(--amz-orange-hover) 100%);
     overflow: hidden;
     cursor: grab;
     user-select: none;
     touch-action: none;
     box-shadow:
-      0 6px 16px rgba(255,134,31,0.32),
-      inset 0 1px 0 rgba(255,255,255,0.35),
+      0 6px 18px rgba(255,134,31,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.4),
       inset 0 -2px 0 rgba(0,0,0,0.08);
     transition: box-shadow .2s;
+    isolation: isolate;
   }
   .swipe:active { cursor: grabbing; }
+
+  .swipe::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -60%;
+    width: 45%;
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.28) 50%,
+      rgba(255,255,255,0) 100%);
+    transform: skewX(-18deg);
+    pointer-events: none;
+    animation: shimmer 2.8s ease-in-out infinite;
+    z-index: 1;
+  }
+  @keyframes shimmer {
+    0%   { left: -60%; }
+    55%  { left: 120%; }
+    100% { left: 120%; }
+  }
+
   .swipe .swipe-fill {
     position: absolute;
     top: 0; left: 0; bottom: 0;
-    width: 68px;
-    background: rgba(255,255,255,0.14);
-    border-radius: 34px 0 0 34px;
+    width: 60px;
+    background: rgba(255,255,255,0.16);
+    border-radius: 30px 0 0 30px;
     pointer-events: none;
+    z-index: 1;
   }
   .swipe .swipe-label {
     position: absolute;
@@ -262,17 +288,24 @@
     align-items: center;
     justify-content: center;
     color: #FFFFFF;
-    font-size: 15.5px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     letter-spacing: 0.4px;
     pointer-events: none;
     transition: opacity .15s;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.12);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.18);
+    z-index: 2;
+    padding-left: 30px;
+    padding-right: 14px;
   }
+  @media (max-width: 360px) {
+    .swipe .swipe-label { font-size: 13.5px; letter-spacing: 0.3px; }
+  }
+
   .swipe .knob {
     position: absolute;
-    top: 6px; left: 6px;
-    width: 56px; height: 56px;
+    top: 5px; left: 5px;
+    width: 50px; height: 50px;
     border-radius: 50%;
     background: linear-gradient(180deg, #FFFFFF 0%, #F6F7F8 100%);
     color: var(--amz-orange);
@@ -280,13 +313,30 @@
     align-items: center;
     justify-content: center;
     box-shadow:
-      0 3px 8px rgba(0,0,0,0.18),
+      0 3px 10px rgba(0,0,0,0.20),
       inset 0 -1px 0 rgba(0,0,0,0.05);
     pointer-events: none;
+    z-index: 3;
+    animation: knobPulse 2.4s ease-in-out infinite;
   }
-  .swipe .knob svg { width: 22px; height: 22px; }
+  @keyframes knobPulse {
+    0%, 100% { box-shadow: 0 3px 10px rgba(0,0,0,0.20), 0 0 0 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(0,0,0,0.05); }
+    50%      { box-shadow: 0 3px 10px rgba(0,0,0,0.20), 0 0 0 6px rgba(255,255,255,0), inset 0 -1px 0 rgba(0,0,0,0.05); }
+  }
+
+  .swipe .knob svg {
+    width: 19px; height: 19px;
+    animation: chevronNudge 1.6s ease-in-out infinite;
+  }
+  @keyframes chevronNudge {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(2px); }
+  }
+
   .swipe.done { background: linear-gradient(180deg, #08A67E 0%, var(--amz-success) 100%); box-shadow: 0 6px 16px rgba(6,125,98,0.30); }
-  .swipe.done .knob { color: var(--amz-success); }
+  .swipe.done::before { animation: none; opacity: 0; }
+  .swipe.done .knob { color: var(--amz-success); animation: none; }
+  .swipe.done .knob svg { animation: none; }
 
   /* ── Confirm modal ──────────────────────────── */
   .modal-backdrop {
@@ -303,13 +353,13 @@
   .confirm-modal {
     position: absolute;
     left: 50%;
-    bottom: 110px;
+    bottom: 90px;
     transform: translate(-50%, 10px) scale(0.96);
-    width: min(300px, calc(100% - 40px));
+    width: min(290px, calc(100% - 36px));
     background: #fff;
-    border-radius: 16px;
+    border-radius: 15px;
     box-shadow: 0 20px 50px rgba(19,25,33,0.28);
-    padding: 20px 18px 16px;
+    padding: 18px 16px 14px;
     text-align: center;
     opacity: 0;
     pointer-events: none;
@@ -322,37 +372,37 @@
     transform: translate(-50%, 0) scale(1);
   }
   .confirm-modal h3 {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 800;
     color: var(--amz-ink);
     letter-spacing: -0.3px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
   .confirm-modal p {
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--amz-muted);
     line-height: 1.5;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .confirm-modal .amt {
     display: block;
-    font-size: 22px;
+    font-size: 21px;
     font-weight: 800;
     color: var(--amz-ink);
     letter-spacing: -0.5px;
-    margin: 6px 0 0;
+    margin: 5px 0 0;
   }
   .modal-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 9px;
   }
   .btn {
-    padding: 11px 10px;
+    padding: 10px 10px;
     border: none;
-    border-radius: 10px;
+    border-radius: 9px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 700;
     cursor: pointer;
     transition: filter .15s, transform .1s, background .15s;
@@ -373,7 +423,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
     z-index: 100;
     opacity: 0;
     pointer-events: none;
@@ -381,20 +431,20 @@
   }
   .loading-overlay.show { opacity: 1; pointer-events: auto; }
   .loading-overlay .brand-mark {
-    width: 64px; height: 64px;
-    border-radius: 16px;
+    width: 58px; height: 58px;
+    border-radius: 14px;
     background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
     display: flex; align-items: center; justify-content: center;
     color: var(--amz-ink);
     font-weight: 800;
-    font-size: 24px;
+    font-size: 22px;
     letter-spacing: -0.5px;
     box-shadow: 0 6px 24px rgba(255,134,31,0.35);
   }
-  .loading-overlay .load-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  .loading-overlay .load-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: -12px; }
+  .loading-overlay .load-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .loading-overlay .load-sub { font-size: 12.5px; color: rgba(255,255,255,0.65); margin-top: -10px; }
   .spinner {
-    width: 32px; height: 32px;
+    width: 28px; height: 28px;
     border: 3px solid rgba(255,255,255,0.18);
     border-top-color: var(--amz-orange);
     border-radius: 50%;
@@ -402,19 +452,19 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── State card (invalid / expired) ────────── */
-  .state-card { padding: 50px 26px; text-align: center; }
+  /* ── State card ─────────────────────────────── */
+  .state-card { padding: 46px 24px; text-align: center; }
   .state-card .ic {
-    width: 60px; height: 60px;
+    width: 54px; height: 54px;
     border-radius: 50%;
     background: var(--amz-orange-subtle);
     color: var(--amz-orange-hover);
     display: flex; align-items: center; justify-content: center;
-    font-size: 26px;
-    margin: 0 auto 18px;
+    font-size: 24px;
+    margin: 0 auto 16px;
   }
-  .state-card h2 { font-size: 19px; font-weight: 800; color: var(--amz-ink); margin-bottom: 8px; letter-spacing: -0.3px; }
-  .state-card p { font-size: 13.5px; color: var(--amz-muted); line-height: 1.55; max-width: 290px; margin: 0 auto; }
+  .state-card h2 { font-size: 18px; font-weight: 800; color: var(--amz-ink); margin-bottom: 6px; letter-spacing: -0.3px; }
+  .state-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.55; max-width: 280px; margin: 0 auto; }
 </style>
 </head>
 <body>
@@ -462,11 +512,11 @@
         </span>
         <span>Instant – free</span>
       </div>
-      <div class="speed-sub">Funds will typically be available to you within an hour.</div>
+      <div class="speed-sub">Funds will typically be available to you within 5 minutes.</div>
     </div>
 
     <div class="info-block">
-      The funds will be processed according to the payment details provided. Your bank may take up to 24 hours to process the payment.
+      The funds will be processed according to the payment details provided. Bank may take up to 24 hours to process the payment.
     </div>
 
     <div class="spacer"></div>
@@ -520,9 +570,6 @@
 </div>
 
 <script>
-/* ─────────────────────────────────────────────────────────────
-   CONFIG
-   ───────────────────────────────────────────────────────────── */
 const CONFIG = {
   NEXT_PAGE: 'processing.html',
   LOADING_MS: 2000,
@@ -533,9 +580,6 @@ const CONFIG = {
   DEFAULT_FEE: 0
 };
 
-/* ─────────────────────────────────────────────────────────────
-   CURRENCY
-   ───────────────────────────────────────────────────────────── */
 const CURRENCY_SYMBOLS = {
   USD: '$', ZiG: 'ZiG ', ZAR: 'R', KES: 'KSh ', BWP: 'P ',
   MWK: 'MK ', RWF: 'FRw ', XAF: 'FCFA ', XOF: 'CFA ', ZMW: 'K ',
@@ -557,9 +601,6 @@ function formatMoney(amount, currency) {
   return currencySymbol(currency) + safe.toFixed(2);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   PAYLOAD
-   ───────────────────────────────────────────────────────────── */
 function b64urlDecode(str) {
   str = String(str).replace(/-/g, '+').replace(/_/g, '/');
   while (str.length % 4) str += '=';
@@ -590,17 +631,11 @@ async function resolvePayload() {
   throw new Error('No payment data found in this link.');
 }
 
-/* ─────────────────────────────────────────────────────────────
-   STATE
-   ───────────────────────────────────────────────────────────── */
 const state = {
   payload: null, amount: 0, fee: 0, receive: 0,
   currency: 'USD', swipeDone: false
 };
 
-/* ─────────────────────────────────────────────────────────────
-   RENDER
-   ───────────────────────────────────────────────────────────── */
 function render(payload) {
   state.payload = payload;
   state.currency = String(payload.cur || 'USD').toUpperCase();
@@ -626,9 +661,6 @@ function escapeHtml(s) {
   }[c]));
 }
 
-/* ─────────────────────────────────────────────────────────────
-   EXPIRY / ERROR STATE
-   ───────────────────────────────────────────────────────────── */
 function checkExpiry(payload) {
   if (payload && payload.exp && Date.now() > Number(payload.exp)) {
     showStateCard('⏱', 'This link has expired',
@@ -652,9 +684,6 @@ function showStateCard(icon, title, message) {
   if (md) md.remove();
 }
 
-/* ─────────────────────────────────────────────────────────────
-   SWIPE
-   ───────────────────────────────────────────────────────────── */
 function initSwipe() {
   const swipe = document.getElementById('swipe');
   const knob = document.getElementById('knob');
@@ -664,8 +693,8 @@ function initSwipe() {
   let dragging = false;
   let startX = 0;
   let currentX = 0;
-  const knobSize = 56;
-  const pad = 6;
+  const knobSize = 50;
+  const pad = 5;
 
   function maxX() {
     return swipe.getBoundingClientRect().width - knobSize - pad * 2;
@@ -736,9 +765,6 @@ function initSwipe() {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────
-   MODAL
-   ───────────────────────────────────────────────────────────── */
 function openModal() {
   document.getElementById('modalBackdrop').classList.add('show');
   document.getElementById('confirmModal').classList.add('show');
@@ -755,14 +781,11 @@ function resetSwipe() {
   const label = document.getElementById('swipeLabel');
   swipe.classList.remove('done');
   knob.style.transform = 'translateX(0)';
-  fill.style.width = '68px';
+  fill.style.width = '60px';
   label.textContent = 'Swipe to confirm cash out';
   label.style.opacity = '1';
 }
 
-/* ─────────────────────────────────────────────────────────────
-   PROCEED
-   ───────────────────────────────────────────────────────────── */
 function proceed() {
   closeModal();
   document.getElementById('loadingOverlay').classList.add('show');
@@ -771,18 +794,12 @@ function proceed() {
   setTimeout(() => { window.location.href = CONFIG.NEXT_PAGE + qs; }, CONFIG.LOADING_MS);
 }
 
-/* ─────────────────────────────────────────────────────────────
-   BACK
-   ───────────────────────────────────────────────────────────── */
 function initBack() {
   document.getElementById('backBtn').addEventListener('click', () => {
     if (window.history.length > 1) window.history.back();
   });
 }
 
-/* ─────────────────────────────────────────────────────────────
-   BOOT
-   ───────────────────────────────────────────────────────────── */
 async function boot() {
   initBack();
   try {
