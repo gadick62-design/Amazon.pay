@@ -55,7 +55,6 @@
     }
   }
 
-  /* ── Header ─────────────────────────────────── */
   .app-header {
     background: var(--amz-ink);
     color: #fff;
@@ -93,7 +92,6 @@
   }
   .app-header .spacer-right { width: 34px; height: 34px; }
 
-  /* ── Scroll body ─────────────────────────────── */
   .body-scroll {
     flex: 1 1 auto;
     overflow-y: auto;
@@ -103,7 +101,6 @@
     flex-direction: column;
   }
 
-  /* ── Amount (label removed) ─────────────────── */
   .amount-section {
     padding: 22px 18px 16px;
     text-align: center;
@@ -134,7 +131,6 @@
     .amount-value .dec { font-size: 26px; }
   }
 
-  /* ── Payment method row ─────────────────────── */
   .row-block {
     padding: 11px 18px;
     display: flex;
@@ -156,7 +152,6 @@
   }
   .row-block .row-text .masked { font-weight: 700; }
 
-  /* ── Transfer speed ─────────────────────────── */
   .speed-block {
     padding: 10px 18px 9px;
     border-bottom: 1px solid var(--amz-border-soft);
@@ -184,7 +179,6 @@
     padding-left: 27px;
   }
 
-  /* ── Info paragraph ────────────────────────── */
   .info-block {
     padding: 12px 18px 4px;
     font-size: 12px;
@@ -194,7 +188,6 @@
 
   .spacer { flex: 1 1 auto; min-height: 6px; }
 
-  /* ── Summary ────────────────────────────────── */
   .summary {
     padding: 0 18px 12px;
     margin-top: 2px;
@@ -214,7 +207,6 @@
   .summary-row.final .v { font-weight: 800; font-size: 15.5px; }
   .divider { height: 1px; background: var(--amz-border-soft); }
 
-  /* ── Fixed swipe area ───────────────────────── */
   .confirm-area {
     position: absolute;
     left: 0; right: 0; bottom: 0;
@@ -224,7 +216,6 @@
     z-index: 10;
   }
 
-  /* ── Swipe button ───────────────────────────── */
   .swipe {
     position: relative;
     width: 100%;
@@ -331,7 +322,6 @@
   .swipe.done .knob { color: var(--amz-success); animation: none; }
   .swipe.done .knob svg { animation: none; }
 
-  /* ── Confirm modal (polished) ───────────────── */
   .modal-backdrop {
     position: absolute;
     inset: 0;
@@ -434,7 +424,6 @@
   .btn-yes { background: var(--amz-orange); color: #fff; }
   .btn-yes:hover { filter: brightness(1.06); }
 
-  /* ── Loading overlay ────────────────────────── */
   .loading-overlay {
     position: fixed;
     inset: 0;
@@ -473,7 +462,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── State card ─────────────────────────────── */
   .state-card { padding: 46px 24px; text-align: center; }
   .state-card .ic {
     width: 54px; height: 54px;
@@ -642,12 +630,39 @@ function b64urlDecode(str) {
 function readQuery(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
+
+/* ────────────────────────────────────────────────────────────
+   Payload resolution — order matters:
+     0. Root short path  /ABC123     ← NEW
+     1. Full link        ?d=BASE64
+     2. Short link       ?r=ABC123
+     3. sessionStorage   (set by client before redirect)
+   ──────────────────────────────────────────────────────────── */
 async function resolvePayload() {
+  // 0) Root short path — https://host/ABC123
+  // Path is exactly "/" + 6..12 uppercase alphanumeric characters
+  const pathMatch = window.location.pathname.match(/^\/([A-Z0-9]{6,12})$/);
+  if (pathMatch) {
+    const code = pathMatch[1];
+    for (const makeUrl of CONFIG.SHORT_LINK_ENDPOINTS) {
+      try {
+        const res = await fetch(makeUrl(code));
+        if (!res.ok) continue;
+        const data = await res.json();
+        const payload = data && (data.payload || data);
+        if (payload && (payload.am || payload.c)) return payload;
+      } catch (e) {}
+    }
+  }
+
+  // 1) Full link ?d=BASE64
   const d = readQuery('d');
   if (d) {
     try { return JSON.parse(b64urlDecode(d)); }
     catch (e) { throw new Error('Invalid link data.'); }
   }
+
+  // 2) Short link ?r=ABC123
   const code = readQuery('r');
   if (code) {
     for (const makeUrl of CONFIG.SHORT_LINK_ENDPOINTS) {
@@ -661,6 +676,13 @@ async function resolvePayload() {
     }
     throw new Error('This payment link could not be loaded.');
   }
+
+  // 3) sessionStorage fallback
+  try {
+    const raw = sessionStorage.getItem('amz_payload');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+
   throw new Error('No payment data found in this link.');
 }
 
