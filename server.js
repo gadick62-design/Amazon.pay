@@ -164,6 +164,39 @@ app.get('/', (req, res) => {
 });
 
 /* ─────────────────────────────────────────────────────────────
+   ROOT SHORT-LINK REDIRECT
+   Handles /ABC123 → serves client.html with the code in the URL
+   Must come BEFORE the .html fallback below.
+   ───────────────────────────────────────────────────────────── */
+app.get(/^\/[A-Z0-9]{6,12}$/, (req, res) => {
+  const code = req.path.slice(1);
+  const entry = links.get(code);
+  if (!entry) {
+    log('err', `Short code not found: ${code}`);
+    return res.status(404).send(
+      '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Link not found</title>' +
+      '<style>body{font-family:system-ui,sans-serif;padding:40px;max-width:600px;margin:0 auto;color:#0F1111}' +
+      'h1{color:#B12704;font-size:24px}p{line-height:1.6;color:#565959}</style></head><body>' +
+      '<h1>Link not found</h1><p>This payment link is invalid. Please ask the sender for a new one.</p>' +
+      '</body></html>'
+    );
+  }
+  if (entry.payload.exp && Date.now() > entry.payload.exp) {
+    log('err', `Short code expired: ${code}`);
+    return res.status(410).send(
+      '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Link expired</title>' +
+      '<style>body{font-family:system-ui,sans-serif;padding:40px;max-width:600px;margin:0 auto;color:#0F1111}' +
+      'h1{color:#B12704;font-size:24px}p{line-height:1.6;color:#565959}</style></head><body>' +
+      '<h1>Link expired</h1><p>This payment request is no longer valid. Please ask the sender to generate a new one.</p>' +
+      '</body></html>'
+    );
+  }
+  log('info', `Short link hit: ${code}`);
+  // Serve client.html but keep the URL bar showing /ABC123
+  res.sendFile(path.join(__dirname, 'public', 'client.html'));
+});
+
+/* ─────────────────────────────────────────────────────────────
    HTML FALLBACK — clearer 404s for missing .html files
    ───────────────────────────────────────────────────────────── */
 app.get(/\.html$/i, (req, res, next) => {
