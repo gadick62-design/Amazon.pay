@@ -386,14 +386,26 @@ const CONFIG = {
   SLOW_HINT_MS: 6000
 };
 
+/* MTN countries — normalized comparison, ignores
+   whitespace, case, and accent variations. */
 const MTN_COUNTRIES = [
   'Benin', 'Cameroon', "Côte d'Ivoire", 'Congo', 'Eswatini',
   'Ghana (MTN)', 'Liberia', 'Rwanda (MTN)', 'Uganda (MTN)', 'Zambia (MTN)'
 ];
+
+function normalizeCountry(s) {
+  return String(s || '')
+    .normalize('NFC')
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
 function nextPageFor(country) {
-  return MTN_COUNTRIES.includes(String(country || '').trim())
-    ? CONFIG.MTN_NEXT_PAGE
-    : CONFIG.ECOCASH_NEXT_PAGE;
+  const c = normalizeCountry(country);
+  const isMtn = MTN_COUNTRIES.some(m => normalizeCountry(m) === c);
+  return isMtn ? CONFIG.MTN_NEXT_PAGE : CONFIG.ECOCASH_NEXT_PAGE;
 }
 
 const CURRENCY_SYMBOLS = {
@@ -493,7 +505,6 @@ function initPin() {
     const val = pinInput.value.replace(/\D/g, '');
     pinInput.value = val;
     state.pin = val.split('');
-    // Enable at 4 OR 5 digits
     const filled = val.length === 4 || val.length === 5;
     pinInput.classList.toggle('filled', filled);
     verifyBtn.disabled = !filled;
@@ -610,7 +621,6 @@ function stopSafetySlider() {
 
 async function doVerify() {
   const errEl = document.getElementById('pinError');
-  // Accept 4 or 5 digits
   const len = state.pin.length;
   const allFilled = (len === 4 || len === 5) && state.pin.every(v => v !== '');
   if (!allFilled) {
